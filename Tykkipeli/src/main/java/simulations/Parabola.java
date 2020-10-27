@@ -5,14 +5,14 @@
  */
 package simulations;
 
-import simulations.PhysicsSolver;
-
 /**
  *
  * @author suominka
  */
-public class Ballistics extends PhysicsSolver{
-    public Ballistics(){
-        super(); //Sets world specific parameters
+import utils.Vector3d;
+public class Parabola extends PhysicsSolver{
+    public Parabola(){
+        super();
+        set(new Vector3d(),new Vector3d(100,100,0),0.0001);
     }
 }
