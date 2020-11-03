@@ -85,4 +85,20 @@ public class KassapaateTest {
         assertEquals(1,paate.maukkaitaLounaitaMyyty());
         assertEquals(100000,paate.kassassaRahaa());
     }
+    @Test
+    public void arvonLatausKortille(){
+        int korttialussa = kortti.saldo();
+        int kassaalussa = paate.kassassaRahaa();
+        paate.lataaRahaaKortille(kortti, 100);
+        assertEquals(korttialussa+100,kortti.saldo());
+        assertEquals(kassaalussa+100,paate.kassassaRahaa());
+    }
+    @Test
+    public void arvonLatausKortilleNegatiivisellaSummalla(){
+        int korttialussa = kortti.saldo();
+        int kassaalussa = paate.kassassaRahaa();
+        paate.lataaRahaaKortille(kortti,-100);
+        assertEquals(korttialussa,kortti.saldo());
+        assertEquals(kassaalussa,paate.kassassaRahaa());
+    }
 }
