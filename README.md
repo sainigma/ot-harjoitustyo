@@ -4,7 +4,7 @@ Lorem ipsum
 
 ## Harjoitustyö
 
-[Vaatimuusmäärittely](/Tykkipeli/dokumentaatio/vaatimuusmaarittely.md)
+[Vaatimuusmäärittely](/Tykkipeli/dokumentaatio/vaatimusmaarittely.md)
 
 [Tuntikirjanpito](/Tykkipeli/dokumentaatio/tuntikirjanpito.md)
 
