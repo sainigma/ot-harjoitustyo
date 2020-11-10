@@ -6,8 +6,20 @@ Perinteinen tykkipeli jossa pelaaja yrittää osua maaliin tykin kulmaa ja ammuk
 
 Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia parametrejä muuttamalla. Pelin haastavuutta voidaan varioida sekä simulaation parametrejä, esim. tuulivektoria, muuttamalla, että tekemällä maaleista liikkuvia. Pelin voittoehtona on maaliin osuminen, häviöehtoina taas ammusten loppuminen tai maalin pääseminen liian lähelle.
 
-## Rajoitukset
+## Pelisilmukka
+![](./assets/gameplayloop.png)
 
+## Pelin näkymät
+![](./assets/paanakyma.png)
+Isot objektien ryhmittymät ovat omissa renderbuffereissaan. Mahdollisesti 3 bufferia (ui, peliobjektit, tausta)
+
+![](./assets/karttanakyma.png)
+Lentorata päivittyy karttanäkymään reaaliajassa. Pitkästä lentoajasta johtuen näkymän pitää osata piirtää useita projektiileja samanaikaisesti. Edellisiä lentoratoja pitää pystyä myös piirtämään uudelleen näkymään (esim. jos käyttäjä haluaa tarkastella projektiilihistoriaa) Jokainen projektiili voidaan esim. tallentaa omiin buffereihin joita pidetään koko pelin ajan muistissa.
+
+Karttanäkymän täytyy myös pystyä piirtämään maali (esim. laiva) järkevästi (vähintään pisteenä/ikonina, mieluiten spritenä jota pystyy pyörittämään)
+
+## Rajoitukset
+- Peli pyörii Cubbli-linuxjakelulla ja käyttää kiinteää resoluutiota (joko 800x600 retrosyistä tai suoraan 720p reso&kuvasuhde)
 
 ## Perustoiminnallisuudet
 
