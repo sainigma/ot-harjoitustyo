@@ -11,6 +11,7 @@ package utils;
  */
 public class Vector3d {
     public double x,y,z; //Public for simplicitys sake
+    public float x_f,y_f,z_f;
     public Vector3d(){
         x=0;
         y=0;
