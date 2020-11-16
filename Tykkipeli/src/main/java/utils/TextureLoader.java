@@ -30,6 +30,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ *
+ * @author suominka
+ */
 package utils;
 
 import java.awt.Color;
@@ -52,10 +56,6 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 
-/**
- *
- * @author suominka
- */
 public class TextureLoader {
     private HashMap<String, Texture> textures;
     private IntBuffer textureIDBuffer = BufferUtils.createIntBuffer(1);
@@ -65,7 +65,7 @@ public class TextureLoader {
     public TextureLoader(){
         textures = new HashMap<String, Texture>();
         glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8,8,8,8}, true, false, ComponentColorModel.TRANSLUCENT, DataBuffer.TYPE_BYTE);
-        glColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8,8,8,0}, false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
+        glColorModel =      new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8,8,8,0}, false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
     }
     
     public Texture loadTexture(String path){
@@ -107,6 +107,7 @@ public class TextureLoader {
         if( img.getColorModel().hasAlpha() ){
             channels = 4;
             colormodel = glAlphaColorModel;
+            System.out.println("alpha");
         }else{
             colormodel = glColorModel;
         }

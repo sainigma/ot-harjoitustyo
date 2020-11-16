@@ -66,28 +66,33 @@ public class Graffatestailua {
         
 
         GL.createCapabilities();
-        glEnable(GL11.GL_TEXTURE_2D);
-        glDisable(GL11.GL_DEPTH_TEST);
-        glMatrixMode(GL11.GL_PROJECTION);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
+        glMatrixMode(GL_PROJECTION);
         glOrtho(0, 1280, 720, 0, -1, 1);
-        glClearColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 0.0f);
+        glClearColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 1.0f);
         
         TextureLoader texLoader = new TextureLoader();
         Sprite testi = new Sprite(texLoader, "test.png", new Vector3d(128));
-        
+        Sprite testibackground = new Sprite(texLoader, "testisprite.png");
+        Sprite testibackground2 = new Sprite(texLoader, "testisprite_trans.png");
         while( !glfwWindowShouldClose(window) ){
             glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
             glMatrixMode(GL11.GL_MODELVIEW);
             glLoadIdentity();
             x+=15;
             r+=15;
-            if( x > 1280-100 ){
+            if( x > 1280 ){
                 x = 0;
                 y += 100;
-                if( y > 620 ){
+                if( y > 720 ){
                     y = 0;
                 }
             }
+            testibackground.draw(100,200);
+            testibackground2.draw(600,400,-r/10);
             testi.draw(x,y,r);
             glfwSwapBuffers(window);
             glfwPollEvents();
