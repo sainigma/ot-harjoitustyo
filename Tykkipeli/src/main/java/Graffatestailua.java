@@ -10,19 +10,20 @@
  */
 import java.util.Random;
 
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
-import objects.Sprite;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
+import objects.Sprite;
+import utils.TextureLoader;
 import utils.Vector3d;
 
 public class Graffatestailua {
@@ -62,15 +63,23 @@ public class Graffatestailua {
         int y = 0;
         float r = 0;
         Random rand = new Random();
-        Sprite testi = new Sprite(null, new Vector3d(50,50,0));
+        
+
         GL.createCapabilities();
         glEnable(GL11.GL_TEXTURE_2D);
         glDisable(GL11.GL_DEPTH_TEST);
         glMatrixMode(GL11.GL_PROJECTION);
         glOrtho(0, 1280, 720, 0, -1, 1);
         glClearColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 0.0f);
+        
+        TextureLoader texLoader = new TextureLoader();
+        Sprite testi = new Sprite(texLoader, "test.png", new Vector3d(128));
+        
         while( !glfwWindowShouldClose(window) ){
-            x+=25;
+            glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            glMatrixMode(GL11.GL_MODELVIEW);
+            glLoadIdentity();
+            x+=15;
             r+=15;
             if( x > 1280-100 ){
                 x = 0;
@@ -79,9 +88,7 @@ public class Graffatestailua {
                     y = 0;
                 }
             }
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             testi.draw(x,y,r);
-            //draw(x,y,r);
             glfwSwapBuffers(window);
             glfwPollEvents();
             //glClearColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 0.0f);

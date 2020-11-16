@@ -22,6 +22,11 @@ public class Vector3d {
         this.y=y;
         this.z=z;
     }
+    public Vector3d(double x){
+        this.x=x;
+        this.y=x;
+        this.z=x;
+    }
     @Override
     public Vector3d clone(){
         return new Vector3d(x,y,z);

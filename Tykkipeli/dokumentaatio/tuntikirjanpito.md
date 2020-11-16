@@ -6,3 +6,4 @@
 | 04.11 | 2 | Vaatimusmäärittelyn kirjoitusta |
 | 10.11 | 2 | Vaatimuusmäärittelyn kirjoitusta |
 | 15.11 | 3 | LWJGL3 asennus ja kirjastoon tutustumista, perusruudunpiirto ja quadien luonti ja manipulointi toimii
+| 16.11 | 5 | LWJGL3 esimerkkeihin tutustumista, spritejen piirto toimii
