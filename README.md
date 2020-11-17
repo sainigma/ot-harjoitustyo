@@ -12,7 +12,7 @@ Sovelluksesta on tällä hetkellä valmiina peliobjekti- näkymä- ja renderöin
 
 # Komentorivitoiminnot
 
-## Asennus
+## Asennus & ajo
 
     git clone https://github.com/sainigma/ot-harjoitustyo.git
     cd ot-harjoitustyo/Tykkipeli
