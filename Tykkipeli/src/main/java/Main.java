@@ -15,10 +15,12 @@ import simulations.Parabola;
 public class Main {
     public static void main(String args[]){
         System.out.println("Init");
+        /*
         Parabola parabola = new Parabola();
         while( !parabola.endCondition() ){
             parabola.solveToTime(0.016);
             System.out.println(parabola);
         }
+        */
     }    
 }

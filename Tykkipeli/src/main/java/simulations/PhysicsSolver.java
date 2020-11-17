@@ -20,11 +20,14 @@ public abstract class PhysicsSolver {
         Vector3d acceleration = new Vector3d();;
         double time = 0;
     }
-    double timestep;
-    double mass;
-    State state;
+    private double timestep;
+    private double mass;
+    private State state;
     public PhysicsSolver(){
         state = null;
+    }
+    public Vector3d getPosition(){
+        return state.position;
     }
     public void set(Vector3d position, Vector3d velocity){
         state = new State();
@@ -64,9 +67,6 @@ public abstract class PhysicsSolver {
         return false;
     }
     public void run(){
-        if( state == null ){
-            return;
-        }
         while( !endCondition() ){
             solve();
         }

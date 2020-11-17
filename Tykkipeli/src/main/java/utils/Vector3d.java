@@ -5,13 +5,14 @@
  */
 package utils;
 
+import static java.lang.Math.sqrt;
+
 /**
  *
  * @author suominka
  */
 public class Vector3d {
     public double x,y,z; //Public for simplicitys sake
-    public float x_f,y_f,z_f;
     public Vector3d(){
         x=0;
         y=0;
@@ -26,6 +27,9 @@ public class Vector3d {
         this.x=x;
         this.y=x;
         this.z=x;
+    }
+    public double magnitude(){
+        return sqrt(x*x+y*y+z*z);
     }
     @Override
     public Vector3d clone(){
