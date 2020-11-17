@@ -7,7 +7,7 @@ package utils;
 
 import components.GameObject;
 import java.nio.IntBuffer;
-import objects.Sprite;
+import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
@@ -47,29 +47,56 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * @author suominka
  */
 public class Renderer {
+    ArrayList<GameObject> objects;
+    float[] clearColor = new float[]{0,0,0,1}; 
     private TextureLoader texLoader;
     private long window;
     private int resoX,resoY;
     String windowname;
+    
     public Renderer(){
         resoX = 1280;
         resoY = 720;
         windowname = "Tykkipeli";
-        //init renderqueue
+        objects = new ArrayList<>();
+    }
+    
+    public Renderer(int resolutionX, int resolutionY, String title){
+        resoX = resolutionX;
+        resoY = resolutionY;
+        windowname = title;
+        objects = new ArrayList<>();
     }
     
     public void appendToRenderQueue(GameObject object){
-        
+        objects.add(object);
     }
     
     public void removeFromRenderQueue(GameObject object){
-        
+        objects.remove(object);
+    }
+    
+    public void setBackground(float r, float g, float b){
+        clearColor = new float[]{r,g,b,1};
     }
     
     public void run(){
         init();
+        initObjects();
         loop();
         kill();
+    }
+    
+    private void initObjects(){
+        for(GameObject object : objects){
+            object.setTextureLoader(texLoader);
+        }
+    }
+    
+    private void updateObjects(){
+        for(GameObject object : objects){
+            object.draw();
+        }
     }
     
     private void init(){
@@ -97,7 +124,7 @@ public class Renderer {
         glDisable(GL_DEPTH_TEST);
         glMatrixMode(GL_PROJECTION);
         glOrtho(0, resoX, resoY, 0, -1, 1);
-        glClearColor(0,0,0,1.0f);
+        glClearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
         texLoader = new TextureLoader();
     }
     
@@ -106,7 +133,7 @@ public class Renderer {
             glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
             glMatrixMode(GL11.GL_MODELVIEW);
             glLoadIdentity();
-            //Spritet/pelilogiikka tähän
+            updateObjects();//Spritet/pelilogiikka tähän
             glfwSwapBuffers(window);
             glfwPollEvents();
             //glClearColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 0.0f);

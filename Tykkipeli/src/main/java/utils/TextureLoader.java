@@ -107,7 +107,6 @@ public class TextureLoader {
         if( img.getColorModel().hasAlpha() ){
             channels = 4;
             colormodel = glAlphaColorModel;
-            System.out.println("alpha");
         }else{
             colormodel = glColorModel;
         }

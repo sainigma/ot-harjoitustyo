@@ -7,4 +7,4 @@
 | 10.11 | 2 | Vaatimuusmäärittelyn kirjoitusta |
 | 15.11 | 3 | LWJGL3 asennus ja kirjastoon tutustumista, perusruudunpiirto ja quadien luonti ja manipulointi toimii
 | 16.11 | 5 | LWJGL3 esimerkkeihin tutustumista, spritejen piirto toimii
-| 17.11 | 3 | Testien kirjoitusta, projektin siistimistä
+| 17.11 | 5 | Testien kirjoitusta, repon siistimistä. Koodin refaktorointia ja pelilogiikkaobjektien eriyttämistä

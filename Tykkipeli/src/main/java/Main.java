@@ -1,5 +1,7 @@
 
-import simulations.Parabola;
+import components.Level;
+import java.util.Random;
+import utils.Renderer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,14 +15,23 @@ import simulations.Parabola;
  */
 
 public class Main {
+    Renderer renderer;
+    public void init(){
+        Random rand = new Random();
+        renderer = new Renderer();
+        Level level = new Level("testlevel");        
+        renderer.appendToRenderQueue(level);
+        renderer.setBackground(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+        run();
+    }
+    public void update(){
+        System.out.println("update");
+    }
+    public void run(){
+        renderer.run();
+    }
     public static void main(String args[]){
         System.out.println("Init");
-        /*
-        Parabola parabola = new Parabola();
-        while( !parabola.endCondition() ){
-            parabola.solveToTime(0.016);
-            System.out.println(parabola);
-        }
-        */
+        new Main().init();
     }    
 }
