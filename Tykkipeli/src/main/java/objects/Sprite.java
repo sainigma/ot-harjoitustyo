@@ -17,6 +17,7 @@ import utils.Vector3d;
 public class Sprite {
     Texture texture;
     int width,height;
+    float scale = 1;
     Vector3d origin;
     
     private void _load(TextureLoader loader, String path, Vector3d origin){
@@ -26,7 +27,8 @@ public class Sprite {
         this.origin = origin;
     }
     
-    public Sprite(TextureLoader loader, String path, Vector3d origin){
+    public Sprite(TextureLoader loader, String path, Vector3d origin, float scale){
+        this.scale = scale;
         _load(loader,path,origin);
     }
 
@@ -37,11 +39,13 @@ public class Sprite {
     private void _draw(int x, int y, float r){
         float xOffset = (float)origin.x;
         float yOffset = (float)origin.y;
+        float inverseScale = (float)Math.pow(scale, -1);
         float[][] vertices = {{0,0},{0,height},{width,height},{width,0}};
 
         GL11.glPushMatrix();
         texture.bind();
-        GL11.glTranslatef(x, y, 0);
+        GL11.glScalef(scale, scale, scale);
+        GL11.glTranslatef(x*inverseScale, y*inverseScale, (float)origin.z);
         GL11.glRotatef(r, 0, 0, 1f);
         GL11.glColor3f(1, 1, 1);
         GL11.glBegin(GL11.GL_QUADS);
@@ -63,5 +67,7 @@ public class Sprite {
     public void draw(int x, int y, float r){
         _draw(x,y,r);
     }
-    
+    public void setScale(float scale){
+        this.scale = scale;
+    }
 }

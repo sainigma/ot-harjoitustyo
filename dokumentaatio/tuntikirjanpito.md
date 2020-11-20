@@ -8,3 +8,8 @@
 | 15.11 | 3 | LWJGL3 asennus ja kirjastoon tutustumista, perusruudunpiirto ja quadien luonti ja manipulointi toimii
 | 16.11 | 5 | LWJGL3 esimerkkeihin tutustumista, spritejen piirto toimii
 | 17.11 | 5 | Testien kirjoitusta, repon siistimistä. Koodin refaktorointia ja pelilogiikkaobjektien eriyttämistä
+| 20.11 | ( 7 ) | Grafiikantekoa (tykkiassetit)
+| 20.11 | 1 | Skaalan säätö spriteihin, alphatestaus piirtojärjestyksen toteutukseen
+| yht | 24 | |
+
+Huom. suluissa olevia aikoja ei lasketa kokonaiskirjanpitoon, ne on ns. omaan käyttöön

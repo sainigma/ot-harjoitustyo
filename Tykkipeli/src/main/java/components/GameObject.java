@@ -20,6 +20,7 @@ public abstract class GameObject {
     private String path;
     private String name;
     int x,y,rotation;
+    float scale = 1;
     int parentX,parentY,parentRotation;
     private boolean initialized = false;
     private boolean active = true;
@@ -41,6 +42,13 @@ public abstract class GameObject {
         this.origin = origin;
         this.name = name;
         this.path = path;
+        init();
+    }
+    public GameObject(String name, String path, Vector3d origin, float scale){
+        this.origin = origin;
+        this.name = name;
+        this.path = path;
+        this.scale = scale;
         init();
     }
     public boolean isActive(){
@@ -72,6 +80,9 @@ public abstract class GameObject {
         this.y+=y;
         hasUpdated = true;
     }
+    public void translateLocal(int x, int y){
+        //ota pyöriminen huomioon
+    }
     public void rotate(int rot){
         rotation+=rot;
         hasUpdated = true;
@@ -99,7 +110,7 @@ public abstract class GameObject {
     private void load(){
         System.out.println("Loading "+name);
         if( path != null ){
-            sprite = new Sprite(texLoader, path, origin);
+            sprite = new Sprite(texLoader, path, origin, scale);
         }
         for(GameObject child : children){
             child.load();

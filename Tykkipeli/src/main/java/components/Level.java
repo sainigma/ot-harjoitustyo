@@ -26,11 +26,24 @@ public class Level extends GameObject{
         return isFinished;
     }
     
+    GameObject mortarTube;
     private void init(){
-        gameView = new ViewPort("game");
+        gameView = new ViewPort("game");        
+        float viewPortScale = 720f/1080f;
+        
+        //toteuta lokaalit avaruudet ni esim skaalan saa propogoitua suoraan viewportista alas
+        
+        mortarTube = new GameObject("mortartube","mortar/tykki.png",new Vector3d(512,512,1), viewPortScale){};
+        GameObject mortarCar = new GameObject("mortarcar","mortar/karry.png",new Vector3d(398,147,-1), viewPortScale){};
+        GameObject mortarStand = new GameObject("mortarstand","mortar/jalusta.png",new Vector3d(0), viewPortScale){};
+        mortarCar.append(mortarTube);
+        mortarCar.translate((int)(1065*viewPortScale), (int)(355*viewPortScale));
+        mortarStand.append(mortarCar);
+        gameView.append(mortarStand);
+       
+        /*
         mapView = new ViewPort("map");
         mapView.toggle();
-        
         GameObject updateTest = new ScrollingObject("testiobjekti","test.png",new Vector3d(128));
         GameObject transparencyTest = new GameObject("transtest","testisprite_trans.png"){};
         
@@ -54,13 +67,18 @@ public class Level extends GameObject{
         GameObject backgroundTest = new GameObject("background","tausta.png"){};
         mapView.append(backgroundTest);
         
-        append(gameView);
+        
         append(mapView);
         System.currentTimeMillis();
+        */
+        append(gameView);
     }
     private boolean removeMe = true;
     @Override
     public void update(){
+        mortarTube.rotate(1);
+        
+        /*
         if( System.currentTimeMillis()-start < 1000*2 ){
             return;
         }
@@ -78,6 +96,6 @@ public class Level extends GameObject{
         }else if( toggler < -0.5 && !mapView.isActive()){
             mapView.setActive(true);
             gameView.setActive(false);
-        }
+        }*/
     }
 }

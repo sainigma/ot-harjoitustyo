@@ -25,7 +25,7 @@ public class ScrollingObject extends GameObject{
     public void update(){
         hasUpdated = true;
         x+=15;
-        rotation+=15;
+        //rotation+=15;
         if( x > 1280 ){
             x = 0;
             y += 100;
