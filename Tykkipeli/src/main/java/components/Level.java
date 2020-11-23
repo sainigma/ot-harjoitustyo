@@ -27,16 +27,25 @@ public class Level extends GameObject{
     }
     
     GameObject mortarTube;
+    GameObject mortarGear;
+    GameObject mortarWheel;
+    GameObject mortarCar;
+    
     private void init(){
         gameView = new ViewPort("game");        
         float viewPortScale = 720f/1080f;
         
         //toteuta lokaalit avaruudet ni esim skaalan saa propogoitua suoraan viewportista alas
-        
-        mortarTube = new GameObject("mortartube","mortar/tykki.png",new Vector3d(512,512,1), viewPortScale){};
-        GameObject mortarCar = new GameObject("mortarcar","mortar/karry.png",new Vector3d(398,147,-1), viewPortScale){};
         GameObject mortarStand = new GameObject("mortarstand","mortar/jalusta.png",new Vector3d(0), viewPortScale){};
+        mortarTube = new GameObject("mortartube","mortar/tykki.png",new Vector3d(512,512,1), viewPortScale){};
+        mortarCar = new GameObject("mortarcar","mortar/karry.png",new Vector3d(398,147,-1), viewPortScale){};
+        mortarWheel = new GameObject("mortarwheel","mortar/ruori.png",new Vector3d(128,128,-3), viewPortScale){};
+        mortarGear = new GameObject("mortargear","mortar/ratas.png",new Vector3d(64,64,-2), viewPortScale){};
         mortarCar.append(mortarTube);
+        mortarCar.append(mortarGear);
+        mortarCar.append(mortarWheel);
+        mortarWheel.translate(20, 106);
+        mortarGear.translate(50,90);
         mortarCar.translate((int)(1065*viewPortScale), (int)(355*viewPortScale));
         mortarStand.append(mortarCar);
         gameView.append(mortarStand);
@@ -71,13 +80,28 @@ public class Level extends GameObject{
         append(mapView);
         System.currentTimeMillis();
         */
+        gameView.setScreenShake(2);
         append(gameView);
     }
-    private boolean removeMe = true;
+    boolean asd = true;
     @Override
     public void update(){
-        mortarTube.rotate(1);
-        
+        float initialRot = -10f;
+        mortarWheel.rotate(initialRot);
+        mortarGear.rotate(-initialRot*0.2f);
+        mortarTube.rotate(initialRot*0.2f*0.00845f);
+        if( asd ){
+            mortarCar.translate(-1*5, -0.15f*5);            
+        }else{
+            mortarCar.translate(1*5, 0.15f*5);
+        }
+        if( mortarCar.x > 710 ){
+            asd = true;
+        }else if( mortarCar.x < 500 ){
+            asd = false;
+        }
+        System.out.println(mortarCar.x);
+
         /*
         if( System.currentTimeMillis()-start < 1000*2 ){
             return;

@@ -61,11 +61,11 @@ public class Sprite {
         GL11.glPopMatrix();
     }
     
-    public void draw(int x, int y){
-        _draw(x,y,0);
+    public void draw(float x, float y){
+        _draw((int)x,(int)y,0);
     }
-    public void draw(int x, int y, float r){
-        _draw(x,y,r);
+    public void draw(float x, float y, float r){
+        _draw((int)x,(int)y,r);
     }
     public void setScale(float scale){
         this.scale = scale;

@@ -74,7 +74,7 @@ public class TextureLoader {
             return texture;
         }
         
-        texture = _loadTexture(path, GL_TEXTURE_2D, GL_RGBA, GL_NEAREST, GL_NEAREST);
+        texture = _loadTexture(path, GL_TEXTURE_2D, GL_RGBA, GL_LINEAR, GL_NEAREST);
         textures.put(path, texture);
         return texture;
     }

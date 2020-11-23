@@ -24,12 +24,12 @@ public class ViewPort extends GameObject{
     public void update(){
         if(screenShake){
             hasUpdated = true;
-            x=(int)(rand.nextFloat()*4*screenShakeIntensity);
-            y=(int)(rand.nextFloat()*2*screenShakeIntensity);
-        }else if(x!=0 || y!=0 || rotation!=0){
+            x=(rand.nextFloat()*4*screenShakeIntensity);
+            y=(rand.nextFloat()*2*screenShakeIntensity);
+        }else if(x!=0 || y!=0 || rotation!=0f){
             x=0;
             y=0;
-            rotation=0;
+            rotation=0f;
         }
     }
     public void setScreenShake(float intensity){

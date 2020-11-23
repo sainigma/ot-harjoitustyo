@@ -19,9 +19,10 @@ public abstract class GameObject {
     private Sprite sprite;
     private String path;
     private String name;
-    int x,y,rotation;
+    float x,y,rotation;
     float scale = 1;
-    int parentX,parentY,parentRotation;
+    public float parentX,parentY,parentRotation;
+    private boolean visible = true;
     private boolean initialized = false;
     private boolean active = true;
     boolean hasUpdated = true;
@@ -57,6 +58,9 @@ public abstract class GameObject {
     public void setActive(boolean newState){
         active = newState;
     }
+    public void setVisible(boolean newState){
+        visible = newState;
+    }
     public void toggle(){
         active=!active;
     }
@@ -75,7 +79,7 @@ public abstract class GameObject {
         }
         load();
     }
-    public void translate(int x, int y){
+    public void translate(float x, float y){
         this.x+=x;
         this.y+=y;
         hasUpdated = true;
@@ -83,7 +87,7 @@ public abstract class GameObject {
     public void translateLocal(int x, int y){
         //ota pyöriminen huomioon
     }
-    public void rotate(int rot){
+    public void rotate(float rot){
         rotation+=rot;
         hasUpdated = true;
     }
@@ -101,8 +105,9 @@ public abstract class GameObject {
             return;
         }
         for(GameObject child : children){
-            child.parentX = x;
-            child.parentY = y;
+            child.hasUpdated = true;
+            child.parentX = x+parentX;
+            child.parentY = y+parentY;
             child.parentRotation = rotation;
         }
         hasUpdated = false;
@@ -118,6 +123,9 @@ public abstract class GameObject {
         initialized = true;
     }
     private void _draw(){
+        if(!visible){
+            return;
+        }
         for(GameObject child : children){
             child.draw();
         }

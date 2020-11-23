@@ -123,13 +123,13 @@ public class Renderer {
         GL.createCapabilities();
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
+        glEnable(GL_ALPHA_TEST);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0.0f);
+        glAlphaFunc(GL_GREATER, 0.5f);
         //glDisable(GL_DEPTH_TEST);
         glMatrixMode(GL_PROJECTION);
-        glOrtho(0, resoX, resoY, 0, 1, -10);
+        glOrtho(0, resoX, resoY, 0, 10, -10);
         glClearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
         texLoader = new TextureLoader();
     }
