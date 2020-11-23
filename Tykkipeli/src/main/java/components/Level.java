@@ -5,6 +5,7 @@
  */
 package components;
 
+import templates.Mortar;
 import utils.Vector3d;
 
 /**
@@ -33,7 +34,8 @@ public class Level extends GameObject{
     
     private void init(){
         gameView = new ViewPort("game");        
-        float viewPortScale = 720f/1080f;
+        float viewportScale = 720f/1080f;
+        /*
         
         //toteuta lokaalit avaruudet ni esim skaalan saa propogoitua suoraan viewportista alas
         GameObject mortarStand = new GameObject("mortarstand","mortar/jalusta.png",new Vector3d(0), viewPortScale){};
@@ -80,12 +82,15 @@ public class Level extends GameObject{
         append(mapView);
         System.currentTimeMillis();
         */
-        gameView.setScreenShake(2);
+        GameObject mortar = new Mortar("mortar",viewportScale);
+        gameView.append(mortar);
+        //gameView.setScreenShake(2);
         append(gameView);
     }
     boolean asd = true;
     @Override
     public void update(){
+        /*
         float initialRot = -10f;
         mortarWheel.rotate(initialRot);
         mortarGear.rotate(-initialRot*0.2f);

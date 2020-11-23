@@ -8,6 +8,7 @@
  *
  * @author suominka
  */
+/*
 import java.util.Random;
 
 import org.lwjgl.glfw.*;
@@ -22,7 +23,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-import objects.Sprite;
+import utils.Sprite;
 import utils.TextureLoader;
 import utils.Vector3d;
 
@@ -104,3 +105,4 @@ public class Graffatestailua {
         new Graffatestailua().run();
     }
 }
+*/

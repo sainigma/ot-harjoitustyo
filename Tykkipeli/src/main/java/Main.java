@@ -21,7 +21,8 @@ public class Main {
         renderer = new Renderer();
         Level level = new Level("testlevel");        
         renderer.appendToRenderQueue(level);
-        renderer.setBackground(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+        renderer.setBackground(1, 1, 1);
+        //renderer.setBackground(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
         run();
     }
     public void update(){
