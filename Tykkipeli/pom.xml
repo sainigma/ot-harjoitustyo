@@ -143,6 +143,18 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.3</version>
+                <configuration>
+                    <excludes>
+                        <exlude>game/Main*</exlude>
+                        <exclude>game/utils/Sprite*</exclude>
+                        <exclude>game/utils/TextureLoader*</exclude>
+                        <exclude>game/utils/Renderer*</exclude>
+                        <exclude>game/utils/Texture*</exclude>
+                        <exclude>game/components/GameObject*</exclude>
+                        <exclude>game/components/Level*</exclude> 
+                        <exclude>game/components/ViewPort*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -184,6 +196,19 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <version>2.17</version>
+              <configuration>
+                <configLocation>checkstyle.xml</configLocation>
+              </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-jxr-plugin</artifactId>
+              <version>2.5</version>
             </plugin>
         </plugins>
     </build>

@@ -14,30 +14,30 @@ import java.util.Random;
  *
  * @author suominka
  */
-public class ViewPort extends GameObject{
+public class ViewPort extends GameObject {
     private boolean screenShake = false;
     private float screenShakeIntensity = 1;
     Random rand = new Random();
     
-    public ViewPort(String name){
+    public ViewPort(String name) {
         super(name);
     }
     
     @Override
-    public void update(){
-        if(screenShake){
+    public void update() {
+        if (screenShake) {
             setPosition(new Vector3d(
-                    (rand.nextFloat()*4*screenShakeIntensity),
-                    (rand.nextFloat()*2*screenShakeIntensity)
+                    (rand.nextFloat() * 4 * screenShakeIntensity),
+                    (rand.nextFloat() * 2 * screenShakeIntensity)
             ));
         }
     }
-    public void setScreenShake(float intensity){
+    public void setScreenShake(float intensity) {
         screenShakeIntensity = intensity;
-        if( intensity < 0.1 ){
+        if (intensity < 0.1) {
             screenShake = false;
             setPosition(new Vector3d());
-        }else{
+        } else {
             screenShake = true;
         }
     }

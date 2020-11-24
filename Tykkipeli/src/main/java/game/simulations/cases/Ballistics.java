@@ -12,8 +12,8 @@ import game.simulations.PhysicsSolver;
  *
  * @author suominka
  */
-public class Ballistics extends PhysicsSolver{
-    public Ballistics(){
+public class Ballistics extends PhysicsSolver {
+    public Ballistics() {
         super(); //Sets world specific parameters
     }
 }

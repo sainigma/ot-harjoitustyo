@@ -3,19 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.controllers;
+package game.logic;
+
+import game.components.Level;
 
 /**
  *
  * @author suominka
  */
-import game.utils.Vector3d;
-
-public class Projectile {
-    float weight;
-    float frontalArea;
-    float dragCoeff;
-    Vector3d origin;
-    public Projectile(){
-    }
+public class BaseGame {
+    Level level;
+    
 }

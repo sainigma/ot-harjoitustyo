@@ -10,47 +10,42 @@ package game.utils;
  * @author suominka
  */
 public class PID {
-    private float Kp;
-    private float Kd;
-    private float Ki;
+    private float pFactor;
+    private float dFactor;
+    private float iFactor;
     
     private boolean active = false;
     
-    public PID(){
-        Kp = 1;
-        Ki = 1;
-        Kd = 1;
-    }
-    public PID(float p, float i, float d){
-        Kp = p;
-        Ki = i;
-        Kd = d;
+    public PID(float p, float i, float d) {
+        pFactor = p;
+        iFactor = i;
+        dFactor = d;
     }
     
     private double errorPrev;
     private double errorSum;
     private double control;
     
-    private void update(float error, double dt){
+    private void update(float error, double dt) {
         errorSum += error * dt;
-        double errorSlope = (error - errorPrev)/dt;
-        control = Kp*error + Ki*errorSum + Kd*errorSlope;
+        double errorSlope = (error - errorPrev) / dt;
+        control = pFactor * error + iFactor * errorSum + dFactor * errorSlope;
         errorPrev = error;
     }
-    public double getControl(float error, double dt){
-        update(error,dt);
+    public double getControl(float error, double dt) {
+        update(error, dt);
         return control;
     }
-    public void activate(){
+    public void activate() {
         active = true;
         errorPrev = 0;
         errorSum = 0;
         control = 0;
     }
-    public void deactivate(){
+    public void deactivate() {
         active = false;
     }
-    public boolean isActive(){
+    public boolean isActive() {
         return active;
     }
 }

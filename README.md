@@ -10,19 +10,21 @@ Sovelluksesta on tällä hetkellä valmiina peliobjekti- näkymä- ja renderöin
 
 [Tuntikirjanpito](/dokumentaatio/tuntikirjanpito.md)
 
+[Arkkitehtuurikuvaus](/dokumentaatio/arkkitehtuuri.md)
+
 # Komentorivitoiminnot
 
 ## Asennus & ajo
 
     git clone https://github.com/sainigma/ot-harjoitustyo.git
     cd ot-harjoitustyo/Tykkipeli
-    mvn compile exec:java -Dexec.mainClass=Main
+    mvn compile exec:java -Dexec.mainClass=game.Main
 
 ## Ajo
 
 Tykkipeli kansion juuressa:
 
-    mvn -q exec:java -Dexec.mainClass=Main
+    mvn -q exec:java -Dexec.mainClass=game.Main
 
 ## Testit
 

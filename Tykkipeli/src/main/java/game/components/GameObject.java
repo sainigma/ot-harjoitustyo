@@ -19,192 +19,197 @@ public abstract class GameObject {
     private Sprite sprite;
     private String path;
     private String name;
-    public float x,y,rotation;
-    private int[] crop = {-1,-1};
-    private float[] texOffset = {0,0};
-    private float[][] vertexOffset = {{0,0},{0,0},{0,0},{0,0}};
+    public float x, y, rotation;
+    private int[] crop = { -1, -1};
+    private float[] texOffset = {0, 0};
+    private float[][] vertexOffset = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
     private float scale = 1;
-    public float parentX,parentY,parentRotation;
+    public float parentX, parentY, parentRotation;
     private boolean visible = true;
     private boolean initialized = false;
     private boolean active = true;
     public boolean hasUpdated = true;
-    private TextureLoader texLoader;
+    private TextureLoader texLoader = null;
     private Vector3d origin = new Vector3d(0);
     
-    public GameObject(String name){
+    public GameObject(String name) {
         this.name = name;
         this.path = null;
         this.initialized = true; //empty
     }
-    public GameObject(String name, String path){
+    public GameObject(String name, String path) {
         this.name = name;
         this.path = path;
         init();
     }
-    public GameObject(String name, String path, Vector3d origin){
+    public GameObject(String name, String path, Vector3d origin) {
         this.origin = origin;
         this.name = name;
         this.path = path;
         init();
     }
-    public GameObject(String name, String path, Vector3d origin, float scale){
+    public GameObject(String name, String path, Vector3d origin, float scale) {
         this.origin = origin;
         this.name = name;
         this.path = path;
         this.scale = scale;
         init();
     }
-    public boolean isActive(){
+    public boolean isActive() {
         return active;
     }
-    public void setActive(boolean newState){
+    public void setActive(boolean newState) {
         active = newState;
     }
-    public void setVisible(boolean newState){
+    public void setVisible(boolean newState) {
         visible = newState;
     }
-    public void toggle(){
-        active=!active;
+    public void toggle() {
+        active = !active;
     }
-    private void init(){
-        x=0;
-        y=0;
-        rotation=0;
-        parentX=0;
-        parentY=0;
-        parentRotation=0;
+    private void init() {
+        x = 0;
+        y = 0;
+        rotation = 0;
+        parentX = 0;
+        parentY = 0;
+        parentRotation = 0;
     }
     
-    public void setVertexOffset(float[] topLeft, float[] bottomLeft, float[] topRight, float[] bottomRight){
+    public void setVertexOffset(float[] topLeft, float[] bottomLeft, float[] topRight, float[] bottomRight) {
         vertexOffset[0] = topLeft;
         vertexOffset[1] = bottomLeft;
         vertexOffset[2] = topRight;
         vertexOffset[3] = bottomRight;
-        if(sprite != null){
+        if (sprite != null) {
             sprite.setVertexOffset(vertexOffset);            
         }
     }
-    public void setTextureLoader(TextureLoader loader){
+    public void setTextureLoader(TextureLoader loader) {
         texLoader = loader;
-        for(GameObject child : children){
+        for (GameObject child : children) {
             child.setTextureLoader(loader);
         }
         load();
     }
-    public void setCrop(int x, int y){
+    public void setCrop(int x, int y) {
         crop[0] = x;
         crop[1] = y;
-        if(sprite != null){
+        if (sprite != null) {
             sprite.setCrop(crop);
         }
     }
-    public void setHasUpdated(boolean newState){
+    public void setHasUpdated(boolean newState) {
         hasUpdated = newState;
     }
-    public void setTransform(Vector3d transform){
-        x = (float)transform.x;
-        y = (float)transform.y;
-        rotation = (float)transform.z;
+    public void setTransform(Vector3d transform) {
+        x = (float) transform.x;
+        y = (float) transform.y;
+        rotation = (float) transform.z;
     }
-    public void setPosition(Vector3d position){
-        this.x = (float)position.x;
-        this.y = (float)position.y;
+    public void setPosition(Vector3d position) {
+        this.x = (float) position.x;
+        this.y = (float) position.y;
         hasUpdated = true;
     }
-    public void setRotation(float r){
+    public void setRotation(float r) {
         rotation = r;
         hasUpdated = true;
     }
-    public Vector3d getTransform(){
-        return new Vector3d(x,y,rotation);
+    public Vector3d getTransform() {
+        return new Vector3d(x, y, rotation);
     }
-    public Vector3d getPosition(){
-        return new Vector3d(x,y);
+    public Vector3d getPosition() {
+        return new Vector3d(x, y);
     }
-    public void translate(float x, float y){
-        this.x+=x;
-        this.y+=y;
+    public void translate(float x, float y) {
+        this.x += x;
+        this.y += y;
         hasUpdated = true;
     }
-    public void translateLocal(int x, int y){
+    public void translateLocal(int x, int y) {
         //ota pyöriminen huomioon
     }
-    public void rotate(float rot){
-        rotation+=rot;
+    public void rotate(float rot) {
+        rotation += rot;
         hasUpdated = true;
     }
-    public void setTexOffset(float x, float y){
+    public void setTexOffset(float x, float y) {
         texOffset[0] = x;
         texOffset[1] = y;
-        if( sprite != null ){
+        if (sprite != null) {
             sprite.setTexOffset(texOffset);
         }
     }
-    public void append(GameObject child){
+    public void append(GameObject child) {
         children.add(child);
     }
-    public void remove(GameObject child){
+    public void remove(GameObject child) {
         children.remove(child);
     }
-    public void setZindex(){
+    public void setZindex() {
         //toteuta
     }
-    public void update(){
+    public void update() {
         //pelilogiikka
     }
-    public void propagate(){
-        if( !hasUpdated ){
+    public void propagate() {
+        if (!hasUpdated) {
             return;
         }
-        for(GameObject child : children){
+        for (GameObject child : children) {
             child.hasUpdated = true;
-            child.parentX = x+parentX;
-            child.parentY = y+parentY;
+            child.parentX = x + parentX;
+            child.parentY = y + parentY;
             child.parentRotation = rotation;
         }
         hasUpdated = false;
     }
-    private void load(){
-        System.out.println("Loading "+name);
-        if( path != null ){
+    private void load() {
+        System.out.println("Loading " + name);
+        if (path != null) {
             sprite = new Sprite(texLoader, path, origin, scale);
             sprite.setTexOffset(texOffset);
             sprite.setVertexOffset(vertexOffset);
             sprite.setCrop(crop);
         }
-        for(GameObject child : children){
+        for (GameObject child : children) {
             child.load();
         }
         initialized = true;
     }
-    private void _draw(){
-        if(!visible){
+    private void _draw() {
+        if (!visible) {
             return;
         }
-        for(GameObject child : children){
+        for (GameObject child : children) {
             child.draw();
         }
-        if( sprite != null ){
-           sprite.draw(x+parentX, y+parentY, rotation+parentRotation);            
+        if (sprite != null) {
+            sprite.draw(x + parentX, y + parentY, rotation + parentRotation);            
         }
     }
-    public void draw(){
-        if( !initialized ){
-            load();
-        }else if( active ){
+    public void draw() {
+        if (!initialized) {
+            if (texLoader != null) {
+                load();                
+            } else {
+                update();
+                propagate();
+            }
+        } else if (active) {
             update();
             propagate();
             _draw();                
         }
     }
     @Override
-    public GameObject clone(){
+    public GameObject clone() {
         GameObject ret;
-        if( path != null ){
-            ret = new GameObject(name, path, origin, scale){};
-        }else{
-            ret = new GameObject(name){};
+        if (path != null) {
+            ret = new GameObject(name, path, origin, scale) { };
+        } else {
+            ret = new GameObject(name) { };
         }
         ret.setPosition(getTransform());
         return ret;

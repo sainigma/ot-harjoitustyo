@@ -11,5 +11,5 @@
 | 20.11 | 7 | Grafiikantekoa (tykkiassetit)
 | 20.11 | 1 | Skaalan säätö spriteihin, alphatestaus piirtojärjestyksen toteutukseen
 | 23.11 | 5 | Tykkiobjektin eriyttämistä protokoodista, peliobjekti- ja spriteluokan laajennusta.
-| 24.11 | 6 | Tykkiobjektin laajennusta, kontrollit putken nostamiseen ja kääntämiseen. PID ohjain tavoitearvojen saavuttamiseen päivityslogiikalla. Taustaobjektin toteutus, tykin käännön ja taustan synkronointi. Projektin uudelleenjärjestämistä. 
-| yht | 42 | |
+| 24.11 | 9 | Tykkiobjektin laajennusta, kontrollit putken nostamiseen ja kääntämiseen. PID ohjain tavoitearvojen saavuttamiseen päivityslogiikalla. Taustaobjektin toteutus, tykin käännön ja taustan synkronointi. Projektin uudelleenjärjestämistä. Checklistin käyttöönotto, lisätestien kirjoitusta, käyttöliittymän eriyttämistä sovelluslogiikasta.
+| yht | 45 | |

@@ -2,7 +2,6 @@ package game;
 
 
 import game.components.Level;
-import java.util.Random;
 import game.utils.Renderer;
 
 /*
@@ -18,22 +17,20 @@ import game.utils.Renderer;
 
 public class Main {
     Renderer renderer;
-    public void init(){
-        Random rand = new Random();
+    public void init() {
         renderer = new Renderer();
         Level level = new Level("testlevel");        
         renderer.appendToRenderQueue(level);
-        renderer.setBackground(249f/255f, 240f/255f, 223f/255f);
-        //renderer.setBackground(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
+        renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
         run();
     }
-    public void update(){
+    public void update() {
         System.out.println("update");
     }
-    public void run(){
+    public void run() {
         renderer.run();
     }
-    public static void main(String args[]){
+    public static void main(String args[]) {
         System.out.println("Init");
         new Main().init();
     }    

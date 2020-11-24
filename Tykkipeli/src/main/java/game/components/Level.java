@@ -13,7 +13,7 @@ import game.components.templates.Mortar;
  *
  * @author suominka
  */
-public class Level extends GameObject{
+public class Level extends GameObject {
     long start = System.currentTimeMillis();
     
     ViewPort gameView;
@@ -22,29 +22,33 @@ public class Level extends GameObject{
     GameObject background;
     
     private boolean isFinished = false;
-    private float viewportScale = 720f/1080f;    
-    public Level(String name){
+    private float viewportScale = 720f / 1080f;    
+    public Level(String name) {
         super(name);
         init();
     }
     
-    public boolean isFinished(){
+    public boolean isFinished() {
         return isFinished;
     }
     
-    private void init(){
+    private void init() {
         gameView = new ViewPort("game");        
         
-        mortar = new Mortar("mortar",viewportScale);
-        background = new BackgroundCoast("coast",1);
+        mortar = new Mortar("mortar", viewportScale);
+        background = new BackgroundCoast("coast", 1);
         gameView.append(mortar);
         gameView.append(background);
-        //gameView.setScreenShake(2);
         append(gameView);
+        
+        //gameView.setScreenShake(2);
+        mortar.setTrueElevation(0f);
+        mortar.setElevationTarget(60f);
+        mortar.setTraverseTarget(95f);
     }
     
     @Override
-    public void update(){
+    public void update() {
         background.setRotation(mortar.getTraversal());
     }
 }

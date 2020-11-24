@@ -6,9 +6,6 @@
 package game.utils;
 
 import org.lwjgl.opengl.GL11;
-import game.utils.Texture;
-import game.utils.TextureLoader;
-import game.utils.Vector3d;
 
 /**
  *

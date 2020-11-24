@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.controllers;
+package game.logic.controllers;
 
+import game.logic.controllers.Projectile;
 import game.simulations.cases.Ballistics;
 
 /**
@@ -18,7 +19,7 @@ public class Cannon {
     float traversal;
     float temperature;
     
-    public Cannon(){
+    public Cannon() {
         elevation = 0;
         traversal = 0;
         temperature = 20;
@@ -26,14 +27,18 @@ public class Cannon {
         solver = new Ballistics();
     }
     
-    public boolean addProjectile(Projectile newProjectile){
-        if( currentProjectile != null ) return false;
+    public boolean addProjectile(Projectile newProjectile) {
+        if (currentProjectile != null) {
+            return false;
+        }
         currentProjectile = newProjectile;
         return true;
     }
     
-    public boolean fire(){
-        if( currentProjectile == null ) return false;
+    public boolean fire() {
+        if (currentProjectile == null) {
+            return false;
+        }
         currentProjectile = null;
         return true;
     }
