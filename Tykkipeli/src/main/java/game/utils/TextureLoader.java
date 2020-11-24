@@ -34,7 +34,7 @@
  *
  * @author suominka
  */
-package utils;
+package game.utils;
 
 import java.awt.Color;
 import java.awt.Graphics;

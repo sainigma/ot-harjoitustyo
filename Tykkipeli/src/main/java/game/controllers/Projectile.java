@@ -3,16 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package simulations;
+package game.controllers;
 
 /**
  *
  * @author suominka
  */
-import utils.Vector3d;
-public class Parabola extends PhysicsSolver{
-    public Parabola(){
-        super();
-        set(new Vector3d(),new Vector3d(100,100,0),0.0001);
+import game.utils.Vector3d;
+
+public class Projectile {
+    float weight;
+    float frontalArea;
+    float dragCoeff;
+    Vector3d origin;
+    public Projectile(){
     }
 }

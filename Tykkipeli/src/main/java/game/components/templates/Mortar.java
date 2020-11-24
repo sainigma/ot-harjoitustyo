@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package templates;
+package game.components.templates;
 
-import components.GameObject;
-import utils.Vector3d;
+import game.components.GameObject;
+import game.utils.Vector3d;
 
 /**
  *
@@ -16,7 +16,8 @@ public class Mortar extends GameObject{
     private float viewportScale;
     long start = System.currentTimeMillis();
     
-    private float[] gunLimits = {0, 90};
+    private float elevationTarget = 0;
+    private float[] gunLimits = {-22, 65};
     private Vector3d[] cradleLimits = {
         new Vector3d(710, 236),
         new Vector3d(500, 204.5)
@@ -75,16 +76,69 @@ public class Mortar extends GameObject{
                 new float[]{-240,-30}
         );
         append(mount);
+
+        setElevationTarget(60);
+    }
+    
+    public float getElevationFactor(){
+        return (float)Math.cos(Math.PI*(getElevation()-10)/180);
     }
     
     public void setCradle(float t){
-        cradle.setPosition(new Vector3d().lerp(cradleLimits[0], cradleLimits[1], t));
+        cradle.setPosition(new Vector3d().lerp(cradleLimits[0], cradleLimits[1], t*getElevationFactor()));
     }
+    public float getElevation(){
+        return -gun.rotation;
+    }
+    public void setElevationTarget(float r){
+        elevationTarget = r;
+    }
+    private float wheelRot = 0;
+    public void addElevation(float r){
+        setElevation(-wheelRot+r);
+    }
+    private void setElevation(float r){
+        //22min -70max
+        wheelRot = -r;
+        float gearRot = -wheelRot*(12f/60f);
+        float gunRot = -gearRot*(12f/142f);
+        if( getElevation() > gunLimits[0] && getElevation() < gunLimits[1] ){
+            elevationWheel.setRotation(wheelRot);
+            elevationGear.setRotation(gearRot);
+            gun.setRotation(gunRot+22f);            
+        }
+    }
+    private float errorPrev = 0;
+    private float errorSum = 0;
+    private void elevate(){
+        float maxSpeed = 10f;
+        float error =  elevationTarget - getElevation();
+        if( error > 0.1f || error < -0.1f ){
+            float errorSlope = (error - errorPrev)/dt;
+            errorPrev = error;
+            float control = error + 2f*errorSlope;
+            if( control > maxSpeed ){
+                control = maxSpeed;
+            }else if( control < -maxSpeed ){
+                control = -maxSpeed;
+            }
+            addElevation(control);
+        }
+    }
+    
+    float r2 = 0;
     float t2 = 0f;
+    private float dt = 0;
+    private long lastTime = System.nanoTime();
     public void update(){
+        long time = System.nanoTime()/1000000;
+        dt = (float)(time - lastTime);
         float t = (float)(Math.cos((System.currentTimeMillis()-start)*0.001)*0.5f+0.5f);
+        r2 += 10;
         setCradle(t);
+        elevate();
         t2+=0.005f;
         mountGrooves.setTexOffset(t2, 0);
+        lastTime = time;
     }
 }

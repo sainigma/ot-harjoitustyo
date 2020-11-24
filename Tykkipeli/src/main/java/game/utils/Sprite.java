@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package utils;
+package game.utils;
 
 import org.lwjgl.opengl.GL11;
-import utils.Texture;
-import utils.TextureLoader;
-import utils.Vector3d;
+import game.utils.Texture;
+import game.utils.TextureLoader;
+import game.utils.Vector3d;
 
 /**
  *

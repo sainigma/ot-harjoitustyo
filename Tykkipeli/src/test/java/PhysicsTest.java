@@ -10,10 +10,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import simulations.Ballistics;
-import simulations.Parabola;
-import simulations.PhysicsSolver;
-import utils.Vector3d;
+import game.simulations.cases.Ballistics;
+import game.simulations.cases.Parabola;
+import game.simulations.PhysicsSolver;
+import game.utils.Vector3d;
 
 /**
  *

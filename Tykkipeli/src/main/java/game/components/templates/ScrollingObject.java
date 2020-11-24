@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package components;
+package game.components.templates;
 
-import utils.Vector3d;
+import game.components.GameObject;
+import game.utils.Vector3d;
 
 /**
  *

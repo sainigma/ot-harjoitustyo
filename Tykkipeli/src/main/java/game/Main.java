@@ -1,7 +1,9 @@
+package game;
 
-import components.Level;
+
+import game.components.Level;
 import java.util.Random;
-import utils.Renderer;
+import game.utils.Renderer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

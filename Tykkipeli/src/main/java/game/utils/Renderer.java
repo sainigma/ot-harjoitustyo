@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package utils;
+package game.utils;
 
-import components.GameObject;
+import game.components.GameObject;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;

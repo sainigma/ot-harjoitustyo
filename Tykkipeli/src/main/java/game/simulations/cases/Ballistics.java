@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package simulations;
+package game.simulations.cases;
 
-import simulations.PhysicsSolver;
+import game.simulations.PhysicsSolver;
+import game.simulations.PhysicsSolver;
 
 /**
  *

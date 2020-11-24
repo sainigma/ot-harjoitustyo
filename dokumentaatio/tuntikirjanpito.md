@@ -11,4 +11,5 @@
 | 20.11 | 7 | Grafiikantekoa (tykkiassetit)
 | 20.11 | 1 | Skaalan säätö spriteihin, alphatestaus piirtojärjestyksen toteutukseen
 | 23.11 | 5 | Tykkiobjektin eriyttämistä protokoodista, peliobjekti- ja spriteluokan laajennusta.
-| yht | 36 | |
+| 24.11 | 2 | Tykkiobjektin laajennusta, kontrollien ja animaatioiden alustusta. Projektin uudelleenjärjestämistä
+| yht | 38 | |

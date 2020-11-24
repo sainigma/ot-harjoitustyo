@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package components;
+package game.components.templates;
 
+import game.utils.Vector3d;
+import game.components.GameObject;
+import game.components.GameObject;
 import java.util.Random;
 
 /**
@@ -23,19 +26,17 @@ public class ViewPort extends GameObject{
     @Override
     public void update(){
         if(screenShake){
-            hasUpdated = true;
-            x=(rand.nextFloat()*4*screenShakeIntensity);
-            y=(rand.nextFloat()*2*screenShakeIntensity);
-        }else if(x!=0 || y!=0 || rotation!=0f){
-            x=0;
-            y=0;
-            rotation=0f;
+            setPosition(new Vector3d(
+                    (rand.nextFloat()*4*screenShakeIntensity),
+                    (rand.nextFloat()*2*screenShakeIntensity)
+            ));
         }
     }
     public void setScreenShake(float intensity){
         screenShakeIntensity = intensity;
         if( intensity < 0.1 ){
             screenShake = false;
+            setPosition(new Vector3d());
         }else{
             screenShake = true;
         }

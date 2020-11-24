@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controllers;
+package game.controllers;
 
-import components.Projectile;
-import simulations.Ballistics;
+import game.simulations.cases.Ballistics;
 
 /**
  *

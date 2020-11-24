@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package components;
+package game.components;
 
 import java.util.ArrayList;
-import utils.Sprite;
-import utils.TextureLoader;
-import utils.Vector3d;
+import game.utils.Sprite;
+import game.utils.TextureLoader;
+import game.utils.Vector3d;
 
 /**
  *
@@ -19,15 +19,15 @@ public abstract class GameObject {
     private Sprite sprite;
     private String path;
     private String name;
-    float x,y,rotation;
-    float[] texOffset = {0,0};
-    float[][] vertexOffset = {{0,0},{0,0},{0,0},{0,0}};
-    float scale = 1;
+    public float x,y,rotation;
+    private float[] texOffset = {0,0};
+    private float[][] vertexOffset = {{0,0},{0,0},{0,0},{0,0}};
+    private float scale = 1;
     public float parentX,parentY,parentRotation;
     private boolean visible = true;
     private boolean initialized = false;
     private boolean active = true;
-    boolean hasUpdated = true;
+    public boolean hasUpdated = true;
     private TextureLoader texLoader;
     private Vector3d origin = new Vector3d(0);
     
@@ -90,10 +90,25 @@ public abstract class GameObject {
         }
         load();
     }
+    public void setHasUpdated(boolean newState){
+        hasUpdated = newState;
+    }
+    public void setTransform(Vector3d transform){
+        x = (float)transform.x;
+        y = (float)transform.y;
+        rotation = (float)transform.z;
+    }
     public void setPosition(Vector3d position){
         this.x = (float)position.x;
         this.y = (float)position.y;
         hasUpdated = true;
+    }
+    public void setRotation(float r){
+        rotation = r;
+        hasUpdated = true;
+    }
+    public Vector3d getTransform(){
+        return new Vector3d(x,y,rotation);
     }
     public Vector3d getPosition(){
         return new Vector3d(x,y);
@@ -181,7 +196,7 @@ public abstract class GameObject {
         }else{
             ret = new GameObject(name){};
         }
-        ret.setPosition(getPosition());
+        ret.setPosition(getTransform());
         return ret;
     }
 }
