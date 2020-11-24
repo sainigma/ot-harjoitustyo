@@ -91,7 +91,7 @@ public class Mortar extends GameObject {
         );
 
         //setElevationTarget(60);
-        setTraversal(90);
+        setTraversal(45);
         //setTraverseTarget(95);
     }
     
@@ -161,7 +161,7 @@ public class Mortar extends GameObject {
     }
     private void setTraversal(float r) {
         traversal = r;
-        mountGrooves.setTexOffset(getTraversal() / 90, 0);
+        mountGrooves.setTexOffset(getTraversal() / 60, 0);
     }
     private float getLocalTraversal() {
         return traversal;

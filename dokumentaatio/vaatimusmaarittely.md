@@ -6,6 +6,30 @@ Perinteinen tykkipeli jossa pelaaja yrittää osua maaliin tykin kulmaa ja ammuk
 
 Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia parametrejä muuttamalla. Pelin haastavuutta voidaan varioida sekä simulaation parametrejä, esim. tuulivektoria, muuttamalla, että tekemällä maaleista liikkuvia. Pelin voittoehtona on maaliin osuminen, häviöehtoina taas ammusten loppuminen tai maalin pääseminen liian lähelle.
 
+## Tehtynä
+
+### Näkymät/grafiikka
+
+- Erillisiä näkymiä voi luoda
+- Peliobjektien ryhmityksen/periytyvyyden toteutus, piirtologiikka ja piirtojärjestys
+- Tykin/mörssärin kontrollit, tavoitekulman ja -suunnan voi asettaa ja PID-säädin animoi tykin kulmiin (paikoitellen buginen)
+
+### Fysiikkasolveri
+
+- Valmis
+
+### Projektiilin lentorata
+
+- Yksinkertainen toteutus kiinteällä kiihtyvyydellä
+
+## Kesken
+
+- Pääpelilogiikka
+- Käyttäjän syötteiden kuuntelu
+- Lentoradan dynaaminen lasku
+- Karttanäkymä
+- Hiscorenäkymä
+
 ## Pelisilmukka
 ![](./assets/gameplayloop.png)
 

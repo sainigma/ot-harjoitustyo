@@ -44,7 +44,7 @@ public class Level extends GameObject {
         //gameView.setScreenShake(2);
         mortar.setTrueElevation(0f);
         mortar.setElevationTarget(60f);
-        mortar.setTraverseTarget(95f);
+        mortar.setTraverseTarget(120f);
     }
     
     @Override

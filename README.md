@@ -32,5 +32,6 @@ Tykkipeli kansion juuressa:
 
     mvn test
     mvn test jacoco:report
+    mvn jxr:jxr checkstyle:checkstyle
 
 Generoitua kattavuusraporttia voi tarkastella polussa Tykkipeli/target/site/jacoco/index.html
