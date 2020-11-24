@@ -20,6 +20,7 @@ public abstract class GameObject {
     private String path;
     private String name;
     public float x,y,rotation;
+    private int[] crop = {-1,-1};
     private float[] texOffset = {0,0};
     private float[][] vertexOffset = {{0,0},{0,0},{0,0},{0,0}};
     private float scale = 1;
@@ -74,6 +75,7 @@ public abstract class GameObject {
         parentY=0;
         parentRotation=0;
     }
+    
     public void setVertexOffset(float[] topLeft, float[] bottomLeft, float[] topRight, float[] bottomRight){
         vertexOffset[0] = topLeft;
         vertexOffset[1] = bottomLeft;
@@ -89,6 +91,13 @@ public abstract class GameObject {
             child.setTextureLoader(loader);
         }
         load();
+    }
+    public void setCrop(int x, int y){
+        crop[0] = x;
+        crop[1] = y;
+        if(sprite != null){
+            sprite.setCrop(crop);
+        }
     }
     public void setHasUpdated(boolean newState){
         hasUpdated = newState;
@@ -162,6 +171,7 @@ public abstract class GameObject {
             sprite = new Sprite(texLoader, path, origin, scale);
             sprite.setTexOffset(texOffset);
             sprite.setVertexOffset(vertexOffset);
+            sprite.setCrop(crop);
         }
         for(GameObject child : children){
             child.load();

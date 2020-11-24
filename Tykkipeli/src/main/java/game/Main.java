@@ -23,7 +23,7 @@ public class Main {
         renderer = new Renderer();
         Level level = new Level("testlevel");        
         renderer.appendToRenderQueue(level);
-        renderer.setBackground(1, 1, 1);
+        renderer.setBackground(249f/255f, 240f/255f, 223f/255f);
         //renderer.setBackground(rand.nextFloat(), rand.nextFloat(), rand.nextFloat());
         run();
     }

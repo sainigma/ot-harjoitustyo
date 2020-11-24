@@ -16,7 +16,7 @@ import game.utils.Vector3d;
  */
 public class Sprite {
     Texture texture;
-    int width,height;
+    int width=-1,height=-1;
     float scale = 1;
     float[] texOffset = {0,0};
     float[][] vertexOffset = {{0,0},{0,0},{0,0},{0,0}};
@@ -26,9 +26,10 @@ public class Sprite {
     
     private void _load(TextureLoader loader, String path, Vector3d origin){
         texture = loader.loadTexture("./assets/"+path);
-        width = texture.getImageWidth();
-        height = texture.getImageHeight();
-        
+        if( width == -1 ){
+            width = texture.getImageWidth();
+            height = texture.getImageHeight();
+        }
         //float texW = texture.getWidth();
         //float texH = texture.getHeight();
         //float [][] u = {{0,0},{0,texH},{texW,texH},{texW,0}};
@@ -37,6 +38,13 @@ public class Sprite {
         vertices = v;
         uvmap = u;
         this.origin = origin;
+    }
+    
+    public void setCrop(int[] arr){
+        if( arr[0] > 0 && arr[1] > 0 ){
+            width = arr[0];
+            height = arr[1];            
+        }
     }
     
     public Sprite(TextureLoader loader, String path, Vector3d origin, float scale){

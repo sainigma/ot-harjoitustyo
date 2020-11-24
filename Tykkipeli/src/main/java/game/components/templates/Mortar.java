@@ -6,6 +6,7 @@
 package game.components.templates;
 
 import game.components.GameObject;
+import game.utils.PID;
 import game.utils.Vector3d;
 
 /**
@@ -16,7 +17,16 @@ public class Mortar extends GameObject{
     private float viewportScale;
     long start = System.currentTimeMillis();
     
+    private float elevationMaxSpeed = 10f;
+    private float traversalMaxSpeed = 0.05f;
     private float elevationTarget = 0;
+    private float traverseTarget = 0;
+    private PID elevationControl = new PID(1f,0,2f);
+    private PID traversalControl = new PID(0.05f,0f,0.5f);
+
+    private float traversal = 0;
+    private float elevationWheelRot = 0;
+
     private float[] gunLimits = {-22, 65};
     private Vector3d[] cradleLimits = {
         new Vector3d(710, 236),
@@ -28,10 +38,8 @@ public class Mortar extends GameObject{
     private GameObject elevationGear;
     private GameObject elevationWheel;
     private GameObject cradle;
-    
     private GameObject craneWheel;
     private GameObject craneGear;
-
     private GameObject mountGrooves;
     
     public Mortar(String name, float viewportScale){
@@ -40,8 +48,7 @@ public class Mortar extends GameObject{
         init();
     }
     
-    private void init(){
-        
+    private void init(){   
         mount = new GameObject("mortarstand","mortar/jalusta.png",new Vector3d(0), viewportScale){};
         mountGrooves = new GameObject("mortargrooves","mortar/urat.png",new Vector3d(512,512,0), viewportScale*0.58f){};
         gun = new GameObject("mortartube","mortar/tykki.png",new Vector3d(512,512,1), viewportScale){};
@@ -70,14 +77,55 @@ public class Mortar extends GameObject{
 
         mountGrooves.translate(997*viewportScale, (730)*viewportScale);
         mountGrooves.setVertexOffset(
-                new float[]{240,-30},
+                new float[]{235,-30},
                 new float[]{-220,80},
                 new float[]{220,80},
-                new float[]{-240,-30}
+                new float[]{-235,-30}
         );
         append(mount);
-
         setElevationTarget(60);
+        setTraversal(90);
+        setTraverseTarget(95);
+    }
+    
+    private float getControl(PID controller, float target, float current, float maxSpeed){
+        float error = target - current;
+        if( Math.abs(error) > 0.1f ){
+            float control = (float)controller.getControl(error, dt);
+            if( control > maxSpeed ){
+                control = maxSpeed;
+            }else if( control < -maxSpeed ){
+                control = maxSpeed;
+            }
+            return control;
+        }else{
+            controller.deactivate();
+            return 0;
+        }
+    }
+    
+    private void elevate(){
+        if( !elevationControl.isActive() ){
+            return;
+        }
+        addElevation(getControl(
+                elevationControl,
+                elevationTarget,
+                getElevation(),
+                elevationMaxSpeed
+        ));
+    }
+    
+    private void traverse(){
+        if( !traversalControl.isActive() ){
+            return;
+        }
+        addTraversal(getControl(
+                traversalControl,
+                traverseTarget,
+                getLocalTraversal(),
+                traversalMaxSpeed
+        ));
     }
     
     public float getElevationFactor(){
@@ -91,54 +139,53 @@ public class Mortar extends GameObject{
         return -gun.rotation;
     }
     public void setElevationTarget(float r){
-        elevationTarget = r;
+        if( r >= gunLimits[0] && r <= gunLimits[1]){
+            elevationTarget = r;            
+            elevationControl.activate();
+        }
     }
-    private float wheelRot = 0;
+    public void setTraverseTarget(float r){
+        traverseTarget = r;
+        traversalControl.activate();
+    }
+
+    public void addTraversal(float r){
+        setTraversal(traversal+r);
+    }
+    private void setTraversal(float r){
+        traversal = r;
+        mountGrooves.setTexOffset(getTraversal()/90, 0);
+    }
+    private float getLocalTraversal(){
+        return traversal;
+    }
+    public float getTraversal(){
+        return traversal % 360;
+    }
+
     public void addElevation(float r){
-        setElevation(-wheelRot+r);
+        setElevation(-elevationWheelRot+r);
     }
     private void setElevation(float r){
-        //22min -70max
-        wheelRot = -r;
-        float gearRot = -wheelRot*(12f/60f);
+        elevationWheelRot = -r;
+        float gearRot = -elevationWheelRot*(12f/60f);
         float gunRot = -gearRot*(12f/142f);
         if( getElevation() > gunLimits[0] && getElevation() < gunLimits[1] ){
-            elevationWheel.setRotation(wheelRot);
+            elevationWheel.setRotation(elevationWheelRot);
             elevationGear.setRotation(gearRot);
             gun.setRotation(gunRot+22f);            
         }
     }
-    private float errorPrev = 0;
-    private float errorSum = 0;
-    private void elevate(){
-        float maxSpeed = 10f;
-        float error =  elevationTarget - getElevation();
-        if( error > 0.1f || error < -0.1f ){
-            float errorSlope = (error - errorPrev)/dt;
-            errorPrev = error;
-            float control = error + 2f*errorSlope;
-            if( control > maxSpeed ){
-                control = maxSpeed;
-            }else if( control < -maxSpeed ){
-                control = -maxSpeed;
-            }
-            addElevation(control);
-        }
-    }
     
-    float r2 = 0;
-    float t2 = 0f;
-    private float dt = 0;
+    private double dt = 0;
     private long lastTime = System.nanoTime();
     public void update(){
         long time = System.nanoTime()/1000000;
-        dt = (float)(time - lastTime);
+        dt = (double)(time - lastTime);
         float t = (float)(Math.cos((System.currentTimeMillis()-start)*0.001)*0.5f+0.5f);
-        r2 += 10;
         setCradle(t);
         elevate();
-        t2+=0.005f;
-        mountGrooves.setTexOffset(t2, 0);
+        traverse();
         lastTime = time;
     }
 }
