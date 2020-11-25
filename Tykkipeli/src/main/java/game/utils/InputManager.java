@@ -17,10 +17,10 @@ import org.lwjgl.glfw.GLFWKeyCallback;
  */
 public class InputManager {
     long window;
-    HashMap <Integer, String[]> keyMap;
-    HashMap <String, Boolean> states;
+    HashMap<Integer, String[]> keyMap;
+    HashMap<String, Boolean> states;
     
-    Set <String> keyList;
+    Set<String> keyList;
     
     public InputManager(long window) {
         this.window = window;
@@ -29,10 +29,10 @@ public class InputManager {
         keyList = new HashSet<>();
         setKeys();
         collectKeys();
-        glfwSetKeyCallback(window, new GLFWKeyCallback(){
+        glfwSetKeyCallback(window, new GLFWKeyCallback() {
             @Override
-            public void invoke (long window, int key, int scancode, int action, int mods) {
-                if( !keyMap.containsKey(key) ){
+            public void invoke(long window, int key, int scancode, int action, int mods) {
+                if (!keyMap.containsKey(key)) {
                     return;
                 }
                 String[] keys = keyMap.get(key);
@@ -48,21 +48,21 @@ public class InputManager {
                     return;
                 }
                 for (String k : keys) {
-                    System.out.println(k+" "+newState);
+                    System.out.println(k + " " + newState);
                     states.put(k, newState);
                 }
             }
         });
     }
-    private void setKeys(){
+    private void setKeys() {
         //korvaa tiedostonlukijalla
-        keyMap.put(GLFW_KEY_UP, new String[]{"up","gunUp"});
-        keyMap.put(GLFW_KEY_DOWN, new String[]{"down","gunDown"});
-        keyMap.put(GLFW_KEY_LEFT, new String[]{"left","gunLeft"});
-        keyMap.put(GLFW_KEY_RIGHT, new String[]{"right","gunRight"});
+        keyMap.put(GLFW_KEY_UP, new String[]{"up", "gunUp"});
+        keyMap.put(GLFW_KEY_DOWN, new String[]{"down", "gunDown"});
+        keyMap.put(GLFW_KEY_LEFT, new String[]{"left", "gunLeft"});
+        keyMap.put(GLFW_KEY_RIGHT, new String[]{"right", "gunRight"});
         
-        keyMap.put(GLFW_KEY_SPACE, new String[]{"ok","fire"});
-        keyMap.put(GLFW_KEY_ENTER, new String[]{"ok","fire"});
+        keyMap.put(GLFW_KEY_SPACE, new String[]{"ok", "fire"});
+        keyMap.put(GLFW_KEY_ENTER, new String[]{"ok", "fire"});
         keyMap.put(GLFW_KEY_BACKSPACE, new String[]{"cancel"});
         
         keyMap.put(GLFW_KEY_R, new String[]{"reload"});
@@ -71,7 +71,7 @@ public class InputManager {
         keyMap.put(GLFW_KEY_LEFT_CONTROL, new String[]{"dawdle"});
     }
     
-    private void collectKeys(){
+    private void collectKeys() {
         for (int key : keyMap.keySet()) {
             String [] keys = keyMap.get(key);
             for (String trueKey : keys) {

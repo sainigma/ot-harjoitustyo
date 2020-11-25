@@ -40,7 +40,7 @@ public class BaseGame {
         if (inputs == null) {
             return;
         }
-        float framerateCoeff = (float)(deltatimeMillis / 16f); //1 when 60fps
+        float framerateCoeff = (float) (deltatimeMillis / 16f); //1 when 60fps
         float speedModifier = framerateCoeff;
         if (inputs.keyDown("hasten")) {
             speedModifier *= 2f;
@@ -49,7 +49,7 @@ public class BaseGame {
         }
         if (inputs.keyDown("gunUp")) {
             level.mortar.addToElevationTarget(0.1f * speedModifier);
-        } else if (inputs.keyDown("gunDown")){
+        } else if (inputs.keyDown("gunDown")) {
             level.mortar.addToElevationTarget(-0.1f * speedModifier);
         }
     }
