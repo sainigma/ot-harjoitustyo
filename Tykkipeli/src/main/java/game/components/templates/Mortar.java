@@ -92,6 +92,7 @@ public class Mortar extends GameObject {
 
         //setElevationTarget(60);
         setTraversal(45);
+        setCradle(0);
         //setTraverseTarget(95);
     }
     
@@ -197,10 +198,14 @@ public class Mortar extends GameObject {
     public void update() {
         long time = System.nanoTime() / 1000000;
         dt = (double) (time - lastTime);
-        float t = (float) (Math.cos((System.currentTimeMillis() - start) * 0.001) * 0.5f + 0.5f);
-        setCradle(t);
+        //float t = (float) (Math.cos((System.currentTimeMillis() - start) * 0.001) * 0.5f + 0.5f);
+        //setCradle(t);
         elevate();
         traverse();
         lastTime = time;
+    }
+
+    public void addToElevationTarget(float f) {
+        setElevationTarget(elevationTarget + f);
     }
 }

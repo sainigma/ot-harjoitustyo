@@ -2,6 +2,7 @@ package game;
 
 
 import game.components.Level;
+import game.logic.BaseGame;
 import game.utils.Renderer;
 
 /*
@@ -18,8 +19,9 @@ import game.utils.Renderer;
 public class Main {
     Renderer renderer;
     public void init() {
-        renderer = new Renderer();
-        Level level = new Level("testlevel");        
+        Level level = new Level("testlevel");
+        BaseGame logic = new BaseGame(level);
+        renderer = new Renderer(logic);
         renderer.appendToRenderQueue(level);
         renderer.setBackground(0f / 255f, 240f / 255f, 223f / 255f);
         run();

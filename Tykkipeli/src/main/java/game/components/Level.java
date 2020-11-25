@@ -16,10 +16,10 @@ import game.components.templates.Mortar;
 public class Level extends GameObject {
     long start = System.currentTimeMillis();
     
-    ViewPort gameView;
-    ViewPort mapView;
-    Mortar mortar;
-    GameObject background;
+    public ViewPort gameView;
+    public ViewPort mapView;
+    public Mortar mortar;
+    public GameObject background;
     
     private boolean isFinished = false;
     private float viewportScale = 720f / 1080f;    
@@ -43,8 +43,8 @@ public class Level extends GameObject {
         
         //gameView.setScreenShake(2);
         mortar.setTrueElevation(0f);
-        mortar.setElevationTarget(60f);
-        mortar.setTraverseTarget(120f);
+        //mortar.setElevationTarget(60f);
+        //mortar.setTraverseTarget(120f);
     }
     
     @Override

@@ -6,6 +6,7 @@
 package game.utils;
 
 import game.components.GameObject;
+import game.logic.BaseGame;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -51,17 +52,20 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class Renderer {
     ArrayList<GameObject> objects;
+    BaseGame logic = null;
+    InputManager inputs;
     float[] clearColor = new float[]{0,0,0,1}; 
     private TextureLoader texLoader;
     private long window;
     private int resoX,resoY;
     String windowname;
     
-    public Renderer(){
+    public Renderer(BaseGame logic){
         resoX = 1280;
         resoY = 720;
         windowname = "Tykkipeli";
         objects = new ArrayList<>();
+        this.logic = logic;
     }
     
     public Renderer(int resolutionX, int resolutionY, String title){
@@ -69,6 +73,12 @@ public class Renderer {
         resoY = resolutionY;
         windowname = title;
         objects = new ArrayList<>();
+    }
+    
+    public void setLogic(BaseGame logic){
+        this.logic = logic;
+        logic.setInputManager(inputs);
+        logic.setRenderer(this);
     }
     
     public void appendToRenderQueue(GameObject object){
@@ -100,6 +110,12 @@ public class Renderer {
         for(GameObject object : objects){
             object.draw();
         }
+        if (logic != null) {
+            logic.update();
+        }
+        if (inputs != null) {
+            inputs.update();
+        }
     }
     
     private void init(){
@@ -127,11 +143,13 @@ public class Renderer {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_DEPTH_TEST);
         glAlphaFunc(GL_GREATER, 0.5f);
-        //glDisable(GL_DEPTH_TEST);
         glMatrixMode(GL_PROJECTION);
         glOrtho(0, resoX, resoY, 0, 10, -10);
         glClearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
+        
         texLoader = new TextureLoader();
+        inputs = new InputManager(window);
+        logic.setInputManager(inputs);
     }
     
     private void loop(){

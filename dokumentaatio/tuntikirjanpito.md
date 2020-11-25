@@ -12,4 +12,5 @@
 | 20.11 | 1 | Skaalan säätö spriteihin, alphatestaus piirtojärjestyksen toteutukseen
 | 23.11 | 5 | Tykkiobjektin eriyttämistä protokoodista, peliobjekti- ja spriteluokan laajennusta.
 | 24.11 | 9 | Tykkiobjektin laajennusta, kontrollit putken nostamiseen ja kääntämiseen. PID ohjain tavoitearvojen saavuttamiseen päivityslogiikalla. Taustaobjektin toteutus, tykin käännön ja taustan synkronointi. Projektin uudelleenjärjestämistä. Checklistin käyttöönotto, lisätestien kirjoitusta, käyttöliittymän eriyttämistä sovelluslogiikasta.
-| yht | 45 | |
+| 25.11 | 2 | Refaktorointia, pääpelilogiikkaluokan työstö aloitettu. Näppäinten kuuntelulle oma luokka
+| yht | 47 | |
