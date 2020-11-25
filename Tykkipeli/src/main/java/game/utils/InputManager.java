@@ -48,7 +48,7 @@ public class InputManager {
                     return;
                 }
                 for (String k : keys) {
-                    System.out.println(k + " " + newState);
+                    //System.out.println(k + " " + newState);
                     states.put(k, newState);
                 }
             }

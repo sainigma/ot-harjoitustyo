@@ -13,13 +13,15 @@ public class PID {
     private float pFactor;
     private float dFactor;
     private float iFactor;
-    
+    private float timeMultiplier;
     private boolean active = false;
     
-    public PID(float p, float i, float d) {
+    //use timeMultiplier 0.001 for true pid
+    public PID(float p, float i, float d, float timeMultiplier) {
         pFactor = p;
         iFactor = i;
         dFactor = d;
+        this.timeMultiplier = timeMultiplier;
     }
     
     private double errorPrev;
@@ -27,12 +29,16 @@ public class PID {
     private double control;
     
     private void update(float error, double dt) {
+        dt *= timeMultiplier;
         errorSum += error * dt;
         double errorSlope = (error - errorPrev) / dt;
         control = pFactor * error + iFactor * errorSum + dFactor * errorSlope;
         errorPrev = error;
     }
     public double getControl(float error, double dt) {
+        if (!active) {
+            return 0f;
+        }
         update(error, dt);
         return control;
     }

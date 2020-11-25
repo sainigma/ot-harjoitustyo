@@ -22,19 +22,24 @@ public class GameObjectTest {
     public void setUp() {
         mortar = new Mortar("mortar", 1);
     }
-    private boolean testElevation(float target) {
-        float timer=0;
-        float maxTime=60;
-        mortar.setTrueElevation(0f);
+    private void sleep(double target){
+        long start = System.nanoTime() / 1000000;
+        long now = start;
+        while ((double) (now - start) < target) {
+            now = System.nanoTime() / 1000000;
+        }
+    }
+    private boolean testElevation(float target, float maxTime) {
+        float updates=0;
         mortar.setElevationTarget(target);
-        float initialElevation = mortar.getElevation();
-        while(timer < maxTime){
-            mortar.update();
-            timer+=16f/1000f;
+        while(updates < 60*maxTime){
+            mortar.forcedUpdate(16f);
+            //sleep(16f);
+            updates+=1;
         }
         float finalElevation = mortar.getElevation();
         System.out.println(finalElevation);
-        if( initialElevation == 0 && Math.abs(finalElevation-target)<1f ) {
+        if( Math.abs(finalElevation-target) < 5f ) {
             return true;
         }
         return false;
@@ -42,15 +47,23 @@ public class GameObjectTest {
     @Test
     public void elevationUpwards(){
         System.out.println("Testing mortar elevation PID controller with positive target");
-        assertTrue(testElevation(60f));
+        mortar.setTrueElevation(0f);
+        assertTrue(testElevation(60f, 30f));
     }
-    /* PID controller code is still work in progress
     @Test
     public void elevationDownwards(){
         System.out.println("Testing mortar elevation PID controller with negative target");
-        assertTrue(testElevation(-1f));
+        mortar.setTrueElevation(0f);
+        assertTrue(testElevation(-20f, 30f));
     }
-    */
+    @Test
+    public void elevationFullRange(){
+        System.out.println("Testing that mortar can move to minimum elevation after moving to max elevation");
+        mortar.setTrueElevation(0f);
+        boolean test1 = testElevation(60f, 30f);
+        boolean test2 = testElevation(-20f, 60f);
+        assertTrue(test1 && test2);
+    }
     private boolean _testElevationSetter(float elevation){
         mortar.setTrueElevation(elevation);
         mortar.addElevation(0.5f);

@@ -21,8 +21,8 @@ public class Mortar extends GameObject {
     private float traversalMaxSpeed = 0.05f;
     private float elevationTarget = 0;
     private float traverseTarget = 0;
-    private PID elevationControl = new PID(1f, 0, 2f);
-    private PID traversalControl = new PID(0.05f, 0f, 0.5f);
+    private PID elevationControl = new PID(1f, 0f, 2f, 1f);
+    private PID traversalControl = new PID(0.05f, 0f, 0.5f, 0.001f);
 
     private float traversal = 0;
     private float elevationWheelRot = 0;
@@ -98,18 +98,17 @@ public class Mortar extends GameObject {
     
     private float getControl(PID controller, float target, float current, float maxSpeed) {
         float error = target - current;
-        if (Math.abs(error) > 0.1f) {
-            float control = (float) controller.getControl(error, dt);
-            if (control > maxSpeed) {
-                control = maxSpeed;
-            } else if (control < -maxSpeed) { 
-                control = maxSpeed;
-            }
-            return control;
-        } else { 
-            controller.deactivate();
-            return 0;
+        float control = (float) controller.getControl(error, dt);
+        if (control > maxSpeed) {
+            control = maxSpeed;
+        } else if (control < -maxSpeed) { 
+            control = -maxSpeed;
         }
+        //System.out.println(control);
+        if (Math.abs(control) < 0.1f) {
+            controller.deactivate();
+        }
+        return control;
     }
     
     private void elevate() {
@@ -148,9 +147,13 @@ public class Mortar extends GameObject {
     }
     public void setElevationTarget(float r) {
         if (r >= gunLimits[0] && r <= gunLimits[1]) {
-            elevationTarget = r;            
-            elevationControl.activate();
+            elevationTarget = r;
+        } else if (r > gunLimits[1]) {
+            elevationTarget = gunLimits[1];
+        } else if (r < gunLimits[0]) {
+            elevationTarget = gunLimits[0];
         }
+        elevationControl.activate();
     }
     public void setTraverseTarget(float r) {
         traverseTarget = r;
@@ -173,6 +176,7 @@ public class Mortar extends GameObject {
 
     public void addElevation(float r) {
         setElevation(-elevationWheelRot + r);
+        //System.out.println(elevationTarget + " " + getElevation());
     }
     public void setTrueElevation(float r) {
         float gunRot = -r;
@@ -196,13 +200,19 @@ public class Mortar extends GameObject {
     private double dt = 0;
     private long lastTime = System.nanoTime();
     public void update() {
-        long time = System.nanoTime() / 1000000;
-        dt = (double) (time - lastTime);
+        long time = System.nanoTime();
+        dt = (double) (time - lastTime) / 1000000;
+        //System.out.println(dt);
         //float t = (float) (Math.cos((System.currentTimeMillis() - start) * 0.001) * 0.5f + 0.5f);
         //setCradle(t);
         elevate();
         traverse();
         lastTime = time;
+    }
+    public void forcedUpdate(double deltatime){
+        dt = deltatime;
+        elevate();
+        traverse();
     }
 
     public void addToElevationTarget(float f) {

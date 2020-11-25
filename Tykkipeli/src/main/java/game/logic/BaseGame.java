@@ -40,7 +40,7 @@ public class BaseGame {
         if (inputs == null) {
             return;
         }
-        float framerateCoeff = (float) (deltatimeMillis / 16f); //1 when 60fps
+        float framerateCoeff = (float) (16f / deltatimeMillis); //1 when 60fps
         float speedModifier = framerateCoeff;
         if (inputs.keyDown("hasten")) {
             speedModifier *= 2f;
