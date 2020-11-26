@@ -20,6 +20,13 @@ public class Animator {
     private int currentFrame;
     private double startTime;
     
+    public Animator() {
+        activeClips = new HashSet<>();
+        animations = new HashMap<>();
+        bones = new HashMap<>();
+        drivers = new HashMap<>();
+    }
+    
     public void loadAnimation(String path) {
         Animation newAnimation = new Animation(path);
         animations.put(path, newAnimation);
@@ -50,6 +57,11 @@ public class Animator {
     
     private void _animate(Animation animation, double deltatime) {
         
+        for (String name : drivers.keySet()) {
+            Frame currentFrame = animation.getDriverFrame(name);
+            drivers.get(name).drive(name, currentFrame.value);
+        }
+        
         if (!animation.isPlaying()) {
             activeClips.remove(animation);
         }
@@ -63,6 +75,7 @@ public class Animator {
                 } else {
                     _animate(animation, deltatime);
                 }
+                animation.advance();
             }
         }
     }

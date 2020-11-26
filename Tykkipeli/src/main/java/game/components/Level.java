@@ -50,6 +50,6 @@ public class Level extends GameObject {
     @Override
     public void update() {
         background.setRotation(mortar.getTraversal());
-        System.out.println(mortar.getLocalTraversal());
+        //System.out.println(mortar.getLocalTraversal());
     }
 }

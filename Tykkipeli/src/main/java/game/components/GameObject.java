@@ -92,6 +92,8 @@ public abstract class GameObject {
         }
         load();
     }
+    public void drive(String target, double value) {
+    }
     public void setCrop(int x, int y) {
         crop[0] = x;
         crop[1] = y;

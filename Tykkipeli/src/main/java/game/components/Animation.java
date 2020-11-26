@@ -20,61 +20,37 @@ import org.json.*;
  * @author suominka
  */
 public class Animation {
-    private class Frame {
-        public int frame = 0;
-        public float position[] = {0, 0};
-        public double value = 0;
-        
-        public Frame(int frame, double value) {
-            this.frame = frame;
-            this.value = value;
-        }
-        
-        public Frame(int frame, float position[]) {
-            this.frame = frame;
-            this.position[0] = position[0];
-            this.position[1] = position[1];
-        }
-    }
     
-    private class Clip {
-        private int index = 0;
-        private int current = 0;
-        private int next = 0;
-        private ArrayList<Frame> frames;
-        
-        public Frame get(int frame) {
-            return null;
-        }
-        public void addFrame(Frame frame) {
-            frames.add(frame);
-        }
-    }
-    
-    private double framerate = 24;
-    private int frames = 0;
+    private String name;
+    private double framerate = 60;
+    private int length = 0;
     private boolean linearInterpolation = false;
-    private int currentIndex = 0;
+    private int currentFrame = 0;
     private boolean playing = false;
     private boolean loop = false;
     private HashMap<String, Clip> driverClips;
     
     public Animation(String path) {
-        loadAnimation(path);
+        driverClips = new HashMap<>();
+        name = path;
+        loadAnimation("assets/animations/" + path + ".json");
     }
     
     private void loadClips(HashMap clips, JSONObject data) {
         for (String key : data.keySet()) {
-            System.out.println(key);
             Clip clip = new Clip();
+            clip.setLinearInterpolation(linearInterpolation);
+            driverClips.put(key, clip);
             JSONArray frames = data.getJSONArray(key);
             for (Object frame : frames) {
                 JSONArray framearr = (JSONArray) frame;
                 if (framearr.length() == 2) {
                     Frame newFrame = new Frame(framearr.getInt(0), framearr.getDouble(1));
+                    clip.addFrame(newFrame);
                 } else if (framearr.length() == 3) {
                     float values[] = {framearr.getFloat(1), framearr.getFloat(2)};
                     Frame newFrame = new Frame(framearr.getInt(0), values);
+                    clip.addFrame(newFrame);
                 }
             }
         }
@@ -84,13 +60,12 @@ public class Animation {
         try {
             String raw = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
             JSONObject obj = new JSONObject(raw);
-            System.out.println(obj.keySet());
             
             framerate = obj.getInt("framerate");
-            frames = obj.getInt("length");
+            length = obj.getInt("length") + 1;
+            linearInterpolation = obj.getString("interpolation").equals("linear");
             
             JSONObject drivers = obj.getJSONObject("drivers");
-            
             loadClips(driverClips, drivers);
             
         } catch (Exception e) {
@@ -98,8 +73,32 @@ public class Animation {
 
     }
     
+    public Frame getDriverFrame(String name) {
+        if (!driverClips.containsKey(name)) {
+            return null;
+        }
+        Clip clip = driverClips.get(name);
+        return clip.getFrame(currentFrame);
+    }
+    
+    public void advance() {
+        currentFrame += 1;
+        if (currentFrame >= length) {
+            if (loop) {
+                reset();
+            } else {
+                stop();
+            }
+        }
+    }
+    
     public void play() {
         playing = true;
+        loop = false;
+    }
+    public void playForever() {
+        playing = true;
+        loop = true;
     }
     
     public void pause() {
@@ -108,11 +107,18 @@ public class Animation {
     
     public void stop() {
         playing = false;
-        currentIndex = 0;
+        currentFrame = 0;
+    }
+    
+    private void resetClips(HashMap<String, Clip> clips) {
+        for (String key : clips.keySet()) {
+            clips.get(key).reset();
+        }
     }
     
     public void reset() {
-        currentIndex = 0;
+        currentFrame = 0;
+        resetClips(driverClips);
     }
     
     public boolean isPlaying() {

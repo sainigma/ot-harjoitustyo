@@ -57,5 +57,8 @@ public class BaseGame {
         } else if (inputs.keyDown("traverse left")) {
             level.mortar.addToTraverseTarget(1f * speedModifier);
         }
+        if (inputs.keyDown("fire")) {
+            level.mortar.animator.playAnimation("mortar/firing");
+        }
     }
 }

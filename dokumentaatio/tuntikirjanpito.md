@@ -13,5 +13,5 @@
 | 23.11 | 5 | Tykkiobjektin eriyttämistä protokoodista, peliobjekti- ja spriteluokan laajennusta.
 | 24.11 | 9 | Tykkiobjektin laajennusta, kontrollit putken nostamiseen ja kääntämiseen. PID ohjain tavoitearvojen saavuttamiseen päivityslogiikalla. Taustaobjektin toteutus, tykin käännön ja taustan synkronointi. Projektin uudelleenjärjestämistä. Checklistin käyttöönotto, lisätestien kirjoitusta, käyttöliittymän eriyttämistä sovelluslogiikasta.
 | 25.11 | 3 | Refaktorointia, pääpelilogiikkaluokan työstö aloitettu. Näppäinten kuuntelulle oma luokka. Tykkiä pystyy ohjailemaan näppäimistöllä. PID-luokka korjattu.
-| 26.11 | 4 | Animaatio- ja animaattoriluokkien suunnittelua ja toteutusta.
-| yht | 53 | |
+| 26.11 | 7 | Animaatio- ja animaattoriluokkien suunnittelu ja toteutus. Kappaleita voi nyt animoita yksiulotteisilla ohjausarvoilla (mahdollisuus laajennukseen)
+| yht | 56 | |

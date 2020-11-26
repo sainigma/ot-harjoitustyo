@@ -5,6 +5,7 @@
  */
 package game.components.templates;
 
+import game.components.Animator;
 import game.components.GameObject;
 import game.utils.PID;
 import game.utils.Vector3d;
@@ -24,7 +25,9 @@ public class Mortar extends GameObject {
     private float traverseTarget = 0;
     private PID elevationControl = new PID(1f, 0f, 2f, 1f);
     private PID traversalControl = new PID(0.25f, 0f, 0.005f, 1f);
-
+    
+    public Animator animator;
+    
     private float traversal = 0;
     private float elevationWheelRot = 0;
 
@@ -70,9 +73,16 @@ public class Mortar extends GameObject {
         append(mount);
     }
     
+    private void initAnimator() {
+        animator = new Animator();
+        animator.loadAnimation("mortar/firing");
+        animator.bindDriver("cradle", this);
+    }
+    
     private void init() {   
         spawnChildren();
         appendChildren();
+        initAnimator();
         
         elevationWheel.translate(20, 106);
         elevationGear.translate(50, 90);
@@ -105,7 +115,7 @@ public class Mortar extends GameObject {
         } else if (control < -maxSpeed) { 
             control = -maxSpeed;
         }
-        System.out.println(control);
+        //System.out.println(control);
         if (Math.abs(control) < 0.1f) {
             controller.deactivate();
         }
@@ -137,14 +147,14 @@ public class Mortar extends GameObject {
                 traversalCoeff
         ));
     }
-    public void drive(String name, double value) {
-        if (name.equals("cradle")) {
+    public void drive(String target, double value) {
+        if (target.equals("cradle")) {
             setCradle((float) value);
         }
     }
     
     public float getElevationFactor() {
-        return (float) Math.cos(Math.PI * (getElevation() - 10) / 180);
+        return (float) Math.pow(Math.cos(Math.PI * (getElevation() - 10) / 180), 2);
     }
     
     public void setCradle(float t) {
@@ -222,6 +232,7 @@ public class Mortar extends GameObject {
         //setCradle(t);
         elevate();
         traverse();
+        animator.animate(dt);
         lastTime = time;
     }
     public void forcedUpdate(double deltatime) {
