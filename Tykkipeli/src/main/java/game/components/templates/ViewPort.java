@@ -41,4 +41,7 @@ public class ViewPort extends GameObject {
             screenShake = true;
         }
     }
+    public boolean isShaking() {
+        return screenShake;
+    }
 }

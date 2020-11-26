@@ -31,6 +31,8 @@ public class Mortar extends GameObject {
     private float traversal = 0;
     private float elevationWheelRot = 0;
 
+    private float shakeCoeff = 0;
+    
     private float[] gunLimits = {-22, 65};
     private Vector3d[] cradleLimits = {
         new Vector3d(710, 236),
@@ -147,6 +149,10 @@ public class Mortar extends GameObject {
                 traversalCoeff
         ));
     }
+    public float[] getShake() {
+        float ret[] = {getElevationFactor(), shakeCoeff};
+        return ret;
+    }
     public void drive(String target, double value) {
         if (target.equals("cradle")) {
             setCradle((float) value);
@@ -154,11 +160,12 @@ public class Mortar extends GameObject {
     }
     
     public float getElevationFactor() {
-        return (float) Math.pow(Math.cos(Math.PI * (getElevation() - 10) / 180), 2);
+        return (float) Math.cos(Math.PI * (getElevation() + 10) / 180);
     }
     
     public void setCradle(float t) {
         cradle.setPosition(new Vector3d().lerp(cradleLimits[0], cradleLimits[1], t * getElevationFactor()));
+        shakeCoeff = t;
     }
     
     public float getElevation() {

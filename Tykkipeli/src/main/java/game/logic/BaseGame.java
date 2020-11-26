@@ -33,13 +33,8 @@ public class BaseGame {
     
     private long lastTime = System.nanoTime();
     private double deltatimeMillis;
-    public void update() {
-        long time = System.nanoTime() / 1000000;
-        deltatimeMillis = (double) (time - lastTime);
-        lastTime = time;
-        if (inputs == null) {
-            return;
-        }
+    
+    private float getSpeedModifier() {
         float framerateCoeff = (float) (16f / deltatimeMillis); //1 when 60fps
         float speedModifier = framerateCoeff;
         if (inputs.keyDown("modifier faster")) {
@@ -47,6 +42,10 @@ public class BaseGame {
         } else if (inputs.keyDown("modifier slower")) {
             speedModifier *= 0.5f;
         }
+        return speedModifier;
+    }
+    
+    private void doMovement(float speedModifier) {
         if (inputs.keyDown("elevate")) {
             level.mortar.addToElevationTarget(0.1f * speedModifier);
         } else if (inputs.keyDown("depress")) {
@@ -57,8 +56,34 @@ public class BaseGame {
         } else if (inputs.keyDown("traverse left")) {
             level.mortar.addToTraverseTarget(1f * speedModifier);
         }
-        if (inputs.keyDown("fire")) {
-            level.mortar.animator.playAnimation("mortar/firing");
+    }
+    
+    private void shakeScreen() {
+        float shake[] = level.mortar.getShake();
+        if (shake[1] > 0.05f) {
+            level.gameView.setScreenShake(20f * (1.1f - shake[0]) * shake[1]);
+        } else if (level.gameView.isShaking()) {
+            level.gameView.setScreenShake(0);
+        }        
+    }
+    
+    public void fire() {
+        level.mortar.animator.playAnimation("mortar/firing");        
+    }
+    
+    public void update() {
+        long time = System.nanoTime() / 1000000;
+        deltatimeMillis = (double) (time - lastTime);
+        lastTime = time;
+        if (inputs == null) {
+            return;
         }
+        float speedModifier = getSpeedModifier();
+        doMovement(speedModifier);
+        
+        if (inputs.keyDown("fire")) {
+            fire();
+        }
+        shakeScreen();
     }
 }
