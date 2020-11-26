@@ -1,6 +1,7 @@
 package game;
 
 
+import game.components.Animation;
 import game.components.Level;
 import game.logic.BaseGame;
 import game.utils.Renderer;
@@ -19,6 +20,10 @@ import game.utils.Renderer;
 public class Main {
     Renderer renderer;
     public void init() {
+        Animation animation = new Animation("assets/animations/mortar/firing.json");
+        if (true) {
+            return;
+        }
         Level level = new Level("testlevel");
         BaseGame logic = new BaseGame(level);
         renderer = new Renderer(logic);

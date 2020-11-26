@@ -22,7 +22,7 @@ public class Sprite {
     private float[][] uvmap;
     
     private void _load(TextureLoader loader, String path, Vector3d origin){
-        texture = loader.loadTexture("./assets/"+path);
+        texture = loader.loadTexture("./assets/textures/"+path);
         if( width == -1 ){
             width = texture.getImageWidth();
             height = texture.getImageHeight();

@@ -1,0 +1,19 @@
+{
+    "length": 250,
+    "framerate": 60,
+    "interpolation": "linear",
+    "bones": {
+        "gameobjectname": [
+            [0,0,0],
+            [124,34,32]
+        ]
+    },
+    "drivers": {
+        "drivername": [
+            [0,0],
+            [163,0.5],
+            [230,1],
+            [250,0]
+        ]
+    }
+}

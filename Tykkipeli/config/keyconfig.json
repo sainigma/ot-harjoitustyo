@@ -1,0 +1,20 @@
+{
+    "general":{
+        "up":[],
+        "down":[],
+        "left":[],
+        "right":[],
+        "ok":[],
+        "cancel":[]
+    },
+    "mortar":{
+        "fire":[],
+        "reload":[],
+        "elevate":[],
+        "depress":[],
+        "traverse left":[],
+        "traverse right":[],
+        "modifier faster":[],
+        "modifier slower":[]
+    }
+}

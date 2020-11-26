@@ -18,11 +18,12 @@ public class Mortar extends GameObject {
     long start = System.currentTimeMillis();
     
     private float elevationMaxSpeed = 10f;
-    private float traversalMaxSpeed = 0.05f;
+    private float traversalMaxSpeed = 100f;
+    private float traversalCoeff = 0.025f;
     private float elevationTarget = 0;
     private float traverseTarget = 0;
     private PID elevationControl = new PID(1f, 0f, 2f, 1f);
-    private PID traversalControl = new PID(0.05f, 0f, 0.5f, 0.001f);
+    private PID traversalControl = new PID(0.25f, 0f, 0.005f, 1f);
 
     private float traversal = 0;
     private float elevationWheelRot = 0;
@@ -52,7 +53,7 @@ public class Mortar extends GameObject {
         mount = new GameObject("mortarstand", "mortar/jalusta.png", new Vector3d(0), viewportScale) { };
         mountGrooves = new GameObject("mortargrooves", "mortar/urat.png", new Vector3d(512, 512, 0), viewportScale * 0.58f) { };
         gun = new GameObject("mortartube", "mortar/tykki.png", new Vector3d(512, 512, 1), viewportScale) { };
-        cradle = new GameObject("mortarcar", "mortar/karry.png", new Vector3d(398, 147, -1), viewportScale) { };
+        cradle = new GameObject("mortarcradle", "mortar/karry.png", new Vector3d(398, 147, -1), viewportScale) { };
         elevationWheel = new GameObject("mortarwheel", "mortar/ruori.png", new Vector3d(128, 128, -3), viewportScale) { };
         elevationGear = new GameObject("mortargear", "mortar/ratas.png", new Vector3d(64, 64, -2), viewportScale) { };
         craneWheel = elevationWheel.clone();
@@ -91,12 +92,12 @@ public class Mortar extends GameObject {
         );
 
         //setElevationTarget(60);
-        setTraversal(45);
+        //setTraversal(45);
         setCradle(0);
         //setTraverseTarget(95);
     }
     
-    private float getControl(PID controller, float target, float current, float maxSpeed) {
+    private float getControl(PID controller, float target, float current, float maxSpeed, float coeff) {
         float error = target - current;
         float control = (float) controller.getControl(error, dt);
         if (control > maxSpeed) {
@@ -104,11 +105,11 @@ public class Mortar extends GameObject {
         } else if (control < -maxSpeed) { 
             control = -maxSpeed;
         }
-        //System.out.println(control);
+        System.out.println(control);
         if (Math.abs(control) < 0.1f) {
             controller.deactivate();
         }
-        return control;
+        return control * coeff;
     }
     
     private void elevate() {
@@ -119,7 +120,8 @@ public class Mortar extends GameObject {
                 elevationControl,
                 elevationTarget,
                 getElevation(),
-                elevationMaxSpeed
+                elevationMaxSpeed,
+                1f
         ));
     }
     
@@ -131,8 +133,14 @@ public class Mortar extends GameObject {
                 traversalControl,
                 traverseTarget,
                 getLocalTraversal(),
-                traversalMaxSpeed
+                traversalMaxSpeed,
+                traversalCoeff
         ));
+    }
+    public void drive(String name, double value) {
+        if (name.equals("cradle")) {
+            setCradle((float) value);
+        }
     }
     
     public float getElevationFactor() {
@@ -142,9 +150,11 @@ public class Mortar extends GameObject {
     public void setCradle(float t) {
         cradle.setPosition(new Vector3d().lerp(cradleLimits[0], cradleLimits[1], t * getElevationFactor()));
     }
+    
     public float getElevation() {
         return -gun.rotation;
     }
+    
     public void setElevationTarget(float r) {
         if (r >= gunLimits[0] && r <= gunLimits[1]) {
             elevationTarget = r;
@@ -153,11 +163,16 @@ public class Mortar extends GameObject {
         } else if (r < gunLimits[0]) {
             elevationTarget = gunLimits[0];
         }
-        elevationControl.activate();
+        if (!elevationControl.isActive()) {
+            elevationControl.activate();            
+        }
+
     }
     public void setTraverseTarget(float r) {
         traverseTarget = r;
-        traversalControl.activate();
+        if (!traversalControl.isActive()) {
+            traversalControl.activate();            
+        }
     }
 
     public void addTraversal(float r) {
@@ -167,7 +182,7 @@ public class Mortar extends GameObject {
         traversal = r;
         mountGrooves.setTexOffset(getTraversal() / 60, 0);
     }
-    private float getLocalTraversal() {
+    public float getLocalTraversal() {
         return traversal;
     }
     public float getTraversal() {
@@ -209,7 +224,7 @@ public class Mortar extends GameObject {
         traverse();
         lastTime = time;
     }
-    public void forcedUpdate(double deltatime){
+    public void forcedUpdate(double deltatime) {
         dt = deltatime;
         elevate();
         traverse();
@@ -217,5 +232,9 @@ public class Mortar extends GameObject {
 
     public void addToElevationTarget(float f) {
         setElevationTarget(elevationTarget + f);
+    }
+
+    public void addToTraverseTarget(float f) {
+        setTraverseTarget(traverseTarget + f);
     }
 }

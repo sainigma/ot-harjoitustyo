@@ -42,15 +42,20 @@ public class BaseGame {
         }
         float framerateCoeff = (float) (16f / deltatimeMillis); //1 when 60fps
         float speedModifier = framerateCoeff;
-        if (inputs.keyDown("hasten")) {
+        if (inputs.keyDown("modifier faster")) {
             speedModifier *= 2f;
-        } else if (inputs.keyDown("dawdle")) {
+        } else if (inputs.keyDown("modifier slower")) {
             speedModifier *= 0.5f;
         }
-        if (inputs.keyDown("gunUp")) {
+        if (inputs.keyDown("elevate")) {
             level.mortar.addToElevationTarget(0.1f * speedModifier);
-        } else if (inputs.keyDown("gunDown")) {
+        } else if (inputs.keyDown("depress")) {
             level.mortar.addToElevationTarget(-0.1f * speedModifier);
+        }
+        if (inputs.keyDown("traverse right")) {
+            level.mortar.addToTraverseTarget(-1f * speedModifier);
+        } else if (inputs.keyDown("traverse left")) {
+            level.mortar.addToTraverseTarget(1f * speedModifier);
         }
     }
 }

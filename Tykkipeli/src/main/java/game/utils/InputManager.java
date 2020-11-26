@@ -21,7 +21,6 @@ public class InputManager {
     HashMap<String, Boolean> states;
     
     Set<String> keyList;
-    
     public InputManager(long window) {
         this.window = window;
         keyMap = new HashMap<>();
@@ -56,10 +55,10 @@ public class InputManager {
     }
     private void setKeys() {
         //korvaa tiedostonlukijalla
-        keyMap.put(GLFW_KEY_UP, new String[]{"up", "gunUp"});
-        keyMap.put(GLFW_KEY_DOWN, new String[]{"down", "gunDown"});
-        keyMap.put(GLFW_KEY_LEFT, new String[]{"left", "gunLeft"});
-        keyMap.put(GLFW_KEY_RIGHT, new String[]{"right", "gunRight"});
+        keyMap.put(GLFW_KEY_UP, new String[]{"up", "elevate"});
+        keyMap.put(GLFW_KEY_DOWN, new String[]{"down", "depress"});
+        keyMap.put(GLFW_KEY_LEFT, new String[]{"left", "traverse left"});
+        keyMap.put(GLFW_KEY_RIGHT, new String[]{"right", "traverse right"});
         
         keyMap.put(GLFW_KEY_SPACE, new String[]{"ok", "fire"});
         keyMap.put(GLFW_KEY_ENTER, new String[]{"ok", "fire"});
@@ -67,8 +66,8 @@ public class InputManager {
         
         keyMap.put(GLFW_KEY_R, new String[]{"reload"});
         
-        keyMap.put(GLFW_KEY_LEFT_SHIFT, new String[]{"hasten"});
-        keyMap.put(GLFW_KEY_LEFT_CONTROL, new String[]{"dawdle"});
+        keyMap.put(GLFW_KEY_LEFT_SHIFT, new String[]{"modifier faster"});
+        keyMap.put(GLFW_KEY_LEFT_CONTROL, new String[]{"modifier slower"});
     }
     
     private void collectKeys() {

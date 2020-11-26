@@ -127,6 +127,11 @@
                     <artifactId>lwjgl-stb</artifactId>
                     <classifier>natives-linux</classifier>
             </dependency>
+            <dependency>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                    <version>20201115</version>
+            </dependency>
     </dependencies>
     
     <build>
