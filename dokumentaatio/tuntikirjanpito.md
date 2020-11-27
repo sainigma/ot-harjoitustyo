@@ -14,4 +14,5 @@
 | 24.11 | 9 | Tykkiobjektin laajennusta, kontrollit putken nostamiseen ja kääntämiseen. PID ohjain tavoitearvojen saavuttamiseen päivityslogiikalla. Taustaobjektin toteutus, tykin käännön ja taustan synkronointi. Projektin uudelleenjärjestämistä. Checklistin käyttöönotto, lisätestien kirjoitusta, käyttöliittymän eriyttämistä sovelluslogiikasta.
 | 25.11 | 3 | Refaktorointia, pääpelilogiikkaluokan työstö aloitettu. Näppäinten kuuntelulle oma luokka. Tykkiä pystyy ohjailemaan näppäimistöllä. PID-luokka korjattu.
 | 26.11 | 7 | Animaatio- ja animaattoriluokkien suunnittelu ja toteutus. Kappaleita voi nyt animoita yksiulotteisilla ohjausarvoilla (mahdollisuus laajennukseen)
-| yht | 56 | |
+| 27.11 | 5 | Pääpelisilmukan kehitystä. Tykin pystyy nyt lataamaan ja laukaisemaan, laukaisu käynnistää fysiikkasolverin tykin parametreilla.
+| yht | 61 | |

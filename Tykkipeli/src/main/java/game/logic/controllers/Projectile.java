@@ -9,13 +9,31 @@ package game.logic.controllers;
  *
  * @author suominka
  */
-import game.utils.Vector3d;
 
 public class Projectile {
-    float weight;
+    float weight = -1;
     float frontalArea;
-    float dragCoeff;
-    Vector3d origin;
-    public Projectile() {
+    float dragCoeff = 1;
+    int cartouches;
+    boolean initOk;
+    public Projectile(float weight, int cartouches) {
+        if (weight <= 0 || cartouches <= 0) {
+            return;
+        }
+        this.weight = weight;
+        frontalArea = (float)(0.229f*0.229f*Math.PI/4f);
+        this.cartouches = cartouches;
+    }
+    public void addCartouches(int amount) {
+        cartouches += amount;
+    }
+    public int getCartouches() {
+        return cartouches;
+    }
+    public double getInitialVelocity() {
+        return 335*(weight/123f)*cartouches/3f;
+    }
+    public boolean initOk() {
+        return weight > 0;
     }
 }

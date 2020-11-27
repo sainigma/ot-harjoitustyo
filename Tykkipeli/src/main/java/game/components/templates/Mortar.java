@@ -24,7 +24,7 @@ public class Mortar extends GameObject {
     private float elevationTarget = 0;
     private float traverseTarget = 0;
     private PID elevationControl = new PID(1f, 0f, 2f, 1f);
-    private PID traversalControl = new PID(0.25f, 0f, 0.005f, 1f);
+    private PID traversalControl = new PID(5f, 0f, 5f, 1f);
     
     public Animator animator;
     
@@ -32,6 +32,7 @@ public class Mortar extends GameObject {
     private float elevationWheelRot = 0;
 
     private float shakeCoeff = 0;
+    private float powerModifier = 1f;
     
     private float[] gunLimits = {-22, 65};
     private Vector3d[] cradleLimits = {
@@ -153,6 +154,10 @@ public class Mortar extends GameObject {
         float ret[] = {getElevationFactor(), shakeCoeff};
         return ret;
     }
+    public void setPowerModifier(float modifier) {
+        powerModifier = modifier;
+    }
+    
     public void drive(String target, double value) {
         if (target.equals("cradle")) {
             setCradle((float) value);
@@ -160,7 +165,7 @@ public class Mortar extends GameObject {
     }
     
     public float getElevationFactor() {
-        return (float) Math.cos(Math.PI * (getElevation() + 10) / 180);
+        return (float) Math.cos(Math.PI * (getElevation() + 10) / 180) * powerModifier;
     }
     
     public void setCradle(float t) {

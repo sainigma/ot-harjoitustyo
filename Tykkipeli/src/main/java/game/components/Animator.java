@@ -38,13 +38,18 @@ public class Animator {
         }
         Animation animation = animations.get(name);
         if (activeClips.contains(animation)) {
-            animation.reset();
             animation.play();
         } else {
             activeClips.add(animation);
             animation.play();
         }
-
+    }
+    public boolean isPlaying(String name) {
+        if (!animations.containsKey(name)) {
+            return false;
+        }
+        Animation animation = animations.get(name);
+        return animation.isPlaying();
     }
     
     public void bindBone(String name, GameObject object) {

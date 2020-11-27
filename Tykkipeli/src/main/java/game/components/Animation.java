@@ -93,6 +93,7 @@ public class Animation {
     }
     
     public void play() {
+        reset();
         playing = true;
         loop = false;
     }

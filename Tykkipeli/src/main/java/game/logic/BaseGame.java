@@ -5,6 +5,7 @@
  */
 package game.logic;
 
+import game.logic.controllers.*;
 import game.components.Level;
 import game.utils.InputManager;
 import game.utils.Renderer;
@@ -17,10 +18,17 @@ public class BaseGame {
     Level level = null;
     InputManager inputs = null;
     Renderer renderer = null;
+    MortarLogic mortarLogic;
+    Projectile currentProjectile;
+    Magazine magazine;
+    
+    private boolean gunMovementActive = true;
     
     public BaseGame(Level level) {
         this.level = level;
         this.renderer = renderer;
+        this.mortarLogic = new MortarLogic();
+        this.magazine = new Magazine(12,6,3,54);
     }
     
     public void setRenderer(Renderer renderer) {
@@ -46,15 +54,29 @@ public class BaseGame {
     }
     
     private void doMovement(float speedModifier) {
+        if (!gunMovementActive || level.mortar.animator.isPlaying("mortar/firing")) {
+            return;
+        }
+        float elevationSpeed = 0.1f;
+        float traversalSpeed = 0.05f;
         if (inputs.keyDown("elevate")) {
-            level.mortar.addToElevationTarget(0.1f * speedModifier);
+            level.mortar.addToElevationTarget(elevationSpeed * speedModifier);
         } else if (inputs.keyDown("depress")) {
-            level.mortar.addToElevationTarget(-0.1f * speedModifier);
+            level.mortar.addToElevationTarget(-elevationSpeed * speedModifier);
         }
         if (inputs.keyDown("traverse right")) {
-            level.mortar.addToTraverseTarget(-1f * speedModifier);
+            level.mortar.addToTraverseTarget(-traversalSpeed * speedModifier);
         } else if (inputs.keyDown("traverse left")) {
-            level.mortar.addToTraverseTarget(1f * speedModifier);
+            level.mortar.addToTraverseTarget(traversalSpeed * speedModifier);
+        }
+        if (inputs.keyDownOnce("fire")) {
+            fire();
+        }
+    }
+    
+    private void menuMovement() {
+        if (gunMovementActive) {
+            return;
         }
     }
     
@@ -67,8 +89,91 @@ public class BaseGame {
         }        
     }
     
+    private String[] warheads = {"light","medium","heavy"};
+    private int[] cartouches = {1,2,3};
+    private int reloadIndex = 0;
+    private boolean reloadUpdate = true;
+    private boolean reloadFinished = true;
+    public void reloadProcedure() {
+        if (gunMovementActive && inputs.keyDownOnce("reload") && currentProjectile == null) {
+            System.out.println("starting reload");
+            reloadUpdate = true;
+            gunMovementActive = false;
+            reloadFinished = false;
+            level.mortar.setElevationTarget(0f);
+        } else if (gunMovementActive) {
+            return;
+        }
+        if (currentProjectile == null) {
+            chooseProjectile();
+        } else if (!reloadFinished){
+            chooseCartouches();
+        }
+    }
+    
+    private void reloadSelector(int length) {
+        if (inputs.keyDownOnce("left")) {
+            reloadIndex -= 1;
+            reloadUpdate = true;
+        } else if (inputs.keyDownOnce("right")) {
+            reloadIndex += 1;
+            reloadUpdate = true;    
+        }
+        if (reloadIndex >= length) {
+            reloadIndex = 0;
+        } else if (reloadIndex < 0) {
+            reloadIndex = length - 1;
+        }
+    }
+    
+    private void chooseProjectile() {
+        if (reloadUpdate) {
+            reloadUpdate = false;
+            System.out.println("Select warhead, currently selected: "+warheads[reloadIndex]);            
+        }
+        reloadSelector(warheads.length);
+        
+        if (inputs.keyDownOnce("ok")) {
+            currentProjectile = new Projectile(magazine.getWarhead(reloadIndex), magazine.getCartouche(1));
+            if (!currentProjectile.initOk()) {
+                currentProjectile = null;
+            }
+            reloadUpdate = true;
+        }
+    }
+    
+    private void chooseCartouches() {
+        if (reloadUpdate) {
+            reloadUpdate = false;
+            System.out.println("Select cartouches, currently selected: "+cartouches[reloadIndex]);
+        }
+        reloadSelector(cartouches.length);
+        
+        if (inputs.keyDownOnce("ok")) {
+            currentProjectile.addCartouches(magazine.getCartouche(cartouches[reloadIndex] - 1));
+            reload();
+        }
+    }
+    
+    private void reload() {
+        if (mortarLogic.addProjectile(currentProjectile)) {
+            System.out.println("reload finished");
+            reloadFinished = true;
+            gunMovementActive = true;
+        }
+    }
+    
     public void fire() {
-        level.mortar.animator.playAnimation("mortar/firing");        
+        if (!reloadFinished) {
+            return;
+        }
+        mortarLogic.set(level.mortar.getElevation(), level.mortar.getTraversal());
+        if (mortarLogic.fire()) {
+            float powerModifier = ( currentProjectile.getCartouches() + 4f ) / 7f;
+            level.mortar.setPowerModifier(powerModifier);
+            currentProjectile = null;
+            level.mortar.animator.playAnimation("mortar/firing");
+        }
     }
     
     public void update() {
@@ -80,10 +185,9 @@ public class BaseGame {
         }
         float speedModifier = getSpeedModifier();
         doMovement(speedModifier);
-        
-        if (inputs.keyDown("fire")) {
-            fire();
-        }
+        reloadProcedure();
+
         shakeScreen();
+        mortarLogic.solve(deltatimeMillis);
     }
 }

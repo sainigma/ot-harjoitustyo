@@ -23,11 +23,15 @@ public abstract class PhysicsSolver {
     private double timestep;
     private double mass;
     private State state;
+    private boolean logging = false;
     public PhysicsSolver() {
         state = null;
     }
     public Vector3d getPosition() {
         return state.position;
+    }
+    public void enableLogging() {
+        logging = true;
     }
     public void set(Vector3d position, Vector3d velocity) {
         state = new State();
@@ -75,6 +79,9 @@ public abstract class PhysicsSolver {
         double targetTime = state.time + time;
         while (state.time < targetTime && !endCondition()) {
             solve();
+            if (logging) {
+                System.out.println(toString());                
+            }
         }
     }
     public String toString() {

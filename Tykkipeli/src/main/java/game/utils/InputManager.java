@@ -19,12 +19,14 @@ public class InputManager {
     long window;
     HashMap<Integer, String[]> keyMap;
     HashMap<String, Boolean> states;
+    HashMap<String, Boolean> debounced;
     
     Set<String> keyList;
     public InputManager(long window) {
         this.window = window;
         keyMap = new HashMap<>();
         states = new HashMap<>();
+        debounced = new HashMap<>();
         keyList = new HashSet<>();
         setKeys();
         collectKeys();
@@ -61,7 +63,7 @@ public class InputManager {
         keyMap.put(GLFW_KEY_RIGHT, new String[]{"right", "traverse right"});
         
         keyMap.put(GLFW_KEY_SPACE, new String[]{"ok", "fire"});
-        keyMap.put(GLFW_KEY_ENTER, new String[]{"ok", "fire"});
+        keyMap.put(GLFW_KEY_ENTER, new String[]{"ok"});
         keyMap.put(GLFW_KEY_BACKSPACE, new String[]{"cancel"});
         
         keyMap.put(GLFW_KEY_R, new String[]{"reload"});
@@ -84,6 +86,25 @@ public class InputManager {
             return false;
         }
         return states.get(action);
+    }
+    
+    public boolean keyDownOnce(String action) {
+        if (!states.containsKey(action)) {
+            return false;
+        }
+        if (!debounced.containsKey(action)) {
+            debounced.put(action, false);
+            return states.get(action);
+        }
+        boolean state = states.get(action);
+        if (!state && !debounced.get(action)) {
+            debounced.put(action, true);
+        } else if (state && debounced.get(action)) {
+            debounced.put(action, false);
+            return true;
+        }
+        
+        return state && debounced.get(action);
     }
     
     public void update() {
