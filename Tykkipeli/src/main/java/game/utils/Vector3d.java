@@ -79,8 +79,8 @@ public class Vector3d {
     private double deg2Rad(double degs) {
         return (degs / 360f) * Math.PI * 2f;
     }
-    public void normalize(){
-        double factor = 1f/magnitude();
+    public void normalize() {
+        double factor = 1f / magnitude();
         set(this.scale(factor));
     }
     public void set(Vector3d toCopy) {

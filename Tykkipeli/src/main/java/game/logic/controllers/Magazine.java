@@ -15,11 +15,11 @@ public class Magazine {
     float heavyMass = 150;
     
     private int[] warheads;
-    private float[] warheadWeights = {123f,130f,150f};
+    private float[] warheadWeights = {123f, 130f, 150f};
     private int cartouches;
     
     public Magazine(int light, int medium, int heavy, int cartouches) {
-        warheads = new int[] {light,medium,heavy};
+        warheads = new int[] {light, medium, heavy};
         this.cartouches = cartouches;
     }
     
@@ -27,7 +27,7 @@ public class Magazine {
         if (index < 0 || index >= warheads.length) {
             return -1;
         }
-        if (warheads[index]>0) {
+        if (warheads[index] > 0) {
             warheads[index] -= 1;
             return warheadWeights[index];
         }

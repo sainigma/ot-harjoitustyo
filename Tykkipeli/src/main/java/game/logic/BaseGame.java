@@ -28,7 +28,7 @@ public class BaseGame {
         this.level = level;
         this.renderer = renderer;
         this.mortarLogic = new MortarLogic();
-        this.magazine = new Magazine(12,6,3,54);
+        this.magazine = new Magazine(12, 6, 3, 54);
     }
     
     public void setRenderer(Renderer renderer) {
@@ -89,8 +89,8 @@ public class BaseGame {
         }        
     }
     
-    private String[] warheads = {"light","medium","heavy"};
-    private int[] cartouches = {1,2,3};
+    private String[] warheads = {"light", "medium", "heavy"};
+    private int[] cartouches = {1, 2, 3};
     private int reloadIndex = 0;
     private boolean reloadUpdate = true;
     private boolean reloadFinished = true;
@@ -106,7 +106,7 @@ public class BaseGame {
         }
         if (currentProjectile == null) {
             chooseProjectile();
-        } else if (!reloadFinished){
+        } else if (!reloadFinished) {
             chooseCartouches();
         }
     }
@@ -129,7 +129,7 @@ public class BaseGame {
     private void chooseProjectile() {
         if (reloadUpdate) {
             reloadUpdate = false;
-            System.out.println("Select warhead, currently selected: "+warheads[reloadIndex]);            
+            System.out.println("Select warhead, currently selected: " + warheads[reloadIndex]);            
         }
         reloadSelector(warheads.length);
         
@@ -145,7 +145,7 @@ public class BaseGame {
     private void chooseCartouches() {
         if (reloadUpdate) {
             reloadUpdate = false;
-            System.out.println("Select cartouches, currently selected: "+cartouches[reloadIndex]);
+            System.out.println("Select cartouches, currently selected: " + cartouches[reloadIndex]);
         }
         reloadSelector(cartouches.length);
         
@@ -169,7 +169,7 @@ public class BaseGame {
         }
         mortarLogic.set(level.mortar.getElevation(), level.mortar.getTraversal());
         if (mortarLogic.fire()) {
-            float powerModifier = ( currentProjectile.getCartouches() + 4f ) / 7f;
+            float powerModifier = (currentProjectile.getCartouches() + 4f) / 7f;
             level.mortar.setPowerModifier(powerModifier);
             currentProjectile = null;
             level.mortar.animator.playAnimation("mortar/firing");

@@ -43,6 +43,9 @@ public abstract class PhysicsSolver {
         set(position, velocity);
         this.timestep = timestep;
     }
+    public void setMass(double mass) {
+        this.mass = mass;
+    }
     private double gravity() {
         return -9.81;
     }

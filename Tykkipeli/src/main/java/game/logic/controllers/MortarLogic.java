@@ -5,7 +5,6 @@
  */
 package game.logic.controllers;
 
-import game.logic.controllers.Projectile;
 import game.simulations.cases.Ballistics;
 import game.utils.Vector3d;
 import java.util.ArrayList;
@@ -44,6 +43,10 @@ public class MortarLogic {
                 positions.add(lastPosition);
                 lastPosition = position.clone();
             }
+        }
+        @Override
+        public String toString() {
+            return "final position: " + lastPosition;
         }
     }
     
@@ -84,7 +87,7 @@ public class MortarLogic {
         Vector3d direction = new Vector3d();
         direction.setByAzimuthAltitude(traversal, elevation);
         Vector3d velocity = direction.clone().scale(currentProjectile.getInitialVelocity());
-        solver.set(new Vector3d(0, aboveSeaLevel + chamberHeight, 0), velocity, 0.001f);
+        solver.set(new Vector3d(0, aboveSeaLevel + chamberHeight, 0), velocity, mass, 0.001f);
         //solver.enableLogging();
         activeSolvers.add(solver);
         history.put(solver, new Statistic(elevation, traversal, mass, cartouches, solver));
@@ -100,7 +103,7 @@ public class MortarLogic {
                 activeSolvers.remove(solver);
                 System.out.println(solverStats);
             } else {
-                solver.solveToTime(dtMillis/1000f);
+                solver.solveToTime(dtMillis / 1000f);
                 solverStats.updatePosition(solver.getPosition());
             }
         }

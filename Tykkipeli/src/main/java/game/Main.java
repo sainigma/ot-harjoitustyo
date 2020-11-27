@@ -24,7 +24,7 @@ public class Main {
         BaseGame logic = new BaseGame(level);
         renderer = new Renderer(logic);
         renderer.appendToRenderQueue(level);
-        renderer.setBackground(0f / 255f, 240f / 255f, 223f / 255f);
+        renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
         run();
     }
     public void update() {
