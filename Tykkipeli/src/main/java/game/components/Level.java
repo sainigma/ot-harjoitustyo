@@ -6,8 +6,10 @@
 package game.components;
 
 import game.components.templates.BackgroundCoast;
+import game.components.templates.MapScreen;
 import game.components.templates.ViewPort;
 import game.components.templates.Mortar;
+import game.utils.Vector3d;
 
 /**
  *
@@ -19,6 +21,7 @@ public class Level extends GameObject {
     public ViewPort gameView;
     public ViewPort mapView;
     public Mortar mortar;
+    public MapScreen mapScreen;
     public GameObject background;
     
     private boolean isFinished = false;
@@ -34,17 +37,22 @@ public class Level extends GameObject {
     
     private void init() {
         gameView = new ViewPort("game");        
+        mapView = new ViewPort("map");
         
         mortar = new Mortar("mortar", viewportScale);
         background = new BackgroundCoast("coast", 1);
         gameView.append(mortar);
         gameView.append(background);
-        append(gameView);
         
-        //gameView.setScreenShake(2);
+        mapScreen = new MapScreen("mapScreen", viewportScale);
+        mapView.append(mapScreen);
+        
+        append(gameView);
+        append(mapView);
+        
+        gameView.setVisible(false);
+        //mapView.setVisible(false);
         mortar.setTrueElevation(0f);
-        //mortar.setElevationTarget(55f);
-        //mortar.setTraverseTarget(120f);
     }
     
     @Override

@@ -18,6 +18,7 @@ public class Sprite {
     float[] texOffset = {0,0};
     float[][] vertexOffset = {{0,0},{0,0},{0,0},{0,0}};
     Vector3d origin;
+    Vector3d trueRotation = new Vector3d(0);
     private float[][] vertices;
     private float[][] uvmap;
     
@@ -53,7 +54,7 @@ public class Sprite {
         _load(loader,path,new Vector3d(0,0,0));
     }
     
-    private void _draw(int x, int y, float r){
+    private void _draw(float x, float y, float r){
         int i = 0;
         float xOffset = (float)origin.x;
         float yOffset = (float)origin.y;
@@ -64,8 +65,12 @@ public class Sprite {
         texture.bind();
         GL11.glScalef(scale, scale, scale);
         GL11.glTranslatef(x*inverseScale, y*inverseScale, (float)origin.z);
-        GL11.glRotatef(r, 0, 0, 1f);
+        //GL11.glRotatef(r, 0, 0, 1f);
         GL11.glColor3f(1, 1, 1);
+        
+        GL11.glRotated(trueRotation.x, 1f, 0, 0);
+        GL11.glRotated(trueRotation.y, 0, 1f, 0);
+        GL11.glRotated(trueRotation.z+r, 0, 0, 1f);
         
         GL11.glBegin(GL11.GL_QUADS);
         for(float[] vertex : vertices){
@@ -81,10 +86,10 @@ public class Sprite {
     }
     
     public void draw(float x, float y){
-        _draw((int)x,(int)y,0);
+        _draw(x,y,0);
     }
     public void draw(float x, float y, float r){
-        _draw((int)x,(int)y,r);
+        _draw(x,y,r);
     }
     public void setScale(float scale){
         this.scale = scale;
@@ -95,5 +100,8 @@ public class Sprite {
     }
     public void setVertexOffset(float[][] offset){
         vertexOffset = offset;
-    } 
+    }
+    public void setTrueRotation(Vector3d trueRotation){
+        this.trueRotation = trueRotation.clone();
+    }
 }

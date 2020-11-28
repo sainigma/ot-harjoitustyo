@@ -144,7 +144,7 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
         glAlphaFunc(GL_GREATER, 0.5f);
         glMatrixMode(GL_PROJECTION);
-        glOrtho(0, resoX, resoY, 0, 10, -10);
+        glOrtho(0, resoX, resoY, 0, 2000, -2000);
         glClearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
         
         texLoader = new TextureLoader();

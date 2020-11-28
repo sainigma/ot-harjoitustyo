@@ -15,4 +15,5 @@
 | 25.11 | 3 | Refaktorointia, pääpelilogiikkaluokan työstö aloitettu. Näppäinten kuuntelulle oma luokka. Tykkiä pystyy ohjailemaan näppäimistöllä. PID-luokka korjattu.
 | 26.11 | 7 | Animaatio- ja animaattoriluokkien suunnittelu ja toteutus. Kappaleita voi nyt animoita yksiulotteisilla ohjausarvoilla (mahdollisuus laajennukseen)
 | 27.11 | 5 | Pääpelisilmukan kehitystä. Tykin pystyy nyt lataamaan ja laukaisemaan, laukaisu käynnistää fysiikkasolverin tykin parametreilla.
-| yht | 61 | |
+| 28.11 | 3 | Aloitin karttanäkymän/projektiilin seuraamisen työstämisen.
+| yht | 63 | |

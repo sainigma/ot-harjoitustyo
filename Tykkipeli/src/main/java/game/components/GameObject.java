@@ -31,6 +31,7 @@ public abstract class GameObject {
     public boolean hasUpdated = true;
     private TextureLoader texLoader = null;
     private Vector3d origin = new Vector3d(0);
+    private Vector3d trueRotation = new Vector3d(0);
     
     public GameObject(String name) {
         this.name = name;
@@ -63,6 +64,12 @@ public abstract class GameObject {
     }
     public void setVisible(boolean newState) {
         visible = newState;
+    }
+    public boolean isVisible() {
+        return visible;
+    }
+    public void toggleVisible() {
+        visible = !visible;
     }
     public void toggle() {
         active = !active;
@@ -117,6 +124,12 @@ public abstract class GameObject {
     public void setRotation(float r) {
         rotation = r;
         hasUpdated = true;
+    }
+    public void setTrueRotation(Vector3d rotation) {
+        this.trueRotation = rotation.clone();
+        if (sprite != null) {
+            sprite.setTrueRotation(rotation);
+        }
     }
     public Vector3d getTransform() {
         return new Vector3d(x, y, rotation);
@@ -174,6 +187,7 @@ public abstract class GameObject {
             sprite.setTexOffset(texOffset);
             sprite.setVertexOffset(vertexOffset);
             sprite.setCrop(crop);
+            sprite.setTrueRotation(trueRotation);
         }
         for (GameObject child : children) {
             child.load();

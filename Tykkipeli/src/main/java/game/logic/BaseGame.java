@@ -183,10 +183,19 @@ public class BaseGame {
         if (inputs == null) {
             return;
         }
-        float speedModifier = getSpeedModifier();
-        doMovement(speedModifier);
-        reloadProcedure();
 
+        float speedModifier = getSpeedModifier();
+        if (level.gameView.isVisible()) {
+            doMovement(speedModifier);
+            reloadProcedure();            
+        }
+
+        
+        if (inputs.keyDownOnce("toggle map")) {
+            level.gameView.toggleVisible();
+            level.mapView.toggleVisible();
+        }
+        
         shakeScreen();
         mortarLogic.solve(deltatimeMillis);
     }

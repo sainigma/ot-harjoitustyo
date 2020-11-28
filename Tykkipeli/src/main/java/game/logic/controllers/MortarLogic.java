@@ -88,7 +88,7 @@ public class MortarLogic {
         direction.setByAzimuthAltitude(traversal, elevation);
         Vector3d velocity = direction.clone().scale(currentProjectile.getInitialVelocity());
         solver.set(new Vector3d(0, aboveSeaLevel + chamberHeight, 0), velocity, mass, 0.001f);
-        //solver.enableLogging();
+        solver.enableLogging();
         activeSolvers.add(solver);
         history.put(solver, new Statistic(elevation, traversal, mass, cartouches, solver));
     }

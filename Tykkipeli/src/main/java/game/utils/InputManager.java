@@ -70,6 +70,8 @@ public class InputManager {
         
         keyMap.put(GLFW_KEY_LEFT_SHIFT, new String[]{"modifier faster"});
         keyMap.put(GLFW_KEY_LEFT_CONTROL, new String[]{"modifier slower"});
+        
+        keyMap.put(GLFW_KEY_M, new String[]{"toggle map"});
     }
     
     private void collectKeys() {
