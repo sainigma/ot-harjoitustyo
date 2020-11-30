@@ -74,6 +74,17 @@ public class BaseGame {
         }
     }
     
+    private void rotateMap(float speedModifier) {
+        if (!level.mapView.isVisible()) {
+            return;
+        }
+        if (inputs.keyDown("right")) {
+            level.mapScreen.rotateMap(speedModifier);
+        } else if (inputs.keyDown("left")) {
+            level.mapScreen.rotateMap(-speedModifier);
+        }
+    }
+    
     private void menuMovement() {
         if (gunMovementActive) {
             return;
@@ -94,6 +105,7 @@ public class BaseGame {
     private int reloadIndex = 0;
     private boolean reloadUpdate = true;
     private boolean reloadFinished = true;
+    
     public void reloadProcedure() {
         if (gunMovementActive && inputs.keyDownOnce("reload") && currentProjectile == null) {
             System.out.println("starting reload");
@@ -192,10 +204,13 @@ public class BaseGame {
 
         
         if (inputs.keyDownOnce("toggle map")) {
+            if (!level.mapView.isVisible()) {
+                level.mapScreen.setTraversal(-level.mortar.getTraversal());
+            }
             level.gameView.toggleVisible();
             level.mapView.toggleVisible();
         }
-        
+        rotateMap(0.1f);
         shakeScreen();
         mortarLogic.solve(deltatimeMillis);
     }

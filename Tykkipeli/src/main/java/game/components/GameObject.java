@@ -17,21 +17,25 @@ import game.utils.Vector3d;
 public abstract class GameObject {
     private ArrayList<GameObject> children = new ArrayList<>();
     private Sprite sprite;
+    
+    private boolean initialized = false;
+    private boolean visible = true;
+    private boolean active = true;
+    public boolean hasUpdated = true;
+    
     private String path;
     private String name;
-    public float x, y, rotation;
     private int[] crop = { -1, -1};
     private float[] texOffset = {0, 0};
     private float[][] vertexOffset = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
     private float scale = 1;
-    public float parentX, parentY, parentRotation;
-    private boolean visible = true;
-    private boolean initialized = false;
-    private boolean active = true;
-    public boolean hasUpdated = true;
     private TextureLoader texLoader = null;
+    
     private Vector3d origin = new Vector3d(0);
-    private Vector3d trueRotation = new Vector3d(0);
+    public Vector3d localPosition = new Vector3d(0);
+    public Vector3d localRotation = new Vector3d(0);
+    public Vector3d globalPosition = new Vector3d(0);
+    public Vector3d globalRotation = new Vector3d(0);
     
     public GameObject(String name) {
         this.name = name;
@@ -56,6 +60,8 @@ public abstract class GameObject {
         this.scale = scale;
         init();
     }
+    private void init() {
+    }
     public boolean isActive() {
         return active;
     }
@@ -73,14 +79,6 @@ public abstract class GameObject {
     }
     public void toggle() {
         active = !active;
-    }
-    private void init() {
-        x = 0;
-        y = 0;
-        rotation = 0;
-        parentX = 0;
-        parentY = 0;
-        parentRotation = 0;
     }
     
     public void setVertexOffset(float[] topLeft, float[] bottomLeft, float[] topRight, float[] bottomRight) {
@@ -111,44 +109,37 @@ public abstract class GameObject {
     public void setHasUpdated(boolean newState) {
         hasUpdated = newState;
     }
-    public void setTransform(Vector3d transform) {
-        x = (float) transform.x;
-        y = (float) transform.y;
-        rotation = (float) transform.z;
-    }
+    
     public void setPosition(Vector3d position) {
-        this.x = (float) position.x;
-        this.y = (float) position.y;
+        localPosition.x = position.x;
+        localPosition.y = position.y;
         hasUpdated = true;
     }
     public void setRotation(float r) {
-        rotation = r;
+        localRotation.z = r;
         hasUpdated = true;
     }
-    public void setTrueRotation(Vector3d rotation) {
-        this.trueRotation = rotation.clone();
-        if (sprite != null) {
-            sprite.setTrueRotation(rotation);
-        }
+    public void setRotation(Vector3d rotation) {
+        localRotation.set(rotation);
     }
-    public Vector3d getTransform() {
-        return new Vector3d(x, y, rotation);
-    }
-    public Vector3d getPosition() {
-        return new Vector3d(x, y);
+    public void setDepth(float z) {
+        localPosition.z = z;
     }
     public void translate(float x, float y) {
-        this.x += x;
-        this.y += y;
+        localPosition.x += x;
+        localPosition.y += y;
         hasUpdated = true;
     }
-    public void translateLocal(int x, int y) {
-        //ota pyöriminen huomioon
+    public void translate(float x, float y, float z) {
+        translate(x,y);
+        localPosition.z += z;
     }
+    
     public void rotate(float rot) {
-        rotation += rot;
+        localRotation.z += rot;
         hasUpdated = true;
     }
+    
     public void setTexOffset(float x, float y) {
         texOffset[0] = x;
         texOffset[1] = y;
@@ -162,9 +153,6 @@ public abstract class GameObject {
     public void remove(GameObject child) {
         children.remove(child);
     }
-    public void setZindex() {
-        //toteuta
-    }
     public void update() {
         //pelilogiikka
     }
@@ -174,9 +162,8 @@ public abstract class GameObject {
         }
         for (GameObject child : children) {
             child.hasUpdated = true;
-            child.parentX = x + parentX;
-            child.parentY = y + parentY;
-            child.parentRotation = rotation;
+            child.globalPosition.set(globalPosition.add(localPosition));
+            child.globalRotation.set(globalRotation.add(localRotation));
         }
         hasUpdated = false;
     }
@@ -187,7 +174,6 @@ public abstract class GameObject {
             sprite.setTexOffset(texOffset);
             sprite.setVertexOffset(vertexOffset);
             sprite.setCrop(crop);
-            sprite.setTrueRotation(trueRotation);
         }
         for (GameObject child : children) {
             child.load();
@@ -202,7 +188,8 @@ public abstract class GameObject {
             child.draw();
         }
         if (sprite != null) {
-            sprite.draw(x + parentX, y + parentY, rotation + parentRotation);            
+            sprite.setTransforms(localPosition, localRotation, globalPosition, globalRotation);
+            sprite.draw();
         }
     }
     public void draw() {
@@ -229,5 +216,12 @@ public abstract class GameObject {
         }
         ret.setPosition(getTransform());
         return ret;
+    }
+    
+    public Vector3d getTransform() {
+        return new Vector3d(localPosition.x, localPosition.y, localRotation.z);
+    }
+    public Vector3d getPosition() {
+        return localPosition;
     }
 }

@@ -58,7 +58,7 @@ public class Mortar extends GameObject {
     private void spawnChildren() {
         mount = new GameObject("mortarstand", "mortar/jalusta.png", new Vector3d(0), viewportScale) { };
         mountGrooves = new GameObject("mortargrooves", "mortar/urat.png", new Vector3d(512, 512, 0), viewportScale * 0.58f) { };
-        gun = new GameObject("mortartube", "mortar/tykki.png", new Vector3d(512, 512, 1), viewportScale) { };
+        gun = new GameObject("mortartube", "mortar/tykki.png", new Vector3d(512, 512, 0), viewportScale) { };
         cradle = new GameObject("mortarcradle", "mortar/karry.png", new Vector3d(398, 147, -1), viewportScale) { };
         elevationWheel = new GameObject("mortarwheel", "mortar/ruori.png", new Vector3d(128, 128, -3), viewportScale) { };
         elevationGear = new GameObject("mortargear", "mortar/ratas.png", new Vector3d(64, 64, -2), viewportScale) { };
@@ -75,6 +75,15 @@ public class Mortar extends GameObject {
         mount.append(mountGrooves);
         append(mount);
     }
+    private void setDepth() {
+        mount.setDepth(2);
+        cradle.setDepth(1);
+        craneWheel.setDepth(2);
+        
+        gun.setDepth(-2);
+        elevationGear.setDepth(1);
+        elevationWheel.setDepth(2);
+    }
     
     private void initAnimator() {
         animator = new Animator();
@@ -85,6 +94,7 @@ public class Mortar extends GameObject {
     private void init() {   
         spawnChildren();
         appendChildren();
+        setDepth();
         initAnimator();
         
         elevationWheel.translate(20, 106);
@@ -174,7 +184,8 @@ public class Mortar extends GameObject {
     }
     
     public float getElevation() {
-        return -gun.rotation;
+        return (float)-gun.localRotation.z;
+        //return -gun.rotation;
     }
     
     public void setElevationTarget(float r) {
