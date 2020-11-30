@@ -80,7 +80,7 @@ public class Sprite {
         rotate(globalRotation);
         translate(localPosition);
         rotate(localRotation);
-
+        
         GL11.glColor3f(1, 1, 1);
         GL11.glBegin(GL11.GL_QUADS);
         for(float[] vertex : vertices){

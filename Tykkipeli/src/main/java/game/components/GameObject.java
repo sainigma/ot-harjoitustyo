@@ -113,6 +113,7 @@ public abstract class GameObject {
     public void setPosition(Vector3d position) {
         localPosition.x = position.x;
         localPosition.y = position.y;
+        localPosition.z = position.z;
         hasUpdated = true;
     }
     public void setRotation(float r) {
@@ -182,12 +183,15 @@ public abstract class GameObject {
     }
     private void _draw() {
         if (!visible) {
+            for (GameObject child : children) {
+                child.update();
+            }
             return;
         }
         for (GameObject child : children) {
             child.draw();
         }
-        if (sprite != null) {
+        if (sprite != null && visible) {
             sprite.setTransforms(localPosition, localRotation, globalPosition, globalRotation);
             sprite.draw();
         }

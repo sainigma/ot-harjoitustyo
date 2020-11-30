@@ -210,8 +210,13 @@ public class BaseGame {
             level.gameView.toggleVisible();
             level.mapView.toggleVisible();
         }
-        rotateMap(0.1f);
+        
+        
+        rotateMap(1f);
         shakeScreen();
         mortarLogic.solve(deltatimeMillis);
+        if (mortarLogic.hasActiveSolvers()) {
+            level.mapScreen.setProjectile(mortarLogic.latest);            
+        }
     }
 }

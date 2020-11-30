@@ -16,5 +16,5 @@
 | 26.11 | 7 | Animaatio- ja animaattoriluokkien suunnittelu ja toteutus. Kappaleita voi nyt animoita yksiulotteisilla ohjausarvoilla (mahdollisuus laajennukseen)
 | 27.11 | 5 | Pääpelisilmukan kehitystä. Tykin pystyy nyt lataamaan ja laukaisemaan, laukaisu käynnistää fysiikkasolverin tykin parametreilla.
 | 28.11 | 3 | Aloitin karttanäkymän/projektiilin seuraamisen työstämisen.
-| 30.11 | 5 | Karttanäkymä toimii, 3d-siirtymä -ja rotaatio siirtyy lapsiobjekteihin oikein. Sprite- ja GameObjectluokkien refaktorointia että em. mahdollista.
-| yht | 68 | |
+| 30.11 | 6 | Karttanäkymä toimii, 3d-siirtymä -ja rotaatio siirtyy lapsiobjekteihin oikein. Sprite- ja GameObjectluokkien refaktorointia että em. mahdollista. Viimeisin projektiili piirretään karttanäkymään.
+| yht | 69 | |

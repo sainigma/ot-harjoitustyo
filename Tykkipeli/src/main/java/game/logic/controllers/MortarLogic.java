@@ -15,41 +15,7 @@ import java.util.HashSet;
  *
  * @author suominka
  */
-public class MortarLogic {
-    
-    private class Statistic {
-        
-        private double elevation;
-        private double traversal;
-        private double mass;
-        private int cartouches;
-        private Ballistics solver;
-        private Vector3d lastPosition;
-        private ArrayList<Vector3d> positions;
-        
-        public Statistic(double elevation, double traversal, double mass, int cartouches, Ballistics solver) {
-            this.elevation = elevation;
-            this.traversal = traversal;
-            this.mass = mass;
-            this.cartouches = cartouches;
-            this.solver = solver;
-            positions = new ArrayList<>();
-        }
-        
-        public void updatePosition(Vector3d position) {
-            if (lastPosition == null) {
-                lastPosition = position.clone();
-            } else if (position.y > 0) {
-                positions.add(lastPosition);
-                lastPosition = position.clone();
-            }
-        }
-        @Override
-        public String toString() {
-            return "final position: " + lastPosition;
-        }
-    }
-    
+public class MortarLogic {    
     HashMap<Ballistics, Statistic> history;
     HashSet<Ballistics> activeSolvers;
     Projectile currentProjectile;
@@ -58,6 +24,8 @@ public class MortarLogic {
     
     double aboveSeaLevel = 15f;
     double chamberHeight = 2.2f;
+    
+    public Vector3d latest = new Vector3d();
     
     public MortarLogic() {
         elevation = 0;
@@ -88,7 +56,7 @@ public class MortarLogic {
         direction.setByAzimuthAltitude(traversal, elevation);
         Vector3d velocity = direction.clone().scale(currentProjectile.getInitialVelocity());
         solver.set(new Vector3d(0, aboveSeaLevel + chamberHeight, 0), velocity, mass, 0.001f);
-        solver.enableLogging();
+        //solver.enableLogging();
         activeSolvers.add(solver);
         history.put(solver, new Statistic(elevation, traversal, mass, cartouches, solver));
     }
@@ -104,9 +72,24 @@ public class MortarLogic {
                 System.out.println(solverStats);
             } else {
                 solver.solveToTime(dtMillis / 1000f);
-                solverStats.updatePosition(solver.getPosition());
+                latest.set(solver.getPosition());
+                solverStats.updatePosition(latest);
             }
         }
+    }
+    
+    public boolean hasActiveSolvers() {
+        return !activeSolvers.isEmpty();
+    }
+    
+    public Statistic getPosition() {
+        if (activeSolvers.isEmpty()) {
+            return null;
+        }
+        for (Ballistics solver : activeSolvers) {
+            return history.get(solver);
+        }
+        return null;
     }
     
     public boolean fire() {
