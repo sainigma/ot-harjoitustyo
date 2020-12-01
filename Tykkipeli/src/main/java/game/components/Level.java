@@ -51,7 +51,8 @@ public class Level extends GameObject {
         append(mapView);
         
         //gameView.setVisible(false);
-        mapView.setVisible(false);
+        mapView.setMinimized(true);
+        //mapView.setVisible(false);
         mortar.setTrueElevation(0f);
     }
     

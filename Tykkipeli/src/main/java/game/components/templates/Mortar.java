@@ -48,6 +48,7 @@ public class Mortar extends GameObject {
     private GameObject craneWheel;
     private GameObject craneGear;
     private GameObject mountGrooves;
+    private GameObject inclinometer;
     
     public Mortar(String name, float viewportScale) {
         super(name);
@@ -62,6 +63,7 @@ public class Mortar extends GameObject {
         cradle = new GameObject("mortarcradle", "mortar/karry.png", new Vector3d(398, 147, -1), viewportScale) { };
         elevationWheel = new GameObject("mortarwheel", "mortar/ruori.png", new Vector3d(128, 128, -3), viewportScale) { };
         elevationGear = new GameObject("mortargear", "mortar/ratas.png", new Vector3d(64, 64, -2), viewportScale) { };
+        inclinometer = new GameObject("inclinometer", "mortar/inklinometri.png", new Vector3d(32,354), viewportScale) { };
         craneWheel = elevationWheel.clone();
         craneGear = elevationGear.clone();
     }
@@ -73,13 +75,15 @@ public class Mortar extends GameObject {
         mount.append(craneWheel);
         mount.append(craneGear);
         mount.append(mountGrooves);
+        mount.append(inclinometer);
         append(mount);
     }
     private void setDepth() {
-        mount.setDepth(2);
+        mount.setDepth(3);
         cradle.setDepth(1);
         craneWheel.setDepth(2);
-        
+        inclinometer.setDepth(-3);
+
         gun.setDepth(-2);
         elevationGear.setDepth(1);
         elevationWheel.setDepth(2);
@@ -97,6 +101,8 @@ public class Mortar extends GameObject {
         setDepth();
         initAnimator();
         
+        inclinometer.setVisible(false);
+        
         elevationWheel.translate(20, 106);
         elevationGear.translate(50, 90);
         cradle.translate(1065f * viewportScale, 355f * viewportScale);
@@ -105,7 +111,8 @@ public class Mortar extends GameObject {
         craneGear.translate(495, 398);
         
         cradle.translate(-210, -0.15f * 210);
-
+        inclinometer.translate(710, 235);
+        
         mountGrooves.translate(997 * viewportScale, (730) * viewportScale);
         mountGrooves.setVertexOffset(
                 new float[]{235, -30},
@@ -113,11 +120,7 @@ public class Mortar extends GameObject {
                 new float[]{220, 80},
                 new float[]{-235, -30}
         );
-
-        //setElevationTarget(60);
-        //setTraversal(45);
         setCradle(0);
-        //setTraverseTarget(95);
     }
     
     private float getControl(PID controller, float target, float current, float maxSpeed, float coeff) {
@@ -250,9 +253,6 @@ public class Mortar extends GameObject {
     public void update() {
         long time = System.nanoTime();
         dt = (double) (time - lastTime) / 1000000;
-        //System.out.println(dt);
-        //float t = (float) (Math.cos((System.currentTimeMillis() - start) * 0.001) * 0.5f + 0.5f);
-        //setCradle(t);
         elevate();
         traverse();
         animator.animate(dt);
@@ -270,5 +270,9 @@ public class Mortar extends GameObject {
 
     public void addToTraverseTarget(float f) {
         setTraverseTarget(traverseTarget + f);
+    }
+    
+    public void setInclinometer(boolean state) {
+        inclinometer.setVisible(state);
     }
 }

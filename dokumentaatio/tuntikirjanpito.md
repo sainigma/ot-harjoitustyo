@@ -17,4 +17,5 @@
 | 27.11 | 5 | Pääpelisilmukan kehitystä. Tykin pystyy nyt lataamaan ja laukaisemaan, laukaisu käynnistää fysiikkasolverin tykin parametreilla.
 | 28.11 | 3 | Aloitin karttanäkymän/projektiilin seuraamisen työstämisen.
 | 30.11 | 6 | Karttanäkymä toimii, 3d-siirtymä -ja rotaatio siirtyy lapsiobjekteihin oikein. Sprite- ja GameObjectluokkien refaktorointia että em. mahdollista. Viimeisin projektiili piirretään karttanäkymään.
-| yht | 69 | |
+| 01.12 | 7 | Koodin refaktorointia, latauslogiikka siirretty omaan luokkaan. Alinäkymät ViewPort -luokkaan. Kartta piirtyy päänäkymän alanurkkaan kun karttanäkymä on pienennettynä.
+| yht | 76 | |

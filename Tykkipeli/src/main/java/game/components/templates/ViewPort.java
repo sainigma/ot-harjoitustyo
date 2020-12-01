@@ -7,7 +7,6 @@ package game.components.templates;
 
 import game.utils.Vector3d;
 import game.components.GameObject;
-import game.components.GameObject;
 import java.util.Random;
 
 /**
@@ -17,6 +16,7 @@ import java.util.Random;
 public class ViewPort extends GameObject {
     private boolean screenShake = false;
     private float screenShakeIntensity = 1;
+    private boolean minimized = false;
     Random rand = new Random();
     
     public ViewPort(String name) {
@@ -43,5 +43,20 @@ public class ViewPort extends GameObject {
     }
     public boolean isShaking() {
         return screenShake;
+    }
+    @Override
+    public boolean isMinimized() {
+        return minimized;
+    }
+    @Override
+    public void toggleMinimized() {
+        setMinimized(!minimized);
+    }
+    @Override
+    public void setMinimized(boolean state) {
+        minimized = state;
+        for (GameObject child : children) {
+            child.setMinimized(minimized);
+        }
     }
 }

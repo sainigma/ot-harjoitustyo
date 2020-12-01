@@ -15,7 +15,7 @@ import game.utils.Vector3d;
  * @author suominka
  */
 public abstract class GameObject {
-    private ArrayList<GameObject> children = new ArrayList<>();
+    public ArrayList<GameObject> children = new ArrayList<>();
     private Sprite sprite;
     
     private boolean initialized = false;
@@ -227,5 +227,17 @@ public abstract class GameObject {
     }
     public Vector3d getPosition() {
         return localPosition;
+    }
+    public Vector3d getRotation() {
+        return localRotation;
+    }
+    public void toggleMinimized() {
+    }
+    
+    public boolean isMinimized() {
+        return false;
+    }
+
+    public void setMinimized(boolean minimized) {
     }
 }
