@@ -38,3 +38,10 @@ Huom2. tykin lataamisen käyttöliittymä sijaitsee toistaiseksi kokonaan koment
 | Q | Kartan pyöritys myötäpäivään |
 | E | Kartan pyöritys vastapäivään |
 | väli | Tykin laukaisu |
+
+
+## Videodemo
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/zZMtgFfIBSc/0.jpg)](https://youtu.be/zZMtgFfIBSc)
+
+↑ Linkki
