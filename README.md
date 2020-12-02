@@ -26,11 +26,15 @@ Peli on jo jossain määrin toimivassa muodossa, pelimoottori on enimmäkseen va
     cd ot-harjoitustyo/Tykkipeli
     mvn compile exec:java -Dexec.mainClass=game.Main
 
-## Kääntö
+## Pakkaus .jariksi
 
 Tykkipeli kansion juuressa:
 
-    mvn -q exec:java -Dexec.mainClass=game.Main
+    mvn package
+
+Paketti luodaan target -kansioon, ja sen voi ajaa komennolla
+
+    java -jar Tykkipeli-1.0-SNAPSHOT.jar
 
 ## Testit
 
