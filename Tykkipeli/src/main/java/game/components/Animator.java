@@ -44,6 +44,9 @@ public class Animator {
             animation.play();
         }
     }
+    public boolean isPlaying() {
+        return activeClips.size() > 0;
+    }
     public boolean isPlaying(String name) {
         if (!animations.containsKey(name)) {
             return false;

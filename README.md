@@ -12,6 +12,8 @@ Sovelluksesta on tällä hetkellä valmiina peliobjekti- näkymä- ja renderöin
 
 [Arkkitehtuurikuvaus](/dokumentaatio/arkkitehtuuri.md)
 
+[Käyttöohje](/dokumentaatio/kayttoohje.md)
+
 # Komentorivitoiminnot
 
 ## Asennus & ajo

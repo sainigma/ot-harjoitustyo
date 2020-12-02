@@ -149,6 +149,9 @@ public abstract class GameObject {
         }
     }
     public void append(GameObject child) {
+        if (texLoader != null) {
+            child.setTextureLoader(texLoader);
+        }
         children.add(child);
     }
     public void remove(GameObject child) {
@@ -156,6 +159,13 @@ public abstract class GameObject {
     }
     public void update() {
         //pelilogiikka
+    }
+    private long lastTime = System.nanoTime();
+    public double getDeltatime() {
+        long time = System.nanoTime();
+        double dt = (double) (time - lastTime) / 1000000;
+        lastTime = time;
+        return dt;
     }
     public void propagate() {
         if (!hasUpdated) {

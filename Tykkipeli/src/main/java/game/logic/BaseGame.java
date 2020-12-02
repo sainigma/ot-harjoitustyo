@@ -7,6 +7,7 @@ package game.logic;
 
 import game.logic.controllers.*;
 import game.components.Level;
+import game.components.templates.ScreenShaker;
 import game.utils.InputManager;
 import game.utils.Renderer;
 
@@ -21,6 +22,7 @@ public class BaseGame {
     public ReloadLogic reloadLogic;
     public Level level = null;
     
+    public ScreenShaker screenShaker;
     private boolean gunMovementActive = true;
     
     private long lastTime = System.nanoTime();
@@ -29,6 +31,7 @@ public class BaseGame {
     public BaseGame(Level level) {
         this.level = level;
         this.renderer = renderer;
+        this.screenShaker = new ScreenShaker();
         this.mortarLogic = new MortarLogic();
         this.reloadLogic = new ReloadLogic(mortarLogic, level.mortar);
     }
@@ -43,9 +46,11 @@ public class BaseGame {
     }
     
     private void shakeScreen() {
+        screenShaker.update();
         float shake[] = level.mortar.getShake();
-        if (shake[1] > 0.05f) {
-            float shakeLevel = 20f * (1.1f - shake[0]) * shake[1];
+        float altShake = screenShaker.getShakevalue();
+        if (shake[1] + altShake > 0.05f) {
+            float shakeLevel = 20f * (1.1f - shake[0]) * shake[1] + altShake;
             level.gameView.setScreenShake(shakeLevel);
             level.mapView.setScreenShake(shakeLevel);
         } else if (level.gameView.isShaking()) {
@@ -161,6 +166,7 @@ public class BaseGame {
         mapControls(speedModifier);
     }
     
+    private int lastSolversActive = 0;
     public void update() {
         if (inputs == null) {
             return;
@@ -174,8 +180,17 @@ public class BaseGame {
         
         shakeScreen();
         mortarLogic.solve(deltatimeMillis);
+        
+        int solversActive = mortarLogic.activeSolvers.size();
+        if (solversActive < lastSolversActive) {
+            screenShaker.shake();
+        }
+        lastSolversActive = solversActive;
+        
         if (mortarLogic.hasActiveSolvers()) {
-            level.mapScreen.setProjectile(mortarLogic.latest);            
+            level.mapScreen.setByHistory(mortarLogic.history);
+        } else {
+            level.mapScreen.freeProjectiles(0);
         }
     }
     

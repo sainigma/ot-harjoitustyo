@@ -17,6 +17,7 @@ public class ViewPort extends GameObject {
     private boolean screenShake = false;
     private float screenShakeIntensity = 1;
     private boolean minimized = false;
+    
     Random rand = new Random();
     
     public ViewPort(String name) {

@@ -6,29 +6,48 @@ Perinteinen tykkipeli jossa pelaaja yrittää osua maaliin tykin kulmaa ja ammuk
 
 Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia parametrejä muuttamalla. Pelin haastavuutta voidaan varioida sekä simulaation parametrejä, esim. tuulivektoria, muuttamalla, että tekemällä maaleista liikkuvia. Pelin voittoehtona on maaliin osuminen, häviöehtoina taas ammusten loppuminen tai maalin pääseminen liian lähelle.
 
-## Tehtynä
+## Projektin eteneminen
 
 ### Näkymät/grafiikka
 
-- Erillisiä näkymiä voi luoda
-- Peliobjektien ryhmityksen/periytyvyyden toteutus, piirtologiikka ja piirtojärjestys
-- Tykin/mörssärin kontrollit, tavoitekulman ja -suunnan voi asettaa ja PID-säädin animoi tykin kulmiin (paikoitellen buginen)
+- [x] Erillisiä näkymiä voi luoda
+- [x] Näkymät voidaan piilottaa, minimoida ja deaktivoida (+käänteiset toiminnot), status propagoituu lapsiobjekteihin
+- [x] Peliobjektien ryhmityksen/periytyvyyden toteutus, piirtologiikka ja piirtojärjestys
+- [x] Tykin/mörssärin kontrollit, tavoitekulman ja -suunnan voi asettaa ja PID-säädin animoi tykin kulmiin
+- [x] Karttanäkymä, tykin kulma ja elävien projektiilien sijainnit piirretään reaaliajassa
+- [x] Peliobjektien animointi animaatiotiedostoilla
+- [ ] Näkymä tykin ammusten valintaan
+- [ ] Tuulen suunnan ilmaisu
+- [ ] Projektiilin lentoradan piirto
+- [ ] Edellisten projektiilien lentoradan piirto
+- [ ] Aktiivisen projektiilin alkuparametrien piirto karttanäkymään
+- [ ] Latausanimaatio tykille
+- [ ] Hiscorenäkymä
+- [ ] Päämenu
 
 ### Fysiikkasolveri
 
-- Valmis
+- [x] Solveri toimii staattisella kiihtyvyydellä
+- [x] Simulaatio toimii 3d-avaruudessa
+- [ ] Solveri toimii dynaamisella kiihtyvyydellä
 
-### Projektiilin lentorata
+## Pelilogiikka
 
-- Yksinkertainen toteutus kiinteällä kiihtyvyydellä
-
-## Kesken
-
-- Pääpelilogiikka
-- Käyttäjän syötteiden kuuntelu
-- Lentoradan dynaaminen lasku
-- Karttanäkymä
-- Hiscorenäkymä
+- [x] Käyttäjän näppäinsyötteiden kuuntelu
+- [x] Käyttäjä voi ladata tykin erilaisilla ammuksen ja panostusten yhdistelmillä
+- [x] Ammusvarasto ammuksille ja panoksille
+- [x] Lataamisella ja ampumisella oikea sekvenssi
+- [x] Käyttäjä voi laukaista tykin
+- [x] Käyttäjä voi vaihtaa näkymää
+- [x] Projektiilin elinkaari (spawnaus ja poisto)
+- [x] Solverin elinkaari (spawnaus, deaktivointi, arkistointi)
+- [ ] Kenttien spawnaus parametrisesti
+- [ ] Näppäinasetusten lataaminen tiedostosta
+- [ ] Maaliobjektit
+- [ ] Pisteidenlasku
+- [ ] Pelin päättyminen
+- [ ] Projektiilin osumien jälkikäsittely (osuiko maaliin)
+- [ ] Hiiritapahtumien seuraaminen, klikattavat objektit
 
 ## Pelisilmukka
 ![](./assets/gameplayloop.png)

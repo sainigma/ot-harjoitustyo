@@ -7,7 +7,12 @@ package game.components.templates;
 
 import game.components.GameObject;
 import game.logic.controllers.Statistic;
+import game.simulations.cases.Ballistics;
 import game.utils.Vector3d;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 /**
  *
  * @author suominka
@@ -18,7 +23,9 @@ public class MapScreen extends GameObject {
     Vector3d mapRotation = new Vector3d(0, 0, 0);
     GameObject map;
     GameObject minimap;
-    ProjectileGroup projectileIcon;
+    
+    ArrayList<ProjectileGroup> projectiles;
+    Iterator<ProjectileGroup> projectileIterator;
     
     GameObject cursor;
     GameObject minicursor;
@@ -29,21 +36,42 @@ public class MapScreen extends GameObject {
         
         GameObject front;
         GameObject shadow;
+        private boolean visible;
+        private float power;
         
-        public ProjectileGroup(GameObject front, GameObject shadow) {
-            this.front = front;
-            this.shadow = shadow;
+        public ProjectileGroup() {
+            this.front = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8), viewportScale) { };;
+            this.shadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16, 16), viewportScale) { };
             
             this.front.setRotation(new Vector3d(0, 90, 0));
             this.front.setRotation(new Vector3d(90, 0, 0));
-            
             map.append(front);
             map.append(shadow);
+            
+            setVisible(false);
+            power = 0;
+        }
+        
+        private void setVisible(boolean state) {
+            visible = state;
+            front.setVisible(state);
+            shadow.setVisible(state);
+        }
+        
+        public void setPower(float power) {
+            this.power = power;
+        }
+        
+        public float getPower() {
+            return power;
         }
         
         public void setPosition(Vector3d position) {
             if (position == null) {
                 return;
+            }
+            if (!visible) {
+                setVisible(true);
             }
             Vector3d pos = new Vector3d(position.x, position.z, position.y);
             pos.set(pos.scale(520f / 10000f));
@@ -53,9 +81,17 @@ public class MapScreen extends GameObject {
             front.setPosition(pos);
             pos.z = 2f;
             shadow.setPosition(pos);
+            setRotation(map.getRotation());
         }
         public void setRotation(Vector3d rotation) {
             front.setRotation(new Vector3d(0, 0, rotation.z));
+        }
+        public Vector3d getPosition() {
+            return shadow.getPosition();
+        }
+        public void kill() {
+            map.remove(front);
+            map.remove(shadow);
         }
     }
     
@@ -63,6 +99,7 @@ public class MapScreen extends GameObject {
         super(name);
         this.traversal = 0f;
         this.viewportScale = viewportScale;
+        projectiles = new ArrayList<>();
         init();
     }
     
@@ -76,18 +113,41 @@ public class MapScreen extends GameObject {
     public void rotateMap(double rotation) {
         map.rotate((float) rotation);
         minimap.rotate((float) rotation);
-        projectileIcon.setRotation(map.getRotation());
     }
     
-    public void setProjectile(Vector3d position) {
-        projectileIcon.setPosition(position);
+    private void setProjectile(ProjectileGroup projectile, Vector3d position, float power) {
+        projectile.setPower(power);
+        projectile.setPosition(position);
     }
     
-    public void setByStatistic(Statistic stat) {
-        if (stat == null) {
+    public void freeProjectiles(int i) {
+        if (projectiles.size() <= i) {
             return;
         }
-        setProjectile(stat.getLastPosition());
+        int j = projectiles.size() - 1;
+        while (projectiles.size() > i) {
+            ProjectileGroup projectile = projectiles.get(j);
+            spawnHitmarker(projectile.getPosition(), projectile.getPower());
+            projectiles.get(j).kill();
+            projectiles.remove(j);
+        }
+    }
+    
+    public void setByHistory(HashMap<Ballistics, Statistic> history) {
+        int i = 0;
+        for (Ballistics solver : history.keySet()) {
+            Statistic stat = history.get(solver);
+            if (stat.isActive()) {
+                i += 1;
+                if (projectiles.size() < i) {
+                    spawnProjectile();
+                }
+                setProjectile(projectiles.get(i - 1), stat.getLastPosition(), stat.getPower());
+            }
+        }
+        if (projectiles.size() > i) {
+            freeProjectiles(i);
+        }
     }
     
     private void spawnChildren() {
@@ -99,9 +159,11 @@ public class MapScreen extends GameObject {
     }
     
     private void spawnProjectile() {
-        GameObject projectileFront = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8), viewportScale) { };
-        GameObject projectileShadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16, 16), viewportScale) { };        
-        projectileIcon = new ProjectileGroup(projectileFront, projectileShadow);        
+        projectiles.add(new ProjectileGroup());
+    }
+    
+    private void spawnHitmarker(Vector3d position, float power) {
+        System.out.println("spawning hitmarker at " + position);
     }
     
     private void setChildTransforms() {
@@ -118,9 +180,8 @@ public class MapScreen extends GameObject {
     
     private void init() {
         spawnChildren();
-        spawnProjectile();
         setChildTransforms();
-
+        
         map.append(cursor);
         minimap.append(minicursor);
         

@@ -15,6 +15,8 @@ import game.utils.Vector3d;
  * @author suominka
  */
 public class Mortar extends GameObject {
+    private double dt;
+    
     private float viewportScale;
     long start = System.currentTimeMillis();
     
@@ -250,16 +252,11 @@ public class Mortar extends GameObject {
             gun.setRotation(gunRot);            
         }
     }
-    
-    private double dt = 0;
-    private long lastTime = System.nanoTime();
     public void update() {
-        long time = System.nanoTime();
-        dt = (double) (time - lastTime) / 1000000;
+        dt = this.getDeltatime();
         elevate();
         traverse();
         animator.animate(dt);
-        lastTime = time;
     }
     public void forcedUpdate(double deltatime) {
         dt = deltatime;

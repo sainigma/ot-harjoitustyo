@@ -37,7 +37,7 @@ public class Statistic {
     public void updatePosition(Vector3d position) {
         if (lastPosition == null) {
             lastPosition = position.clone();
-        } else if (position.y > 0) {
+        } else {
             positions.add(lastPosition);
             lastPosition = position.clone();
         }
@@ -56,6 +56,10 @@ public class Statistic {
     
     public boolean isActive() {
         return active;
+    }
+    
+    public float getPower() {
+        return (float) (mass / 123f);
     }
     
     @Override

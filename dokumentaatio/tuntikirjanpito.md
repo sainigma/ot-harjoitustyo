@@ -18,5 +18,5 @@
 | 28.11 | 3 | Aloitin karttanäkymän/projektiilin seuraamisen työstämisen.
 | 30.11 | 6 | Karttanäkymä toimii, 3d-siirtymä -ja rotaatio siirtyy lapsiobjekteihin oikein. Sprite- ja GameObjectluokkien refaktorointia että em. mahdollista. Viimeisin projektiili piirretään karttanäkymään.
 | 01.12 | 7 | Koodin refaktorointia, latauslogiikka siirretty omaan luokkaan. Alinäkymät ViewPort -luokkaan. Kartta piirtyy päänäkymän alanurkkaan kun karttanäkymä on pienennettynä.
-| 02.12 | 2 | Testien kirjoitusta pääpelisilmukalle.
-| yht | 78 | |
+| 02.12 | 6 | Testien kirjoitusta pääpelisilmukalle. Karttanäkymä pystyy spawnaamaan ja poistamaan projektiileja tarpeenmukaan, projektiilin osuma maahan tärisyttää ruutua. Palautuksen valmistelua.
+| yht | 84 | |
