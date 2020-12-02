@@ -63,7 +63,7 @@ public class Mortar extends GameObject {
         cradle = new GameObject("mortarcradle", "mortar/karry.png", new Vector3d(398, 147, -1), viewportScale) { };
         elevationWheel = new GameObject("mortarwheel", "mortar/ruori.png", new Vector3d(128, 128, -3), viewportScale) { };
         elevationGear = new GameObject("mortargear", "mortar/ratas.png", new Vector3d(64, 64, -2), viewportScale) { };
-        inclinometer = new GameObject("inclinometer", "mortar/inklinometri.png", new Vector3d(32,354), viewportScale) { };
+        inclinometer = new GameObject("inclinometer", "mortar/inklinometri.png", new Vector3d(32, 354), viewportScale) { };
         craneWheel = elevationWheel.clone();
         craneGear = elevationGear.clone();
     }
@@ -95,12 +95,7 @@ public class Mortar extends GameObject {
         animator.bindDriver("cradle", this);
     }
     
-    private void init() {   
-        spawnChildren();
-        appendChildren();
-        setDepth();
-        initAnimator();
-        
+    private void setChildParameters() {
         inclinometer.setVisible(false);
         
         elevationWheel.translate(20, 106);
@@ -121,6 +116,14 @@ public class Mortar extends GameObject {
                 new float[]{-235, -30}
         );
         setCradle(0);
+    }
+    
+    private void init() {   
+        spawnChildren();
+        appendChildren();
+        setDepth();
+        initAnimator();
+        setChildParameters();
     }
     
     private float getControl(PID controller, float target, float current, float maxSpeed, float coeff) {
@@ -187,7 +190,7 @@ public class Mortar extends GameObject {
     }
     
     public float getElevation() {
-        return (float)-gun.localRotation.z;
+        return -(float) gun.localRotation.z;
         //return -gun.rotation;
     }
     

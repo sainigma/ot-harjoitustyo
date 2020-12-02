@@ -99,6 +99,9 @@ public class BaseGame {
         if (inputs.keyDownOnce("fire")) {
             fire();
         }
+        if (inputs.keyDownOnce("toggle map") || (inputs.keyDownOnce("cancel") && !level.mapView.isMinimized())) {
+            toggleView();
+        }
         rotateMap(speedModifier);
     }
     
@@ -137,27 +140,37 @@ public class BaseGame {
         level.mapView.toggleMinimized();        
     }
     
-    public void update() {
+    private void getDeltatimeMillis() {
         long time = System.nanoTime() / 1000000;
         deltatimeMillis = (double) (time - lastTime);
         lastTime = time;
+    }
+    
+    private void gameViewLogic(float speedModifier) {
+        if (!level.gameView.isVisible()) {
+            return;
+        }
+        gameControls(speedModifier);
+        reloadLogic.reloadControls();
+    }
+    
+    private void mapViewLogic(float speedModifier) {
+        if (level.gameView.isVisible()) {
+            return;
+        }
+        mapControls(speedModifier);
+    }
+    
+    public void update() {
         if (inputs == null) {
             return;
         }
-
+        getDeltatimeMillis();
+        
         float speedModifier = getSpeedModifier();
         sharedControls(speedModifier);
-        if (level.gameView.isVisible()) {
-            gameControls(speedModifier);
-            reloadLogic.reloadControls();
-        } else {
-            mapControls(speedModifier);
-        }
-
-        
-        if (inputs.keyDownOnce("toggle map") || (inputs.keyDownOnce("cancel") && !level.mapView.isMinimized())) {
-            toggleView();
-        }
+        gameViewLogic(speedModifier);
+        mapViewLogic(speedModifier);
         
         shakeScreen();
         mortarLogic.solve(deltatimeMillis);

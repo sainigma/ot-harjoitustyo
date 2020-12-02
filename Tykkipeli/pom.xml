@@ -152,12 +152,13 @@
                     <excludes>
                         <exlude>game/Main*</exlude>
                         <exclude>game/utils/Sprite*</exclude>
-                        <exclude>game/utils/TextureLoader*</exclude>
                         <exclude>game/utils/Renderer*</exclude>
                         <exclude>game/utils/Texture*</exclude>
+                        <exclude>game/utils/Input*</exclude>
                         <exclude>game/components/GameObject*</exclude>
                         <exclude>game/components/Level*</exclude> 
                         <exclude>game/components/ViewPort*</exclude>
+                        
                     </excludes>
                 </configuration>
                 <executions>

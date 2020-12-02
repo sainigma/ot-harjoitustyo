@@ -47,7 +47,7 @@ public class Statistic {
         if (positions.isEmpty()) {
             return null;
         }
-        return positions.get(positions.size()-1);
+        return positions.get(positions.size() - 1);
     }
     
     public void disable() {

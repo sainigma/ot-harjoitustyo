@@ -15,7 +15,7 @@ import game.utils.Vector3d;
 public class MapScreen extends GameObject {
     private float viewportScale;
     private boolean minimized = true;
-    Vector3d mapRotation = new Vector3d(0,0,0);
+    Vector3d mapRotation = new Vector3d(0, 0, 0);
     GameObject map;
     GameObject minimap;
     ProjectileGroup projectileIcon;
@@ -34,8 +34,11 @@ public class MapScreen extends GameObject {
             this.front = front;
             this.shadow = shadow;
             
-            this.front.setRotation(new Vector3d(0,90,0));
-            this.front.setRotation(new Vector3d(90,0,0));
+            this.front.setRotation(new Vector3d(0, 90, 0));
+            this.front.setRotation(new Vector3d(90, 0, 0));
+            
+            map.append(front);
+            map.append(shadow);
         }
         
         public void setPosition(Vector3d position) {
@@ -43,7 +46,7 @@ public class MapScreen extends GameObject {
                 return;
             }
             Vector3d pos = new Vector3d(position.x, position.z, position.y);
-            pos.set(pos.scale(520f/10000f));
+            pos.set(pos.scale(520f / 10000f));
             pos.x -= 256f;
             pos.y += 256f;
             pos.z += 2f;
@@ -52,7 +55,7 @@ public class MapScreen extends GameObject {
             shadow.setPosition(pos);
         }
         public void setRotation(Vector3d rotation) {
-            front.setRotation(new Vector3d(0,0,rotation.z));
+            front.setRotation(new Vector3d(0, 0, rotation.z));
         }
     }
     
@@ -87,37 +90,42 @@ public class MapScreen extends GameObject {
         setProjectile(stat.getLastPosition());
     }
     
-    private void init() {
-        map = new GameObject("map3d", "mapview/kartta.png", new Vector3d(512,512), viewportScale) { };
-        minimap = new GameObject("minimap", "mapview/karttamini.png", new Vector3d(128,128), viewportScale) { };
+    private void spawnChildren() {
+        map = new GameObject("map3d", "mapview/kartta.png", new Vector3d(512, 512), viewportScale) { };
+        minimap = new GameObject("minimap", "mapview/karttamini.png", new Vector3d(128, 128), viewportScale) { };
         
-        cursor = new GameObject("mapcursor", "mapview/suunta.png", new Vector3d(5,7), viewportScale) { };
+        cursor = new GameObject("mapcursor", "mapview/suunta.png", new Vector3d(5, 7), viewportScale) { };
         minicursor = new GameObject("mapcursor", "mapview/suuntamini.png", new Vector3d(0), viewportScale) { };
+    }
+    
+    private void spawnProjectile() {
+        GameObject projectileFront = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8), viewportScale) { };
+        GameObject projectileShadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16, 16), viewportScale) { };        
+        projectileIcon = new ProjectileGroup(projectileFront, projectileShadow);        
+    }
+    
+    private void setChildTransforms() {
+        map.translate((1280 / 2), (720 / 2));
+        map.setRotation(new Vector3d(45, 0, 22.5));
         
-        GameObject projectileFront = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8,8), viewportScale) { };
-        GameObject projectileShadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16,16), viewportScale) { };
+        minimap.translate(1280f - 110f, 720f - 90f, 100f);
+        minimap.setRotation(new Vector3d(45, 0, 22.5));        
         
-        projectileIcon = new ProjectileGroup(projectileFront, projectileShadow);
-        
-        map.translate((1280/2), (720/2));
-        map.setRotation(new Vector3d(45,0,22.5));
-        
-        minimap.translate(1280f-110f, 720f - 90f, 100f);
-        minimap.setRotation(new Vector3d(45,0,22.5));        
-        
-        cursor.translate(-256, 256,1);
-        minicursor.translate(-64,64,1);
+        cursor.translate(-256, 256, 1);
+        minicursor.translate(-64, 64, 1);
+        setTraversal(0);
+    }
+    
+    private void init() {
+        spawnChildren();
+        spawnProjectile();
+        setChildTransforms();
 
         map.append(cursor);
         minimap.append(minicursor);
         
-        map.append(projectileFront);
-        map.append(projectileShadow);
-        
         append(map);
         append(minimap);
-        
-        setTraversal(0);
     }
     
     @Override

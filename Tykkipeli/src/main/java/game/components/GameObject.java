@@ -132,7 +132,7 @@ public abstract class GameObject {
         hasUpdated = true;
     }
     public void translate(float x, float y, float z) {
-        translate(x,y);
+        translate(x, y);
         localPosition.z += z;
     }
     
