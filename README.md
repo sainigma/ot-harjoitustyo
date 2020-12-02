@@ -2,7 +2,7 @@
 
 Perinteinen tykkipeli jossa pelaaja yrittää osua maaliin tykin kulmaa ja ammuksen nopeutta muuttamalla.
 
-Sovelluksesta on tällä hetkellä valmiina peliobjekti- näkymä- ja renderöintilogiikka, sekä yksinkertainen fysiikkasolveri. Testit kattavat tällä hetkellä fysikkasolverin ja tilanteen jossa lentorataan ei vaikuta ilmanvastus.
+Peli on jo jossain määrin toimivassa muodossa, pelimoottori on enimmäkseen valmis ja pelilogiikka kattaa tykin peruskontrolloinnin. Varsinainen pääpelisilmukka on kuitenkin vielä toteuttamatta, ja joitain kriittisiä näkymiä vielä puuttuu.
 
 ## Dokumentaatio
 
@@ -14,19 +14,19 @@ Sovelluksesta on tällä hetkellä valmiina peliobjekti- näkymä- ja renderöin
 
 [Käyttöohje](/dokumentaatio/kayttoohje.md)
 
+# Releaset
+
+[Viikko 5](https://github.com/sainigma/ot-harjoitustyo/releases/tag/0.6)
+
 # Komentorivitoiminnot
 
-## Asennus & ajo
+## Kääntö & ajo
 
     git clone https://github.com/sainigma/ot-harjoitustyo.git
     cd ot-harjoitustyo/Tykkipeli
     mvn compile exec:java -Dexec.mainClass=game.Main
 
-## Releaset
-
-[Viikko 5](https://github.com/sainigma/ot-harjoitustyo/releases/tag/0.6)
-
-## Ajo
+## Kääntö
 
 Tykkipeli kansion juuressa:
 
