@@ -22,6 +22,10 @@ Sovelluksesta on tällä hetkellä valmiina peliobjekti- näkymä- ja renderöin
     cd ot-harjoitustyo/Tykkipeli
     mvn compile exec:java -Dexec.mainClass=game.Main
 
+## Releaset
+
+[Viikko 5](https://github.com/sainigma/ot-harjoitustyo/releases/tag/0.6)
+
 ## Ajo
 
 Tykkipeli kansion juuressa:
