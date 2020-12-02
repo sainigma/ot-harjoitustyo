@@ -122,4 +122,12 @@ public class ReloadLogic {
             chooseCartouches();
         }
     }
+    
+    public void setProjectile(int warhead, int cartouches) {
+        float weight = magazine.getWarhead(warhead);
+        cartouches = magazine.getCartouche(cartouches);
+        if (weight > 0 && cartouches > 0) {
+            currentProjectile = new Projectile(weight, cartouches);            
+        }
+    }
 }

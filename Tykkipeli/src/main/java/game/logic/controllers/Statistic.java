@@ -22,7 +22,8 @@ public class Statistic {
     private Ballistics solver;
     private Vector3d lastPosition;
     private ArrayList<Vector3d> positions;
-
+    private boolean active;
+    
     public Statistic(double elevation, double traversal, double mass, int cartouches, Ballistics solver) {
         this.elevation = elevation;
         this.traversal = traversal;
@@ -30,6 +31,7 @@ public class Statistic {
         this.cartouches = cartouches;
         this.solver = solver;
         positions = new ArrayList<>();
+        active = true;
     }
 
     public void updatePosition(Vector3d position) {
@@ -47,6 +49,15 @@ public class Statistic {
         }
         return positions.get(positions.size()-1);
     }
+    
+    public void disable() {
+        active = false;
+    }
+    
+    public boolean isActive() {
+        return active;
+    }
+    
     @Override
     public String toString() {
         return "final position: " + lastPosition;

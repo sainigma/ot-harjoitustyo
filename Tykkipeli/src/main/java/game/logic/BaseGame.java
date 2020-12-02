@@ -15,11 +15,11 @@ import game.utils.Renderer;
  * @author suominka
  */
 public class BaseGame {
-    Level level = null;
-    InputManager inputs = null;
-    Renderer renderer = null;
-    MortarLogic mortarLogic;
-    ReloadLogic reloadLogic;
+    private InputManager inputs = null;
+    private Renderer renderer = null;
+    public MortarLogic mortarLogic;
+    public ReloadLogic reloadLogic;
+    public Level level = null;
     
     private boolean gunMovementActive = true;
     
@@ -164,5 +164,9 @@ public class BaseGame {
         if (mortarLogic.hasActiveSolvers()) {
             level.mapScreen.setProjectile(mortarLogic.latest);            
         }
+    }
+    
+    public void forcedUpdate(double deltatimeMillis) {
+        mortarLogic.solve(deltatimeMillis);
     }
 }

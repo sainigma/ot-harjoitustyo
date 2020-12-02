@@ -7,18 +7,18 @@ package game.logic.controllers;
 
 import game.simulations.cases.Ballistics;
 import game.utils.Vector3d;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  *
  * @author suominka
  */
 public class MortarLogic {    
-    HashMap<Ballistics, Statistic> history;
-    HashSet<Ballistics> activeSolvers;
-    Projectile currentProjectile;
+    public HashMap<Ballistics, Statistic> history;
+    public HashSet<Ballistics> activeSolvers;
+    private Projectile currentProjectile;
     double elevation;
     double traversal;
     
@@ -65,10 +65,13 @@ public class MortarLogic {
         if (activeSolvers.isEmpty()) {
             return;
         }
-        for (Ballistics solver : activeSolvers) {
+        Iterator<Ballistics> iterator = activeSolvers.iterator();
+        while (iterator.hasNext()) {
+            Ballistics solver = iterator.next();
             Statistic solverStats = history.get(solver);
             if (solver.endCondition()) {
-                activeSolvers.remove(solver);
+                solverStats.disable();
+                iterator.remove();
                 System.out.println(solverStats);
             } else {
                 solver.solveToTime(dtMillis / 1000f);
