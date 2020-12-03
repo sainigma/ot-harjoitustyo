@@ -42,18 +42,18 @@ public class Ballistics extends PhysicsSolver {
     
     private Vector3d getDrag(Vector3d velocity) {
         double trueAirDensity = getAirDensity(getPosition().y);
-        double localCoeff = trueAirDensity * dragCoeff * frontalArea / (2 * getMass());
+        double scalarVelocity = velocity.magnitude();
+        double localCoeff = Math.pow(scalarVelocity, 2) * trueAirDensity * dragCoeff * frontalArea / (2 * getMass());
         Vector3d drag = velocity.clone();
-        drag.x *= -drag.x * localCoeff;
-        drag.y *= -drag.y * localCoeff;
-        drag.z *= -drag.z * localCoeff;
+        drag.normalize();
+        drag.scale(localCoeff);
         return drag;
     }
     
     @Override
     public Vector3d solveAcceleration() {
         Vector3d drag = getDrag(getVelocity());
-        return new Vector3d(drag.x, gravity(0)+drag.y, drag.z);
+        return new Vector3d(-drag.x, gravity(0)-drag.y, -drag.z);
     }
     
     private void setConstants() {
