@@ -17,10 +17,12 @@ public class Ballistics extends PhysicsSolver {
     double frontalArea;
     double standardGravity;
     double earthRadius;
+    double earthAngularVelocity;
     double airMolarMass;
     double molarGasConstant;
     double airTemperature;
     double airDensityGround;
+    double latitudeRadians;
     
     public Ballistics() {
         super(); //Sets world specific parameters
@@ -50,10 +52,16 @@ public class Ballistics extends PhysicsSolver {
         return drag;
     }
     
+    public double getCoriolisAcceleration(Vector3d velocity) {
+        return -2f * earthAngularVelocity * Math.sin(latitudeRadians) * velocity.z;
+    }
+    
     @Override
     public Vector3d solveAcceleration() {
-        Vector3d drag = getDrag(getVelocity());
-        return new Vector3d(-drag.x, gravity(0)-drag.y, -drag.z);
+        Vector3d velocity = getVelocity();
+        Vector3d drag = getDrag(velocity);
+        double coriolisAcceleration = getCoriolisAcceleration(velocity);
+        return new Vector3d(-drag.x + coriolisAcceleration, gravity(0) - drag.y, -drag.z);
     }
     
     private void setConstants() {
@@ -63,6 +71,8 @@ public class Ballistics extends PhysicsSolver {
         airMolarMass = 0.0289644f;
         molarGasConstant = 8.3144598f;
         airDensityGround = 1.225f;
+        earthAngularVelocity = Math.PI / (3600f * 12f);
+        latitudeRadians = Math.PI * 60.1454f / 180f;
         setTemperature(15);
         setArea(0.280f);
     }
