@@ -25,10 +25,17 @@ public abstract class PhysicsSolver {
     private State state;
     private boolean logging = false;
     public PhysicsSolver() {
+        timestep = 0.1f;
         state = null;
+    }
+    public double getMass() {
+        return mass;
     }
     public Vector3d getPosition() {
         return state.position;
+    }
+    public Vector3d getVelocity() {
+        return state.velocity;
     }
     public void enableLogging() {
         logging = true;
@@ -56,6 +63,7 @@ public abstract class PhysicsSolver {
         position.z = state.velocity.z * timestep + state.position.z;
         return position;
     }
+    
     private Vector3d solveVelocity(Vector3d previousAcceleration) {
         Vector3d velocity = new Vector3d();
         Vector3d deltaA = state.acceleration.diff(previousAcceleration);
@@ -64,7 +72,7 @@ public abstract class PhysicsSolver {
         velocity.z = timestep * (0.5 * deltaA.z + state.acceleration.z) + state.velocity.z;
         return velocity;
     }
-    private Vector3d solveAcceleration() {
+    public Vector3d solveAcceleration() {
         return new Vector3d(0, gravity(), 0);
     }
     public boolean endCondition() {

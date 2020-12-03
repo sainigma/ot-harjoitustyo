@@ -26,6 +26,7 @@ public class PhysicsTest {
     public void setUp() {
         parabola = new Parabola();
         ballistics = new Ballistics();
+        ballistics.setMass(120);
     }
     private double timeToRun(PhysicsSolver solver, double maxTime){
         double time = 0;
@@ -53,9 +54,9 @@ public class PhysicsTest {
         assertTrue( time < maxTime );
     }
     private double getMagnitudeForDirection(PhysicsSolver solver, Vector3d direction){
-        solver.set(new Vector3d(0), direction);
+        solver.set(new Vector3d(0,1,0), direction);
         solver.run();
-        return parabola.getPosition().magnitude();
+        return solver.getPosition().magnitude();
     }
     private boolean testDistance(PhysicsSolver solver){
         double errorMargin = 0.5;
@@ -86,20 +87,24 @@ public class PhysicsTest {
     }
     
     @Test
-    public void distanceTraveledOnlyDependantOnAngleForParabola(){
-        System.out.println(" Testing that distance is dependant only on the initial angle for parabolic system");
+    public void distanceTraveledOnlyDependantOnElevationForParabola(){
+        System.out.println(" Testing that distance is dependant only on the initial elevation for parabolic system");
         assertTrue(testDistance(parabola));
     }
-    /* implement ballistics first
+    
     @Test
-    public void distanceTraveledOnlyDependantOnAngleForBallistics(){
+    public void distanceTraveledOnlyDependantOnElevationForBallistics(){
+        System.out.println(" Testing that distance is dependant only on the initial elevation for ballistic system");
         assertTrue(testDistance(ballistics));
     }
     
     @Test
     public void dragAffectsDistance(){
+        System.out.println(" Testing that drag affected system decays faster than parabolic one");
         Vector3d direction = new Vector3d(100,100,0);
-        assertTrue( getMagnitudeForDirection(solver, direction) > getMagnitudeForDirection(ballistics, direction) );
+        double parabolicDistance = getMagnitudeForDirection(parabola, direction);
+        double ballisticDistance = getMagnitudeForDirection(ballistics, direction);
+        System.out.println(" final distances: parabolic: " + parabolicDistance + " ballistic: " + ballisticDistance);
+        assertTrue(parabolicDistance > ballisticDistance);
     }
-    */
 }

@@ -29,7 +29,8 @@ Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia param
 
 - [x] Solveri toimii staattisella kiihtyvyydellä
 - [x] Simulaatio toimii 3d-avaruudessa
-- [ ] Solveri toimii dynaamisella kiihtyvyydellä
+- [x] Solveri toimii dynaamisella kiihtyvyydellä
+- [ ] Tuuli otetaan huomioon simulaatiossa
 
 ## Pelilogiikka
 

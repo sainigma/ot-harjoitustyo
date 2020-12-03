@@ -51,6 +51,7 @@ public class MortarLogic {
     private void startSolver() {
         Ballistics solver = new Ballistics();
         float mass = currentProjectile.weight;
+        solver.setMass(mass);
         int cartouches = currentProjectile.cartouches;
         Vector3d direction = new Vector3d();
         direction.setByAzimuthAltitude(traversal, elevation);

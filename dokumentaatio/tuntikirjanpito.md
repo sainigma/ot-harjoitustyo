@@ -19,4 +19,5 @@
 | 30.11 | 6 | Karttanäkymä toimii, 3d-siirtymä -ja rotaatio siirtyy lapsiobjekteihin oikein. Sprite- ja GameObjectluokkien refaktorointia että em. mahdollista. Viimeisin projektiili piirretään karttanäkymään.
 | 01.12 | 7 | Koodin refaktorointia, latauslogiikka siirretty omaan luokkaan. Alinäkymät ViewPort -luokkaan. Kartta piirtyy päänäkymän alanurkkaan kun karttanäkymä on pienennettynä.
 | 02.12 | 7 | Testien kirjoitusta pääpelisilmukalle. Karttanäkymä pystyy spawnaamaan ja poistamaan projektiileja tarpeenmukaan, projektiilin osuma maahan tärisyttää ruutua. Palautuksen valmistelua.
-| yht | 85 | |
+| 03.12 | 2 | Ilmanvastus, gravitaation heikkeneminen ja ilman tiheyden muutos vaikuttaa nyt lentorataan. Testien kirjoitusta parabolisen ja ballistisen lentoradan vertailuun.
+| yht | 87 | |
