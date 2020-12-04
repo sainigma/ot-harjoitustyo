@@ -166,6 +166,7 @@ public class BaseGame {
         mapControls(speedModifier);
     }
     
+    private boolean historyDebouncer;
     private int lastSolversActive = 0;
     public void update() {
         if (inputs == null) {
@@ -189,7 +190,12 @@ public class BaseGame {
         
         if (mortarLogic.hasActiveSolvers()) {
             level.mapScreen.setByHistory(mortarLogic.history);
+            historyDebouncer = true;
         } else {
+            if (historyDebouncer) {
+                level.mapScreen.setByHistory(mortarLogic.history);
+                historyDebouncer = false;
+            }
             level.mapScreen.freeProjectiles(0);
         }
     }

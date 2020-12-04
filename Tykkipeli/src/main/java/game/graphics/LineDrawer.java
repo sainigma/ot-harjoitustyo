@@ -17,6 +17,30 @@ public class LineDrawer extends ImmediateDrawer {
     private ArrayList<Vector3d> positions;
     private boolean initialized = false;
     private int lineStep = 1;
+    private float lineWidth = 1f;
+    private Color color;
+    
+    public class Color {
+        private float r;
+        private float b;
+        private float g;
+        public Color(float r, float b, float g) {
+            this.r = r;
+            this.b = b;
+            this.g = g;
+        }
+        public float[] get() {
+            return new float[] {r,b,g};
+        }
+    }
+    
+    public LineDrawer() {
+        setColor(0f,0f,0f);
+    }
+    
+    public void setColor(float r, float b, float g) {
+        this.color = new Color(r,b,g);
+    }
     
     public boolean isInitialized() {
         return initialized;
@@ -31,6 +55,9 @@ public class LineDrawer extends ImmediateDrawer {
     public void setLineStep(int step) {
         lineStep = step;
     }
+    public void setLineWidth(float lineWidth) {
+        this.lineWidth = lineWidth;
+    }
     
     @Override
     public void _draw() {
@@ -40,7 +67,8 @@ public class LineDrawer extends ImmediateDrawer {
         int i = 0;
         int j = 0;
         int size = positions.size();
-        GL11.glColor3f(0, 0, 0);
+        GL11.glColor3fv(color.get());
+        GL11.glLineWidth(lineWidth);
         GL11.glBegin(GL11.GL_LINES);
         while (i < size) {
             Vector3d pos = positions.get(i);

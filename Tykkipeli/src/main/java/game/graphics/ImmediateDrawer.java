@@ -60,6 +60,10 @@ public abstract class ImmediateDrawer {
         this.globalRotation = rotation;
     }
     
+    public void setGlobalPosition(Vector3d position) {
+        this.globalPosition = position;
+    }
+    
     public void setTransforms(Vector3d localPosition, Vector3d localRotation, Vector3d globalPosition, Vector3d globalRotation){
         this.localPosition.set(localPosition);
         this.localRotation.set(localRotation);

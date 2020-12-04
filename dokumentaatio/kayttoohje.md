@@ -19,6 +19,8 @@ Huom2. tykin lataamisen käyttöliittymä sijaitsee toistaiseksi kokonaan koment
 | → | Valitse seuraava |
 | Enter | Hyväksy valinta |
 | M | Karttanäkymä päälle/pois |
+| LShift | Nopeammin |
+| LCtrl | Hitaammin |
 
 
 |  | Tykin kontrollit |

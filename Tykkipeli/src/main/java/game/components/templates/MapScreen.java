@@ -17,8 +17,6 @@ import java.util.HashMap;
  * @author suominka
  */
 public class MapScreen extends GameObject {
-    Plotter plotter;
-    
     private float viewportScale;
     private boolean minimized = true;
     private float mapTexScale = 520f / 10000f;
@@ -29,7 +27,7 @@ public class MapScreen extends GameObject {
     GameObject projectileShadow;
     
     ArrayList<Plotter> plotters;
-    ArrayList<Plotter> historicalPlots;
+    HashMap<Ballistics, Plotter> historicalPlots;
     ArrayList<ProjectileGroup> projectiles;
     
     GameObject cursor;
@@ -39,10 +37,9 @@ public class MapScreen extends GameObject {
     
     class Plotter {
         LineDrawer plotter;
-        private boolean active;
         public Plotter() {
             plotter = new LineDrawer();
-            plotter.setLineStep(100);
+            plotter.setLineStep(75);
             plotter.setScale(mapTexScale);
             plotter.setTransforms(new Vector3d(-256,256,0), new Vector3d(90,0,0), map.getPosition(), map.getRotation());
         }
@@ -52,6 +49,12 @@ public class MapScreen extends GameObject {
         public void plot() {
             plotter.setGlobalRotation(map.getRotation());
             plotter.draw();
+        }
+        public void setColor(float r, float b, float g) {
+            plotter.setColor(r, b, g);
+        }
+        public void setLineWidth(float lineWidth) {
+            plotter.setLineWidth(lineWidth);
         }
     }
     
@@ -120,6 +123,7 @@ public class MapScreen extends GameObject {
         this.traversal = 0f;
         this.viewportScale = viewportScale;
         projectiles = new ArrayList<>();
+        historicalPlots = new HashMap<>();
         init();
     }
     
@@ -150,6 +154,7 @@ public class MapScreen extends GameObject {
             spawnHitmarker(projectile.getPosition(), projectile.getPower());
             projectiles.get(j).kill();
             projectiles.remove(j);
+            plotters.remove(j);
         }
     }
     
@@ -162,8 +167,19 @@ public class MapScreen extends GameObject {
                 if (projectiles.size() < i) {
                     spawnProjectile();
                 }
+                if (plotters.size() < i) {
+                    Plotter p = new Plotter();
+                    plotters.add(p);
+                    p.setColor(77f/255f, 64f/255f, 69f/255f);
+                }
+                Plotter plotter = plotters.get(i - 1);
                 plotter.setPlot(stat.getPositions());
                 setProjectile(projectiles.get(i - 1), stat.getLastPosition(), stat.getPower());
+            } else if (!historicalPlots.containsKey(solver)) {
+                Plotter plotter = new Plotter();
+                plotter.setPlot(stat.getPositions());
+                plotter.setColor(116f/255f, 103f/255f, 108f/255f);
+                historicalPlots.put(solver, plotter);
             }
         }
         if (projectiles.size() > i) {
@@ -209,7 +225,7 @@ public class MapScreen extends GameObject {
         spawnChildren();
         setChildTransforms();
         
-        plotter = new Plotter();
+        plotters = new ArrayList<>();
         
         map.append(cursor);
         minimap.append(minicursor);
@@ -220,6 +236,7 @@ public class MapScreen extends GameObject {
     
     @Override
     public void setMinimized(boolean minimized) {
+        this.minimized = minimized;
         if (minimized) {
             map.setVisible(false);
             minimap.setVisible(true);
@@ -229,8 +246,29 @@ public class MapScreen extends GameObject {
         }
     }
     
+    private void plotPlotters() {
+        if (plotters.isEmpty()) {
+            return;
+        }
+        for (Plotter plotter : plotters) {
+            plotter.plot();
+        }
+    }
+    
+    private void plotHistoricalPlots() {
+        if (historicalPlots.isEmpty()) {
+            return;
+        }
+        for (Plotter plotter : historicalPlots.values()) {
+            plotter.plot();
+        }
+    }
+    
     @Override
     public void update() {
-        plotter.plot();
+        if (!minimized) {
+            plotPlotters();
+            plotHistoricalPlots();            
+        }
     }
 }

@@ -17,9 +17,9 @@ Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia param
 - [x] Karttanäkymä, tykin kulma ja elävien projektiilien sijainnit piirretään reaaliajassa
 - [x] Peliobjektien animointi animaatiotiedostoilla
 - [x] Projektiilin lentoradan piirto
+- [x] Edellisten projektiilien lentoradan piirto
 - [ ] Näkymä tykin ammusten valintaan
 - [ ] Tuulen suunnan ilmaisu
-- [ ] Edellisten projektiilien lentoradan piirto
 - [ ] Aktiivisen projektiilin alkuparametrien piirto karttanäkymään
 - [ ] Latausanimaatio tykille
 - [ ] Hiscorenäkymä

@@ -236,6 +236,9 @@ public abstract class GameObject {
     public Vector3d getTransform() {
         return new Vector3d(localPosition.x, localPosition.y, localRotation.z);
     }
+    public Vector3d getGlobalPosition() {
+        return globalPosition;
+    }
     public Vector3d getPosition() {
         return localPosition;
     }
