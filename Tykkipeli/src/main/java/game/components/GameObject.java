@@ -6,8 +6,8 @@
 package game.components;
 
 import java.util.ArrayList;
-import game.utils.Sprite;
-import game.utils.TextureLoader;
+import game.graphics.Sprite;
+import game.graphics.TextureLoader;
 import game.utils.Vector3d;
 
 /**

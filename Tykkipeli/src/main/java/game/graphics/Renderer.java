@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.utils;
+package game.graphics;
 
 import game.components.GameObject;
 import game.logic.BaseGame;
+import game.utils.InputManager;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -153,14 +154,15 @@ public class Renderer {
     }
     
     private void loop(){
+        glMatrixMode(GL11.GL_MODELVIEW);
+        glLoadIdentity();
         while( !glfwWindowShouldClose(window) ){
-            glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-            glMatrixMode(GL11.GL_MODELVIEW);
-            glLoadIdentity();
-            updateObjects();//Spritet/pelilogiikka tähän
+            glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);    
+            
+            updateObjects();
+            
             glfwSwapBuffers(window);
             glfwPollEvents();
-            //glClearColor(rand.nextFloat(), rand.nextFloat(), rand.nextFloat(), 0.0f);
         }        
     }
     

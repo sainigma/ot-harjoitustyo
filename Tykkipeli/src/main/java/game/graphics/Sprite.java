@@ -3,29 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.utils;
+package game.graphics;
 
+import game.utils.Vector3d;
 import org.lwjgl.opengl.GL11;
 
 /**
  *
  * @author suominka
  */
-public class Sprite {
+public class Sprite extends ImmediateDrawer{
     Texture texture;
     int width=-1,height=-1;
-    float scale = 1;
     float[] texOffset = {0,0};
     float[][] vertexOffset = {{0,0},{0,0},{0,0},{0,0}};
     Vector3d origin;
     private float[][] vertices;
     private float[][] uvmap;
-    
-    private Vector3d localPosition = new Vector3d(0);
-    private Vector3d localRotation = new Vector3d(0);
-    private Vector3d globalPosition = new Vector3d(0);
-    private Vector3d globalRotation = new Vector3d(0);
-    
     
     private void _load(TextureLoader loader, String path, Vector3d origin){
         texture = loader.loadTexture("./assets/textures/"+path);
@@ -48,39 +42,22 @@ public class Sprite {
     }
     
     public Sprite(TextureLoader loader, String path, Vector3d origin, float scale){
-        this.scale = scale;
+        super();
+        setScale(scale);
         _load(loader,path,origin);
     }
 
     public Sprite(TextureLoader loader, String path){
+        super();
         _load(loader,path,new Vector3d(0,0,0));
     }
     
-    private void translate(Vector3d position) {
-        float inverseScale = (float)Math.pow(scale, -1);
-        GL11.glTranslated(position.x*inverseScale, position.y*inverseScale, position.z*inverseScale);
-    }
-    
-    private void rotate(Vector3d rotation) {
-        GL11.glRotated(rotation.x, 1f, 0, 0);
-        GL11.glRotated(rotation.y, 0, 1f, 0);
-        GL11.glRotated(rotation.z, 0, 0, 1f);        
-    }
-    
-    private void _draw(){
+    @Override
+    public void _draw(){
         int i = 0;
         float xOffset = (float)origin.x;
         float yOffset = (float)origin.y;
-        
-        GL11.glPushMatrix();
         texture.bind();
-        GL11.glScalef(scale, scale, scale);
-        
-        translate(globalPosition);
-        rotate(globalRotation);
-        translate(localPosition);
-        rotate(localRotation);
-        
         GL11.glColor3f(1, 1, 1);
         GL11.glBegin(GL11.GL_QUADS);
         for(float[] vertex : vertices){
@@ -90,27 +67,14 @@ public class Sprite {
             GL11.glVertex2f(vertex[0]-xOffset+vOffset[0], vertex[1]-yOffset+vOffset[1]);
             i+=1;
         }
-                
         GL11.glEnd();
-        GL11.glPopMatrix();
     }
-    public void draw(){
-        _draw();
-    }
-    public void setScale(float scale){
-        this.scale = scale;
-    }
+
     public void setTexOffset(float[] v){
         texOffset[0] = v[0];
         texOffset[1] = v[1];
     }
     public void setVertexOffset(float[][] offset){
         vertexOffset = offset;
-    }
-    public void setTransforms(Vector3d localPosition, Vector3d localRotation, Vector3d globalPosition, Vector3d globalRotation){
-        this.localPosition.set(localPosition);
-        this.localRotation.set(localRotation);
-        this.globalPosition.set(globalPosition);
-        this.globalRotation.set(globalRotation);
     }
 }

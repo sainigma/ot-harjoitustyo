@@ -6,23 +6,26 @@
 package game.components.templates;
 
 import game.components.GameObject;
+import game.graphics.Plotter;
 import game.logic.controllers.Statistic;
 import game.simulations.cases.Ballistics;
 import game.utils.Vector3d;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 /**
  *
  * @author suominka
  */
 public class MapScreen extends GameObject {
+    private Plotter plotter;
     private float viewportScale;
     private boolean minimized = true;
     Vector3d mapRotation = new Vector3d(0, 0, 0);
     GameObject map;
     GameObject minimap;
+    GameObject projectileFront;
+    GameObject projectileShadow;
     
     ArrayList<ProjectileGroup> projectiles;
     Iterator<ProjectileGroup> projectileIterator;
@@ -40,8 +43,8 @@ public class MapScreen extends GameObject {
         private float power;
         
         public ProjectileGroup() {
-            this.front = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8), viewportScale) { };;
-            this.shadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16, 16), viewportScale) { };
+            this.front = projectileFront.clone();
+            this.shadow = projectileShadow.clone();
             
             this.front.setRotation(new Vector3d(0, 90, 0));
             this.front.setRotation(new Vector3d(90, 0, 0));
@@ -103,6 +106,12 @@ public class MapScreen extends GameObject {
         init();
     }
     
+    private void initPlotter() {
+        plotter = new Plotter();
+        plotter.setScale(viewportScale);
+        plotter.setTransforms(new Vector3d(), new Vector3d(), localPosition, localRotation);
+    }
+    
     public void setTraversal(double rotation) {
         double offset = -45f;
         traversal = rotation;
@@ -142,6 +151,7 @@ public class MapScreen extends GameObject {
                 if (projectiles.size() < i) {
                     spawnProjectile();
                 }
+                plotter.setPositions(stat.getPositions());
                 setProjectile(projectiles.get(i - 1), stat.getLastPosition(), stat.getPower());
             }
         }
@@ -151,6 +161,9 @@ public class MapScreen extends GameObject {
     }
     
     private void spawnChildren() {
+        projectileFront = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8), viewportScale) { };;
+        projectileShadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16, 16), viewportScale) { };
+        
         map = new GameObject("map3d", "mapview/kartta.png", new Vector3d(512, 512), viewportScale) { };
         minimap = new GameObject("minimap", "mapview/karttamini.png", new Vector3d(128, 128), viewportScale) { };
         
@@ -187,6 +200,7 @@ public class MapScreen extends GameObject {
         
         append(map);
         append(minimap);
+        initPlotter();
     }
     
     @Override
@@ -197,6 +211,13 @@ public class MapScreen extends GameObject {
         } else {
             map.setVisible(true);
             minimap.setVisible(false);
+        }
+    }
+    
+    @Override
+    public void update() {
+        if (projectiles.size() > 0) {
+            plotter.draw();
         }
     }
 }

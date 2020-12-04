@@ -50,6 +50,10 @@ public class Statistic {
         return positions.get(positions.size() - 1);
     }
     
+    public ArrayList<Vector3d> getPositions() {
+        return positions;
+    }
+    
     public void disable() {
         active = false;
     }

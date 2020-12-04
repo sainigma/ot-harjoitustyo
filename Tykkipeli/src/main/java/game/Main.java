@@ -1,10 +1,8 @@
 package game;
 
-
-import game.components.Animation;
 import game.components.Level;
 import game.logic.BaseGame;
-import game.utils.Renderer;
+import game.graphics.Renderer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

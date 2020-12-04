@@ -9,7 +9,7 @@ import game.logic.controllers.*;
 import game.components.Level;
 import game.components.templates.ScreenShaker;
 import game.utils.InputManager;
-import game.utils.Renderer;
+import game.graphics.Renderer;
 
 /**
  *

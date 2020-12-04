@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package game.utils;
+package game.graphics;
 import static org.lwjgl.opengl.GL11.*;
 
 /**

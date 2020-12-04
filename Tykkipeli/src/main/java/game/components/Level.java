@@ -9,8 +9,6 @@ import game.components.templates.BackgroundCoast;
 import game.components.templates.MapScreen;
 import game.components.templates.ViewPort;
 import game.components.templates.Mortar;
-import game.utils.Vector3d;
-
 /**
  *
  * @author suominka
@@ -50,10 +48,9 @@ public class Level extends GameObject {
         append(gameView);
         append(mapView);
         
-        //gameView.setVisible(false);
         mapView.setMinimized(true);
-        //mapView.setVisible(false);
         mortar.setTrueElevation(0f);
+        
     }
     
     @Override
