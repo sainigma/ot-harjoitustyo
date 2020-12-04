@@ -5,6 +5,7 @@
  */
 package game.components;
 
+import game.graphics.LineDrawer;
 import java.util.ArrayList;
 import game.graphics.Sprite;
 import game.graphics.TextureLoader;

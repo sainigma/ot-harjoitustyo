@@ -56,6 +56,10 @@ public abstract class ImmediateDrawer {
         GL11.glPopMatrix();
     }
     
+    public void setGlobalRotation(Vector3d rotation) {
+        this.globalRotation = rotation;
+    }
+    
     public void setTransforms(Vector3d localPosition, Vector3d localRotation, Vector3d globalPosition, Vector3d globalRotation){
         this.localPosition.set(localPosition);
         this.localRotation.set(localRotation);

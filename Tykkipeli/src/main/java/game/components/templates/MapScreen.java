@@ -6,34 +6,54 @@
 package game.components.templates;
 
 import game.components.GameObject;
-import game.graphics.Plotter;
+import game.graphics.LineDrawer;
 import game.logic.controllers.Statistic;
 import game.simulations.cases.Ballistics;
 import game.utils.Vector3d;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 /**
  *
  * @author suominka
  */
 public class MapScreen extends GameObject {
-    private Plotter plotter;
+    Plotter plotter;
+    
     private float viewportScale;
     private boolean minimized = true;
+    private float mapTexScale = 520f / 10000f;
     Vector3d mapRotation = new Vector3d(0, 0, 0);
     GameObject map;
     GameObject minimap;
     GameObject projectileFront;
     GameObject projectileShadow;
     
+    ArrayList<Plotter> plotters;
+    ArrayList<Plotter> historicalPlots;
     ArrayList<ProjectileGroup> projectiles;
-    Iterator<ProjectileGroup> projectileIterator;
     
     GameObject cursor;
     GameObject minicursor;
     
     private double traversal;
+    
+    class Plotter {
+        LineDrawer plotter;
+        private boolean active;
+        public Plotter() {
+            plotter = new LineDrawer();
+            plotter.setLineStep(100);
+            plotter.setScale(mapTexScale);
+            plotter.setTransforms(new Vector3d(-256,256,0), new Vector3d(90,0,0), map.getPosition(), map.getRotation());
+        }
+        public void setPlot(ArrayList<Vector3d> positions) {
+            plotter.setPlot(positions);
+        }
+        public void plot() {
+            plotter.setGlobalRotation(map.getRotation());
+            plotter.draw();
+        }
+    }
     
     class ProjectileGroup {
         
@@ -45,9 +65,6 @@ public class MapScreen extends GameObject {
         public ProjectileGroup() {
             this.front = projectileFront.clone();
             this.shadow = projectileShadow.clone();
-            
-            this.front.setRotation(new Vector3d(0, 90, 0));
-            this.front.setRotation(new Vector3d(90, 0, 0));
             map.append(front);
             map.append(shadow);
             
@@ -80,9 +97,9 @@ public class MapScreen extends GameObject {
             pos.set(pos.scale(520f / 10000f));
             pos.x -= 256f;
             pos.y += 256f;
-            pos.z += 2f;
+            pos.z += 0.2f;
             front.setPosition(pos);
-            pos.z = 2f;
+            pos.z = 0.2f;
             shadow.setPosition(pos);
             setRotation(map.getRotation());
         }
@@ -104,12 +121,6 @@ public class MapScreen extends GameObject {
         this.viewportScale = viewportScale;
         projectiles = new ArrayList<>();
         init();
-    }
-    
-    private void initPlotter() {
-        plotter = new Plotter();
-        plotter.setScale(viewportScale);
-        plotter.setTransforms(new Vector3d(), new Vector3d(), localPosition, localRotation);
     }
     
     public void setTraversal(double rotation) {
@@ -151,7 +162,7 @@ public class MapScreen extends GameObject {
                 if (projectiles.size() < i) {
                     spawnProjectile();
                 }
-                plotter.setPositions(stat.getPositions());
+                plotter.setPlot(stat.getPositions());
                 setProjectile(projectiles.get(i - 1), stat.getLastPosition(), stat.getPower());
             }
         }
@@ -180,6 +191,9 @@ public class MapScreen extends GameObject {
     }
     
     private void setChildTransforms() {
+        projectileFront.setRotation(new Vector3d(0, 90, 0));
+        projectileShadow.setRotation(new Vector3d(90, 0, 0));
+        
         map.translate((1280 / 2), (720 / 2));
         map.setRotation(new Vector3d(45, 0, 22.5));
         
@@ -195,12 +209,13 @@ public class MapScreen extends GameObject {
         spawnChildren();
         setChildTransforms();
         
+        plotter = new Plotter();
+        
         map.append(cursor);
         minimap.append(minicursor);
         
         append(map);
         append(minimap);
-        initPlotter();
     }
     
     @Override
@@ -216,8 +231,6 @@ public class MapScreen extends GameObject {
     
     @Override
     public void update() {
-        if (projectiles.size() > 0) {
-            plotter.draw();
-        }
+        plotter.plot();
     }
 }

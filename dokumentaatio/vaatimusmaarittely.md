@@ -16,9 +16,9 @@ Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia param
 - [x] Tykin/mörssärin kontrollit, tavoitekulman ja -suunnan voi asettaa ja PID-säädin animoi tykin kulmiin
 - [x] Karttanäkymä, tykin kulma ja elävien projektiilien sijainnit piirretään reaaliajassa
 - [x] Peliobjektien animointi animaatiotiedostoilla
+- [x] Projektiilin lentoradan piirto
 - [ ] Näkymä tykin ammusten valintaan
 - [ ] Tuulen suunnan ilmaisu
-- [ ] Projektiilin lentoradan piirto
 - [ ] Edellisten projektiilien lentoradan piirto
 - [ ] Aktiivisen projektiilin alkuparametrien piirto karttanäkymään
 - [ ] Latausanimaatio tykille
