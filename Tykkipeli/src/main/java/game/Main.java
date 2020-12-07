@@ -18,10 +18,9 @@ import game.graphics.Renderer;
 public class Main {
     Renderer renderer;
     public void init() {
-        Level level = new Level("testlevel");
-        BaseGame logic = new BaseGame(level);
-        renderer = new Renderer(logic);
-        renderer.appendToRenderQueue(level);
+        renderer = new Renderer();
+        BaseGame logic = new BaseGame();
+        renderer.setLogic(logic);
         renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
         run();
     }

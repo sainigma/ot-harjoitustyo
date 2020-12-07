@@ -32,6 +32,10 @@ public class ReloadLogic {
         this.magazine = new Magazine(12, 6, 3, 54);
     }
     
+    public void setMagazine(int light, int medium, int heavy, int charges) {
+        this.magazine = new Magazine(light, medium, heavy, charges);
+    }
+    
     private void reloadSelector(int length) {
         if (inputs.keyDownOnce("left")) {
             reloadIndex -= 1;

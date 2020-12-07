@@ -21,4 +21,5 @@
 | 02.12 | 7 | Testien kirjoitusta pääpelisilmukalle. Karttanäkymä pystyy spawnaamaan ja poistamaan projektiileja tarpeenmukaan, projektiilin osuma maahan tärisyttää ruutua. Palautuksen valmistelua.
 | 03.12 | 2 | Ilmanvastus, gravitaation heikkeneminen ja ilman tiheyden muutos vaikuttaa nyt lentorataan. Testien kirjoitusta parabolisen ja ballistisen lentoradan vertailuun.
 | 04.12 | 4 | Piirtävien luokkien refaktorointia ja laajennusta, lentorata piirretään karttanäkymään nyt kaikille projektiileille
-| yht | 91 | |
+| 07.12 | 5 | Maaliobjektit toteutettu, melko lähellä lopullista toteutusta. Loadareita: sekä kentän että maalien parametrit ladataan tiedostoista. Maaleihin osuminen lähes toteutettu.
+| yht | 96 | |

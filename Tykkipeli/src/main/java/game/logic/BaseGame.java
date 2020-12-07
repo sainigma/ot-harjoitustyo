@@ -10,6 +10,11 @@ import game.components.Level;
 import game.components.templates.ScreenShaker;
 import game.utils.InputManager;
 import game.graphics.Renderer;
+import game.utils.JSONLoader;
+import game.utils.Vector3d;
+import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -18,26 +23,57 @@ import game.graphics.Renderer;
 public class BaseGame {
     private InputManager inputs = null;
     private Renderer renderer = null;
+    
     public MortarLogic mortarLogic;
     public ReloadLogic reloadLogic;
+    public ArrayList<TargetLogic> targets;
     public Level level = null;
     
     public ScreenShaker screenShaker;
     private boolean gunMovementActive = true;
     
-    private long lastTime = System.nanoTime();
+    private long lastTime = System.nanoTime() / 1000000;
     private double deltatimeMillis;
     
-    public BaseGame(Level level) {
-        this.level = level;
-        this.renderer = renderer;
-        this.screenShaker = new ScreenShaker();
-        this.mortarLogic = new MortarLogic();
-        this.reloadLogic = new ReloadLogic(mortarLogic, level.mortar);
+    public BaseGame() {
+        loadLevel("e1m1");
     }
     
     public void setRenderer(Renderer renderer) {
-        this.renderer = renderer;
+        if (renderer != null) {
+            renderer.appendToRenderQueue(level);
+        }
+    }
+    
+    private void loadLevel(String name) {
+        targets = new ArrayList<>();
+        if (level != null) {
+            level.reset();
+        } else {
+            level = new Level("basegame");
+        }
+        screenShaker = new ScreenShaker();
+        mortarLogic = new MortarLogic();
+        reloadLogic = new ReloadLogic(mortarLogic, level.mortar);
+        JSONObject levelData = new JSONLoader("assets/levels/").read(name);
+        JSONObject magazine = levelData.getJSONObject("magazine");
+        reloadLogic.setMagazine(
+                magazine.getInt("light"),
+                magazine.getInt("medium"),
+                magazine.getInt("heavy"),
+                magazine.getInt("charges")
+        );
+        spawnTargets(levelData.getJSONArray("ships"));
+    }
+    
+    private void spawnTargets(JSONArray ships) {
+        for (Object ship : ships) {
+            JSONObject shipObj = (JSONObject) ship;
+            TargetLogic target = new TargetLogic(shipObj.getString("name"));
+            target.setWaypoints(shipObj.getJSONArray("waypoints"));
+            targets.add(target);
+            level.mapScreen.spawnTarget(target);
+        }
     }
     
     public void setInputManager(InputManager inputs) {
@@ -166,6 +202,46 @@ public class BaseGame {
         mapControls(speedModifier);
     }
     
+    private void updateTargets() {
+        for (TargetLogic target : targets) {
+            target.update(deltatimeMillis);
+            level.mapScreen.updateTarget(target);
+        }
+    }
+    
+    private void getHits() {
+        if (mortarLogic.hasHits()) {
+            ArrayList<Statistic> hits = new ArrayList<>();
+            while (mortarLogic.hasHits()) {
+                hits.add(mortarLogic.getHit());
+            }
+            checkHits(hits);
+        }
+    }
+    
+    private void checkHits(ArrayList<Statistic> hits) {
+        for (Statistic hit : hits) {
+            double maxDamage = hit.getPower() * 150f;
+            Vector3d hitPosition = hit.getLastPosition();
+            
+            for (TargetLogic target : targets) {
+                if (target.getHealth() > 0f) {
+                    Vector3d targetPos = target.getPosition();
+                    Vector3d distanceVector = new Vector3d(hitPosition.x - targetPos.x, hitPosition.z - targetPos.y, 0f);
+                    double distance = distanceVector.magnitude();
+                    System.out.println(distance);
+                    /*
+                    double damage = maxDamage - Math.pow(distance, 2);
+                    if (damage > 0f) {
+                        target.reduceHealth((float) damage);
+                    }
+                    System.out.println(damage);
+                    */
+                }
+            }
+        }
+    }
+    
     private boolean historyDebouncer;
     private int lastSolversActive = 0;
     public void update() {
@@ -198,6 +274,8 @@ public class BaseGame {
             }
             level.mapScreen.freeProjectiles(0);
         }
+        updateTargets();
+        getHits();
     }
     
     public void forcedUpdate(double deltatimeMillis) {

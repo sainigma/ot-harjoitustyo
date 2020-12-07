@@ -43,12 +43,12 @@ Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia param
 - [x] Käyttäjä voi vaihtaa näkymää
 - [x] Projektiilin elinkaari (spawnaus ja poisto)
 - [x] Solverin elinkaari (spawnaus, deaktivointi, arkistointi)
-- [ ] Kenttien spawnaus parametrisesti
+- [x] Kenttien spawnaus parametrisesti
 - [ ] Näppäinasetusten lataaminen tiedostosta
-- [ ] Maaliobjektit
+- [x] Maaliobjektit
 - [ ] Pisteidenlasku
 - [ ] Pelin päättyminen
-- [ ] Projektiilin osumien jälkikäsittely (osuiko maaliin)
+- [x] Projektiilin osumien jälkikäsittely (osuiko maaliin)
 - [ ] Hiiritapahtumien seuraaminen, klikattavat objektit
 
 ## Pelisilmukka

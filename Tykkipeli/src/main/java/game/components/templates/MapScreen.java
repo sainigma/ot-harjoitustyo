@@ -8,6 +8,7 @@ package game.components.templates;
 import game.components.GameObject;
 import game.graphics.LineDrawer;
 import game.logic.controllers.Statistic;
+import game.logic.controllers.TargetLogic;
 import game.simulations.cases.Ballistics;
 import game.utils.Vector3d;
 import java.util.ArrayList;
@@ -21,10 +22,14 @@ public class MapScreen extends GameObject {
     private boolean minimized = true;
     private float mapTexScale = 520f / 10000f;
     Vector3d mapRotation = new Vector3d(0, 0, 0);
+    
     GameObject map;
     GameObject minimap;
     GameObject projectileFront;
     GameObject projectileShadow;
+    String [] targetNames = {"windjammer", "frigate", "ironclad", "lineship"};
+    HashMap<String, GameObject> targetIcons;
+    HashMap<TargetLogic, TargetIcon> targets;
     
     ArrayList<Plotter> plotters;
     HashMap<Ballistics, Plotter> historicalPlots;
@@ -34,6 +39,17 @@ public class MapScreen extends GameObject {
     GameObject minicursor;
     
     private double traversal;
+    
+    public MapScreen(String name, float viewportScale) {
+        super(name);
+        this.traversal = 0f;
+        this.viewportScale = viewportScale;
+        projectiles = new ArrayList<>();
+        historicalPlots = new HashMap<>();
+        targetIcons = new HashMap<>();
+        targets = new HashMap<>();
+        init();
+    }
     
     class Plotter {
         LineDrawer plotter;
@@ -118,13 +134,28 @@ public class MapScreen extends GameObject {
         }
     }
     
-    public MapScreen(String name, float viewportScale) {
-        super(name);
-        this.traversal = 0f;
-        this.viewportScale = viewportScale;
-        projectiles = new ArrayList<>();
-        historicalPlots = new HashMap<>();
-        init();
+    class TargetIcon {
+        GameObject icon;
+        public TargetIcon(String name, Vector3d position, Vector3d rotation) {
+            icon = targetIcons.get(name).clone();
+            setPosition(position);
+            setRotation(rotation);
+            map.append(icon);
+        }
+        public void setPosition(Vector3d position) {
+            Vector3d pos = position.clone();
+            icon.setPosition(new Vector3d(
+                    (pos.x-5000f)*mapTexScale,
+                    (pos.y+5000f)*mapTexScale,
+                    pos.z*mapTexScale
+            ));
+        }
+        public void setRotation(Vector3d rotation) {
+            icon.setRotation(rotation);
+        }
+        public void kill() {
+            map.remove(icon);
+        }
     }
     
     public void setTraversal(double rotation) {
@@ -187,15 +218,30 @@ public class MapScreen extends GameObject {
         }
     }
     
+    private void iconLoader() {
+        for (String name : targetNames) {
+            GameObject icon = new GameObject(name + "Icon", "icons/" + name + ".png", new Vector3d(64,128), viewportScale) { };
+            icon.setRotation(new Vector3d(-90,0,0));
+            targetIcons.put(name, icon);
+        }
+    }
+    
     private void spawnChildren() {
-        projectileFront = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8), viewportScale) { };;
+        projectileFront = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8), viewportScale) { };
         projectileShadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16, 16), viewportScale) { };
+        
+        iconLoader();
         
         map = new GameObject("map3d", "mapview/kartta.png", new Vector3d(512, 512), viewportScale) { };
         minimap = new GameObject("minimap", "mapview/karttamini.png", new Vector3d(128, 128), viewportScale) { };
         
         cursor = new GameObject("mapcursor", "mapview/suunta.png", new Vector3d(5, 7), viewportScale) { };
         minicursor = new GameObject("mapcursor", "mapview/suuntamini.png", new Vector3d(0), viewportScale) { };
+    }
+    
+    public void spawnTarget(TargetLogic target) {
+        TargetIcon icon = new TargetIcon(target.getName(), target.getPosition(), target.getRotation());
+        targets.put(target, icon);
     }
     
     private void spawnProjectile() {
@@ -220,7 +266,6 @@ public class MapScreen extends GameObject {
         minicursor.translate(-64, 64, 1);
         setTraversal(0);
     }
-    
     private void init() {
         spawnChildren();
         setChildTransforms();
@@ -246,6 +291,12 @@ public class MapScreen extends GameObject {
         }
     }
     
+    public void updateTarget(TargetLogic logic) {
+        TargetIcon target = targets.get(logic);
+        target.setPosition(logic.getPosition());
+        target.setRotation(logic.getRotation());
+    }
+    
     private void plotPlotters() {
         if (plotters.isEmpty()) {
             return;
@@ -268,7 +319,7 @@ public class MapScreen extends GameObject {
     public void update() {
         if (!minimized) {
             plotPlotters();
-            plotHistoricalPlots();            
+            plotHistoricalPlots();
         }
     }
 }

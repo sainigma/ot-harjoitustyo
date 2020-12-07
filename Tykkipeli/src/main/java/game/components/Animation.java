@@ -5,14 +5,8 @@
  */
 package game.components;
 
-import java.io.File;
-import java.io.FileReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
+import game.utils.JSONLoader;
 import java.util.HashMap;
-import java.util.Scanner;
 import org.json.*;
 
 /**
@@ -33,8 +27,19 @@ public class Animation {
     public Animation(String path) {
         driverClips = new HashMap<>();
         name = path;
-        loadAnimation("assets/animations/" + path + ".json");
+        loadAnimation(path);
     }
+    
+    private void loadAnimation(String path) {
+        JSONObject obj = new JSONLoader("assets/animations/").read(path);
+
+        framerate = obj.getInt("framerate");
+        length = obj.getInt("length") + 1;
+        linearInterpolation = obj.getString("interpolation").equals("linear");
+
+        JSONObject drivers = obj.getJSONObject("drivers");
+        loadClips(driverClips, drivers);
+    }    
     
     private void loadClips(HashMap clips, JSONObject data) {
         for (String key : data.keySet()) {
@@ -54,23 +59,6 @@ public class Animation {
                 }
             }
         }
-    }
-    
-    private void loadAnimation(String path) {
-        try {
-            String raw = new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
-            JSONObject obj = new JSONObject(raw);
-            
-            framerate = obj.getInt("framerate");
-            length = obj.getInt("length") + 1;
-            linearInterpolation = obj.getString("interpolation").equals("linear");
-            
-            JSONObject drivers = obj.getJSONObject("drivers");
-            loadClips(driverClips, drivers);
-            
-        } catch (Exception e) {
-        }
-
     }
     
     public Frame getDriverFrame(String name) {

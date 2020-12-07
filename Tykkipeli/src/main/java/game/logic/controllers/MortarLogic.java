@@ -10,6 +10,7 @@ import game.utils.Vector3d;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Stack;
 
 /**
  *
@@ -18,6 +19,7 @@ import java.util.Iterator;
 public class MortarLogic {    
     public HashMap<Ballistics, Statistic> history;
     public HashSet<Ballistics> activeSolvers;
+    private Stack<Ballistics> hits;
     private Projectile currentProjectile;
     double elevation;
     double traversal;
@@ -33,6 +35,7 @@ public class MortarLogic {
         currentProjectile = null;
         history = new HashMap<>();
         activeSolvers = new HashSet<>();
+        hits = new Stack<>();
     }
     
     public boolean addProjectile(Projectile newProjectile) {
@@ -71,6 +74,7 @@ public class MortarLogic {
             Ballistics solver = iterator.next();
             Statistic solverStats = history.get(solver);
             if (solver.endCondition()) {
+                hits.push(solver);
                 solverStats.disable();
                 iterator.remove();
                 System.out.println(solverStats);
@@ -94,6 +98,18 @@ public class MortarLogic {
             return history.get(solver);
         }
         return null;
+    }
+    
+    public boolean hasHits() {
+        return !hits.isEmpty();
+    }
+    
+    public Statistic getHit() {
+        if (!hasHits()) {
+            return null;
+        }
+        Ballistics solver = hits.pop();
+        return history.get(solver);
     }
     
     public boolean fire() {

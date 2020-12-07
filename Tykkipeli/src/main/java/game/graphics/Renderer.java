@@ -8,6 +8,7 @@ package game.graphics;
 import game.components.GameObject;
 import game.logic.BaseGame;
 import game.utils.InputManager;
+import game.utils.Vector3d;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -59,14 +60,14 @@ public class Renderer {
     private TextureLoader texLoader;
     private long window;
     private int resoX,resoY;
+    private boolean alive = true;
     String windowname;
     
-    public Renderer(BaseGame logic){
+    public Renderer(){
         resoX = 1280;
         resoY = 720;
         windowname = "Tykkipeli";
         objects = new ArrayList<>();
-        this.logic = logic;
     }
     
     public Renderer(int resolutionX, int resolutionY, String title){
@@ -156,14 +157,20 @@ public class Renderer {
     private void loop(){
         glMatrixMode(GL11.GL_MODELVIEW);
         glLoadIdentity();
-        while( !glfwWindowShouldClose(window) ){
+        while( !glfwWindowShouldClose(window) && alive ){
+            draw();
+        }
+    }
+    
+    private void draw() {
+        while( !glfwWindowShouldClose(window) && alive ){
             glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);    
             
-            updateObjects();
+            updateObjects();                
             
             glfwSwapBuffers(window);
             glfwPollEvents();
-        }        
+        }
     }
     
     private void kill(){
@@ -171,5 +178,8 @@ public class Renderer {
         glfwDestroyWindow(window);   
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+    }
+    public void close() {
+        alive = false;
     }
 }

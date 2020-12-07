@@ -35,27 +35,34 @@ public class Level extends GameObject {
     
     private void init() {
         gameView = new ViewPort("game");        
-        mapView = new ViewPort("map");
         
         mortar = new Mortar("mortar", viewportScale);
         background = new BackgroundCoast("coast", 1);
         gameView.append(mortar);
         gameView.append(background);
         
+        append(gameView);
+
+        mortar.setTrueElevation(0f);
+        initMap();
+    }
+    
+    private void initMap() {
+        mapView = new ViewPort("map");
         mapScreen = new MapScreen("mapScreen", viewportScale);
         mapView.append(mapScreen);
-        
-        append(gameView);
         append(mapView);
-        
-        mapView.setMinimized(true);
-        mortar.setTrueElevation(0f);
-        
+        gameView.setVisible(true);
+        mapView.setMinimized(true);        
+    }
+    
+    public void reset() {
+        remove(mapView);
+        initMap();
     }
     
     @Override
     public void update() {
         background.setRotation(mortar.getTraversal());
-        //System.out.println(mortar.getLocalTraversal());
     }
 }
