@@ -29,10 +29,12 @@ public class BaseGame {
     public ArrayList<TargetLogic> targets;
     public Level level = null;
     
+    private int targetsLeft = 0;
+    
     public ScreenShaker screenShaker;
     private boolean gunMovementActive = true;
     
-    private long lastTime = System.nanoTime() / 1000000;
+    private long lastTime;
     private double deltatimeMillis;
     
     public BaseGame() {
@@ -46,6 +48,7 @@ public class BaseGame {
     }
     
     private void loadLevel(String name) {
+        targetsLeft = 0;
         targets = new ArrayList<>();
         if (level != null) {
             level.reset();
@@ -64,10 +67,12 @@ public class BaseGame {
                 magazine.getInt("charges")
         );
         spawnTargets(levelData.getJSONArray("ships"));
+        lastTime = System.nanoTime() / 1000000;
     }
     
     private void spawnTargets(JSONArray ships) {
         for (Object ship : ships) {
+            targetsLeft += 1;
             JSONObject shipObj = (JSONObject) ship;
             TargetLogic target = new TargetLogic(shipObj.getString("name"));
             target.setWaypoints(shipObj.getJSONArray("waypoints"));
@@ -222,6 +227,7 @@ public class BaseGame {
     private void checkHits(ArrayList<Statistic> hits) {
         for (Statistic hit : hits) {
             double maxDamage = hit.getPower() * 150f;
+            double maxDistance = 1000f;
             Vector3d hitPosition = hit.getLastPosition();
             
             for (TargetLogic target : targets) {
@@ -229,17 +235,22 @@ public class BaseGame {
                     Vector3d targetPos = target.getPosition();
                     Vector3d distanceVector = new Vector3d(hitPosition.x - targetPos.x, hitPosition.z - targetPos.y, 0f);
                     double distance = distanceVector.magnitude();
-                    System.out.println(distance);
-                    /*
-                    double damage = maxDamage - Math.pow(distance, 2);
-                    if (damage > 0f) {
+                    double damageFactor = distance / maxDistance;
+                    if (damageFactor < 1f) {
+                        double damage = maxDamage * (1 - Math.pow(damageFactor, 2));
                         target.reduceHealth((float) damage);
+                        System.out.println("Target hit, inflicted " + damage + " damage");
+                        if (target.isSinking()) {
+                            targetsLeft -= 1;
+                        }
                     }
-                    System.out.println(damage);
-                    */
                 }
             }
         }
+    }
+    
+    private void endLevel() {
+        System.out.println("No targets left, ending game");
     }
     
     private boolean historyDebouncer;
@@ -276,6 +287,9 @@ public class BaseGame {
         }
         updateTargets();
         getHits();
+        if (targetsLeft <= 0 ) {
+            endLevel();
+        }
     }
     
     public void forcedUpdate(double deltatimeMillis) {

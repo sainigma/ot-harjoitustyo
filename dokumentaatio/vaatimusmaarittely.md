@@ -10,6 +10,8 @@ Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia param
 
 ### Näkymät/grafiikka
 
+MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksia
+
 - [x] Erillisiä näkymiä voi luoda
 - [x] Näkymät voidaan piilottaa, minimoida ja deaktivoida (+käänteiset toiminnot), status propagoituu lapsiobjekteihin
 - [x] Peliobjektien ryhmityksen/periytyvyyden toteutus, piirtologiikka ja piirtojärjestys
@@ -18,12 +20,14 @@ Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia param
 - [x] Peliobjektien animointi animaatiotiedostoilla
 - [x] Projektiilin lentoradan piirto
 - [x] Edellisten projektiilien lentoradan piirto
-- [ ] Näkymä tykin ammusten valintaan
+- [ ] Latausanimaatio tykille (MVP)
+- [ ] Näkymä tykin ammusten valintaan (MVP)
+- [ ] Näkymä kentän lopettamiseen (MVP)
+- [ ] Päämenu (MVP)
+- [ ] Hiscorenäkymä (MVP)
+- [ ] Tykin jalustan lähimaasto taustaa nopeammin liikkuvalle layerille, parallax
 - [ ] Tuulen suunnan ilmaisu
 - [ ] Aktiivisen projektiilin alkuparametrien piirto karttanäkymään
-- [ ] Latausanimaatio tykille
-- [ ] Hiscorenäkymä
-- [ ] Päämenu
 
 ### Fysiikkasolveri
 
@@ -44,11 +48,13 @@ Pelin pääpelisilmukka on, että pelaaja yrittää osua maaliin erilaisia param
 - [x] Projektiilin elinkaari (spawnaus ja poisto)
 - [x] Solverin elinkaari (spawnaus, deaktivointi, arkistointi)
 - [x] Kenttien spawnaus parametrisesti
-- [ ] Näppäinasetusten lataaminen tiedostosta
 - [x] Maaliobjektit
-- [ ] Pisteidenlasku
-- [ ] Pelin päättyminen
 - [x] Projektiilin osumien jälkikäsittely (osuiko maaliin)
+- [ ] Seuraavaan waypointtiin siirtyminen maalikappaleelle
+- [ ] Näppäinasetusten lataaminen tiedostosta
+- [ ] Pisteidenlasku (MVP)
+- [ ] Pelin päättyminen (MVP)
+- [ ] Häviöstate (maali pääsee karkuun/liian lähelle)
 - [ ] Hiiritapahtumien seuraaminen, klikattavat objektit
 
 ## Pelisilmukka

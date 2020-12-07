@@ -44,4 +44,7 @@ public class Magazine {
         }
         return 0;
     }
+    public String toString() {
+        return "Magazine status: " + warheads[0] + " light, " + warheads[1] + " medium, " + warheads[2] + " heavy warheads, " + cartouches + " charges left.";
+    }
 }
