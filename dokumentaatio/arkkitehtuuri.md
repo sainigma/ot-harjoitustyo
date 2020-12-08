@@ -19,3 +19,27 @@ Sekvenssikaaviossa alustetaan peli ilman käyttöliittymää, eli miten logiikka
 Sekvenssissä alustetaan oliot, haetaan uusi projektiili ammusvarastosta, lisätään se ammuttavaksi, ja lopuksi ammutaan. Jokaiselle projektiilille alustetaan uusi fysiikkasolveri.
 
 Graafista käyttöliittymää hyödyntäviä luokkia (GameObject luokasta johdettuja, esim. mortar ja level) on yksinkertaistettu tähän kaavioon.
+
+## Javadocin eteneminen
+
+- [ ] game
+- [x] game.components
+    - [x] Animator
+    - [x] GameObject
+    - [x] Level
+- [ ] game.components.animation
+- [ ] game.components.templates
+- [ ] game.graphics
+- [ ] game.logic
+    - [x] BaseGame
+    - [ ] MainMenu
+- [ ] game.logic.controllers
+    - [x] MortarLogic
+    - [ ] ReloadLogic
+    - [ ] TargetLogic
+    - [ ] Magazine
+    - [ ] Projectile
+    - [ ] Statistic
+- [ ] game.simulations
+- [ ] game.simulations.cases
+- [ ] game.utils

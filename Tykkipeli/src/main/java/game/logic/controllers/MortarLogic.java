@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.Stack;
 
 /**
- *
+ * Tykin ampumisen liittyvä logiikka, päivittää myös aktiivisten projektiilien solvereita.
  * @author suominka
  */
 public class MortarLogic {    
@@ -38,6 +38,11 @@ public class MortarLogic {
         hits = new Stack<>();
     }
     
+    /**
+     * Asettaa tykkilogiikalle projektiilin. Projektiilin läsnäolo vaaditaan tulitukseen.
+     * @param newProjectile
+     * @return 
+     */
     public boolean addProjectile(Projectile newProjectile) {
         if (currentProjectile != null) {
             return false;
@@ -46,6 +51,11 @@ public class MortarLogic {
         return true;
     }
     
+    /**
+     * Asettaa tykkilogiikalle tykin korotuksen ja siirron.
+     * @param elevation
+     * @param traversal 
+     */
     public void set(double elevation, double traversal) {
         this.elevation = elevation;
         this.traversal = traversal;
@@ -65,6 +75,13 @@ public class MortarLogic {
         history.put(solver, new Statistic(elevation, traversal, mass, cartouches, solver));
     }
     
+    /**
+     * Metodi aktiivisten solverien päivittämiseen.
+     * Vastaanottaa parametrina edellisen piirtoon kuluneen ajan millisekunteina ja päivittää aktiiviset solverit tämän perusteella.
+     * Poistaa myös aktiiviset solverit päivityslistasta ja lisää ne osumapinoon jos niiden lopputavoite on saavutettu.
+     * Huomautuksena tämän voisi joskus muuttaa piirtoajan keskiarvoa käyttäväksi..
+     * @param dtMillis 
+     */
     public void solve(double dtMillis) {
         if (activeSolvers.isEmpty()) {
             return;
@@ -86,24 +103,26 @@ public class MortarLogic {
         }
     }
     
+    /**
+     * Palauttaa false jos aktiivisia solvereita ei enää ole.
+     * @return 
+     */
     public boolean hasActiveSolvers() {
         return !activeSolvers.isEmpty();
     }
     
-    public Statistic getPosition() {
-        if (activeSolvers.isEmpty()) {
-            return null;
-        }
-        for (Ballistics solver : activeSolvers) {
-            return history.get(solver);
-        }
-        return null;
-    }
-    
+    /**
+     * Apumetodi osumapinon tyhjennykseen, palauttaa epätoden jos osumapino on tyhjä.
+     * @return 
+     */
     public boolean hasHits() {
         return !hits.isEmpty();
     }
     
+    /**
+     * Poppaa ja palauttaa viimeisimmän osuman osumapinosta.
+     * @return 
+     */
     public Statistic getHit() {
         if (!hasHits()) {
             return null;
@@ -112,6 +131,10 @@ public class MortarLogic {
         return history.get(solver);
     }
     
+    /**
+     * Tulitusmetodi, käynnistää itsenäisen solverin projektiilille ja resetoi asetetun ammuksen jos ammus on asetettu.
+     * @return 
+     */
     public boolean fire() {
         if (currentProjectile == null) {
             System.out.println("no projectile set");

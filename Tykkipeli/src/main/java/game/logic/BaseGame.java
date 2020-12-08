@@ -17,7 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
+ * Pääluokka pelin logiikalle
  * @author suominka
  */
 public class BaseGame {
@@ -38,14 +38,25 @@ public class BaseGame {
     private long lastTime;
     private double deltatimeMillis;
     
+    /**
+     * Ilman parametreja konstruktori lataa ensimmäisen kentän.
+     */
     public BaseGame() {
         loadLevel("e1m1");
     }
     
+    /**
+     * Parametrin kanssa konstruktori lataa tietyn kentän.
+     * @param level Kentän avain
+     */
     public BaseGame(String level) {
         loadLevel(level);
     }
     
+    /**
+     * Asettaa logiikalle renderöijän, asetuksen yhteydessä Level lisätään renderöijän piirtojonoon.
+     * @param renderer 
+     */
     public void setRenderer(Renderer renderer) {
         if (renderer != null) {
             renderer.appendToRenderQueue(level);
@@ -53,6 +64,12 @@ public class BaseGame {
         }
     }
     
+    /**
+     * Luokan alustusmetodi joka kutsutaan konstruktorista.
+     * Kutsuu lapsiobjektien luonnin, hakee kentän parametrit tiedostosta, sekä asettaa em. parametrit lapsiobjekteihin.
+     * Lisäksi kutsuu maaliobjektien spawnaamisen kenttäparametrien perusteella.
+     * @param name 
+     */
     private void loadLevel(String name) {
         targetsLeft = 0;
         targets = new ArrayList<>();
@@ -84,6 +101,10 @@ public class BaseGame {
         reloadLogic = new ReloadLogic(mortarLogic, level.mortar);        
     }
     
+    /**
+     * Luo maaliobjektit kenttäparametreista saadun listan perusteella.
+     * @param ships Kenttäparametrien ships-avaimella määritelty lista
+     */
     private void spawnTargets(JSONArray ships) {
         for (Object ship : ships) {
             targetsLeft += 1;
@@ -95,11 +116,18 @@ public class BaseGame {
         }
     }
     
+    /**
+     * Vastaanottaa ja asettaa itselleen syötteidenkuuntelijan
+     * @param inputs 
+     */
     public void setInputManager(InputManager inputs) {
         this.inputs = inputs;
         reloadLogic.setInputManager(this.inputs);
     }
     
+    /**
+     * Ruuduntärisytysmetodi. Hakee tärisytyskertoimen tykin animaatioista, sekä aktivoi itse tärinän jos aktiivisten solvereiden määrä on laskenut.
+     */
     private int lastSolversActive = 0;
     private void shakeScreen() {
         int solversActive = mortarLogic.activeSolvers.size();
@@ -121,6 +149,10 @@ public class BaseGame {
         }        
     }
     
+    /**
+     * Nopeuttaa/hidastaa asioita ruudunpäivitysnopeuden sekä nopeutus/hidastusnappien perusteella.
+     * @return 
+     */
     private float getSpeedModifier() {
         float framerateCoeff = (float) (16f / deltatimeMillis); //1 when 60fps
         float speedModifier = framerateCoeff;
@@ -132,6 +164,10 @@ public class BaseGame {
         return speedModifier;
     }
     
+    /**
+     * Tykin liikutuskontrollit vaakasuunnassa, aina voimassa.
+     * @param speedModifier 
+     */
     private void traverse(float speedModifier) {
         if (reloadLogic.isMovementBlocked()) {
             return;
@@ -145,6 +181,10 @@ public class BaseGame {
         level.mapScreen.setTraversal(-level.mortar.getTraversal());
     }
     
+    /**
+     * Pelin kontrollit päänäkymän ollessa aktiivisena. Nostaa/siirtää tykkiä jos tulitusanimaatio ei ole voimassa.
+     * @param speedModifier ruudunpäivitysnopeudesta ja nopeutusnapeista riippuva kerroin
+     */
     private void gameControls(float speedModifier) {
         if (!gunMovementActive || level.mortar.animator.isPlaying("mortar/firing")) {
             return;
@@ -157,11 +197,19 @@ public class BaseGame {
         }
         traverse(speedModifier);
     }
-        
+    
+    /**
+     * Pelin kontrollit karttanäkymän ollessa aktiivinen.
+     * @param speedModifier 
+     */
     private void mapControls(float speedModifier) {
         traverse(speedModifier);
     }
     
+    /**
+     * Pelin jaetut kontrollit, eli kontrollit jotka ovat voimassa näkymästä riippumatta.
+     * @param speedModifier 
+     */
     private void sharedControls(float speedModifier) {
         if (inputs.keyDownOnce("fire")) {
             fire();
@@ -172,6 +220,10 @@ public class BaseGame {
         rotateMap(speedModifier);
     }
     
+    /**
+     * Kontrollit mini- ja pääkartan pyörittämiseen.
+     * @param speedModifier 
+     */
     private void rotateMap(float speedModifier) {
         if (!level.mapView.isVisible()) {
             return;
@@ -189,6 +241,9 @@ public class BaseGame {
         }
     }
     
+    /**
+     * Tulituslogiikka. Aktivoituu tulitusnappia painettaessa, mutta tulittaa vain jos tulituslogiikka on alustettu.
+     */
     public void fire() {
         if (!reloadLogic.isReloadFinished()) {
             return;
@@ -228,6 +283,9 @@ public class BaseGame {
         mapControls(speedModifier);
     }
     
+    /**
+     * Päivittää maaliobjektien sijainnin ja jakaa sen karttanäkymälle.
+     */
     private void updateTargets() {
         for (TargetLogic target : targets) {
             target.update(deltatimeMillis);
@@ -235,6 +293,9 @@ public class BaseGame {
         }
     }
     
+    /**
+     * Tarkistaa onko tykkilogiikalla osumia valmiina. Jos on, vastaanottaa ne ja lähettää ne eteenpäin tarkastettaviksi. Osuman vastaanottaminen poistaa osuman tykkilogiikasta.
+     */
     private void getHits() {
         if (mortarLogic.hasHits()) {
             ArrayList<Statistic> hits = new ArrayList<>();
@@ -244,7 +305,34 @@ public class BaseGame {
             checkHits(hits);
         }
     }
+    /**
+     * Vertailee jokaista vastaanotettua osumaa jokaiselle maalille.
+     * Maksimivahinko tarkastetaan projektiilin painon perusteella, minimissään se on 150.
+     * For-for, mutta käytännössä O(n) koska osumia kerrallaan 1-2. Jatkototeutuksessa olisi hyvä korvata esim. sweep&prune algoritmilla.
+     * @param hits 
+     */
+    private void checkHits(ArrayList<Statistic> hits) {
+        for (Statistic hit : hits) {
+            double maxDamage = hit.getPower() * 150f;
+            double maxDistance = 1000f;
+            Vector3d hitPosition = hit.getLastPosition();
+            
+            for (TargetLogic target : targets) {
+                damageTarget(target, hitPosition, maxDamage, maxDistance);
+            }
+        }
+    }
     
+    /**
+     * Osuman tarkastelu yksittäiselle maalille. 
+     * Tarkastaa etäisyyden osumasta maaliin, ja tarjoilee mallille vahinkoa jos osuma on maksimietäisyyttä pienempi.
+     * Vahingon määrä laskee etäisyyden neliönä, maksimietäisyydessä sen ollessa 0.
+     * Tarkastus pysäytetään jos maali ei ole aktiivinen.
+     * @param target
+     * @param hitPosition
+     * @param maxDamage
+     * @param maxDistance 
+     */
     private void damageTarget(TargetLogic target, Vector3d hitPosition, double maxDamage, double maxDistance) {
         if (target.getHealth() < 0f) {
             return;
@@ -261,27 +349,25 @@ public class BaseGame {
             }
         }
     }
-    
-    private void checkHits(ArrayList<Statistic> hits) {
-        for (Statistic hit : hits) {
-            double maxDamage = hit.getPower() * 150f;
-            double maxDistance = 1000f;
-            Vector3d hitPosition = hit.getLastPosition();
-            
-            for (TargetLogic target : targets) {
-                damageTarget(target, hitPosition, maxDamage, maxDistance);
-            }
-        }
-    }
-    
+    /**
+     * Palauttaa jäljelläolevien maalien määrän.
+     * @return 
+     */
     public int getTargetsLeft() {
         return targetsLeft;
     }
     
+    /**
+     * Keskeneräinen metodi, lopullisessa versiossa tarjoilee käyttäjälle käyttöliittymän seuraavaan kenttään siirtymiseen tai pelin lopettamiseen.
+     */
     private void endLevel() {
         //System.out.println("No targets left, ending game");
 
     }
+    
+    /**
+     * Päivittää solverien muutokset karttanäkymälle.
+     */
     private boolean historyDebouncer;    
     private void linkMapscreenToSolvers() {
         if (mortarLogic.hasActiveSolvers()) {
@@ -296,7 +382,9 @@ public class BaseGame {
         }        
     }
     
-
+    /**
+     * Käyttöliittymästä riippuva päivityslogiikan osa.
+     */
     private void updateGUI() {
         if (!guiInitialized) {
             return;
@@ -311,6 +399,9 @@ public class BaseGame {
         linkMapscreenToSolvers();
     }
     
+    /**
+     * Logiikan sisäinen pääpäivitysmetodi. Kutsutaan julkisista update-metodeista.
+     */
     private void _update() {
         if (guiInitialized && inputs == null) {
             return;
@@ -325,11 +416,18 @@ public class BaseGame {
         }
     }
     
+    /**
+     * Logiikan julkinen päivitysmetodi. Hakee piirtoon kuluneen ajan ennen sisäisen päivitysmetodin kutsumista.
+     */
     public void update() {
         getDeltatimeMillis();
         _update();
     }
     
+    /**
+     * Logiikan julkinen päivitysmetodi manuaaliseen kutsuun. Vastaanottaa piirtoon kuluneen ajan, ja on tarkoitettu testeistä ajettavaksi.
+     * @param dtMillis Piirtoon kulunut aika millisekunneissa. Yleensä 16 (60fps).
+     */
     public void update(double dtMillis) {
         deltatimeMillis = dtMillis;
         _update();

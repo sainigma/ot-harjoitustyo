@@ -6,10 +6,14 @@ Demo:
 	    3. Valitse panostuksen koko (vasen/oikea, enter)
 	    4. Nosta tykki oikeaan korkeuteen (ylös/alas)
 	    5. Laukaise tykki (väli)
-	    6. Seuraa projektiilin etenemistä karttaruudussa (M)
+	    6. Projektiilin etenemistä voi seurata karttaruudussa (M)
+		7. Tykkinäkymässä, GOTO 1
+
 Huom. tykin voi laukaista myös karttanäkymässä, projektiileja voi olla ilmassa useita.
 
 Huom2. tykin lataamisen käyttöliittymä sijaitsee toistaiseksi kokonaan komentolinjassa
+
+Huom3. oikeat parametrit ensimmäisen kentän oikean yläkulman maaliin osumiseen on 29 astetta korotusta, 45 astetta siirtoa, raskas kärki ja 3 kartussia.
 
 ## Oletuskontrollit
 

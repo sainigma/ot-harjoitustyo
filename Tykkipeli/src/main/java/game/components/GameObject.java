@@ -11,9 +11,14 @@ import game.graphics.TextureLoader;
 import game.utils.Vector3d;
 
 /**
- *
+ * Abstrakti luokka pelikappaleiden manipulointiin ja piirtämiseen.
+ * Sisältää vain implementoitujen luokkien jakamat metodit, eli
+ * objektin alustuksen, ominaisuuksien propagoinnin sekä kappaleen piirron.
+ * 
+ * 
  * @author suominka
  */
+
 public abstract class GameObject {
     public ArrayList<GameObject> children = new ArrayList<>();
     private Sprite sprite;
@@ -37,22 +42,37 @@ public abstract class GameObject {
     public Vector3d globalPosition = new Vector3d(0);
     public Vector3d globalRotation = new Vector3d(0);
     
+    /**
+     * Osittainen konstruktori tyhjälle peliobjektille, eli objektille joka ei itsessään piirrä mitään,
+     * mutta voi toimia esimerkiksi keskipisteenä lapsiobjekteille.
+     * @param name 
+     */
     public GameObject(String name) {
         this.name = name;
         this.path = null;
         this.initialized = true; //empty
     }
+    /*
     public GameObject(String name, String path) {
         this.name = name;
         this.path = path;
         init();
     }
+    */
+    /*
     public GameObject(String name, String path, Vector3d origin) {
         this.origin = origin;
         this.name = name;
         this.path = path;
         init();
-    }
+    }*/
+    /**
+     * Täydellinen konstruktori
+     * @param name
+     * @param path Polku pelikappaleen tekstuuriin, muotoa peliobjekti/tekstuuri.png
+     * @param origin Kappaleen keskipiste, määritellään erikseen jos se on muu kuin tekstuurin vasen ylänurkka
+     * @param scale Renderöijän skaala, resoluution vaihtamiseen
+     */
     public GameObject(String name, String path, Vector3d origin, float scale) {
         this.origin = origin;
         this.name = name;
@@ -65,9 +85,17 @@ public abstract class GameObject {
     public boolean isActive() {
         return active;
     }
+    /**
+     * Asettaa peliobjektin aktiivisuuden. Epäaktiiviselle peliobjektille ei päivitetä logiikkaa eikä sitä myöskään piirretä.
+     * @param newState 
+     */
     public void setActive(boolean newState) {
         active = newState;
     }
+    /**
+     * Asettaa peliobjektin näkyvyyden. Suorittaa pelilogiikkaa näkymättömänäkin.
+     * @param newState 
+     */
     public void setVisible(boolean newState) {
         visible = newState;
     }
@@ -81,6 +109,14 @@ public abstract class GameObject {
         active = !active;
     }
     
+    /**
+     * Spriten quadin venyttämiseen, normaalisti quad on 1:1 neliö.
+     * Tuottaa PSX -tyylisiä ongelmia jos lopullinen quad on puolisuunnikas.
+     * @param topLeft
+     * @param bottomLeft
+     * @param topRight
+     * @param bottomRight 
+     */
     public void setVertexOffset(float[] topLeft, float[] bottomLeft, float[] topRight, float[] bottomRight) {
         vertexOffset[0] = topLeft;
         vertexOffset[1] = bottomLeft;
@@ -90,6 +126,10 @@ public abstract class GameObject {
             sprite.setVertexOffset(vertexOffset);            
         }
     }
+    /**
+     * Asettaa peliobjektille tekstuurinlataajan, joka vaatii renderöijän alustumisen.
+     * @param loader 
+     */
     public void setTextureLoader(TextureLoader loader) {
         texLoader = loader;
         for (GameObject child : children) {
@@ -97,8 +137,18 @@ public abstract class GameObject {
         }
         load();
     }
+    /**
+     * Tyhjä metodi implementoivien luokkien käyttöön. Kevyeen animointiin tarkoitettu.
+     * @param target ohjausavain
+     * @param value ohjausarvo
+     */
     public void drive(String target, double value) {
     }
+    /**
+     * Rajaa spriten pienemmäksi
+     * @param x
+     * @param y 
+     */
     public void setCrop(int x, int y) {
         crop[0] = x;
         crop[1] = y;
@@ -123,24 +173,48 @@ public abstract class GameObject {
     public void setRotation(Vector3d rotation) {
         localRotation.set(rotation);
     }
+    /**
+     * Koska peli on enimmäkseen 2D, z-koordinaattia käytetään piirtojärjestyksen määrittelyyn.
+     * @param z Suuri arvo tarkoittaa lähellä kameraa, pieni arvo kaukana kamerasta.
+     */
     public void setDepth(float z) {
         localPosition.z = z;
     }
+    /**
+     * Liikuttaa peliobjektia lokaalissa 2d-avaruudessa
+     * @param x
+     * @param y 
+     */
     public void translate(float x, float y) {
         localPosition.x += x;
         localPosition.y += y;
         hasUpdated = true;
     }
+    /**
+     * Liikuttaa peliobjektia lokaalissa 3d-avaruudessa
+     * @param x
+     * @param y
+     * @param z 
+     */
     public void translate(float x, float y, float z) {
         translate(x, y);
         localPosition.z += z;
     }
     
+    /**
+     * Pyörittää peliobjektia z-akselin ympäri, tarkoitettu 2d-avaruuteen.
+     * @param rot 
+     */
     public void rotate(float rot) {
         localRotation.z += rot;
         hasUpdated = true;
     }
     
+    /**
+     * Muokkaa tekstuurin piirron aloituskohtaa, kätevä scrollerien tekemiseen
+     * @param x
+     * @param y 
+     */
     public void setTexOffset(float x, float y) {
         texOffset[0] = x;
         texOffset[1] = y;
@@ -148,17 +222,28 @@ public abstract class GameObject {
             sprite.setTexOffset(texOffset);
         }
     }
+    /**
+     * Lisää kappaleen lapseksi, eli lisää sen GameObjectin piirtojonoon.
+     * @param child 
+     */
     public void append(GameObject child) {
         if (texLoader != null) {
             child.setTextureLoader(texLoader);
         }
         children.add(child);
     }
+    /**
+     * Poistaa kappaleen lapsista, eli poistaa sen GameObjectin piirtojonosta.
+     * @param child 
+     */
     public void remove(GameObject child) {
         children.remove(child);
     }
+    /**
+     * Tyhjä metodi implementoivien luokkien käyttöön.
+     * Tarkoitettu pelilogiikan päivittämiseen, kutsutaan jokaisen piirron yhteydessä.
+     */
     public void update() {
-        //pelilogiikka
     }
     private long lastTime = System.nanoTime();
     public double getDeltatime() {
@@ -167,6 +252,9 @@ public abstract class GameObject {
         lastTime = time;
         return dt;
     }
+    /**
+     * Jakaa GameObjectin perityn ja sisäisen muunnoksen yhteenlaskettuna lapsiobjekteille.
+     */
     public void propagate() {
         if (!hasUpdated) {
             return;
@@ -178,8 +266,12 @@ public abstract class GameObject {
         }
         hasUpdated = false;
     }
+    /**
+     * Spriten alustusmetodi. Kutsutaan GameObjectin piirtometodista jos spriteä
+     * ei olla alustettu. Ei tee mitään jos GameObjectilta puuttuu sprite.
+     */
     private void load() {
-        System.out.println("Loading " + name);
+        //System.out.println("Loading " + name);
         if (path != null) {
             sprite = new Sprite(texLoader, path, origin, scale);
             sprite.setTexOffset(texOffset);
@@ -191,6 +283,9 @@ public abstract class GameObject {
         }
         initialized = true;
     }
+    /**
+     * Sisäinen piirtometodi. Kutsuu rekursiivisesti päivityksen lapsille ja n-lapsille, päivittää lopuksi oman spriten muunnoksen ja kutsuu piirron.
+     */
     private void _draw() {
         if (!visible) {
             for (GameObject child : children) {
@@ -206,6 +301,9 @@ public abstract class GameObject {
             sprite.draw();
         }
     }
+    /**
+     * Julkinen piirtometodi. Kutsuu spriten alustuksen, ja pelilogiikan päivityksen, kutsuu sisäisen piirron.
+     */
     public void draw() {
         if (!initialized) {
             if (texLoader != null) {
@@ -220,6 +318,10 @@ public abstract class GameObject {
             _draw();                
         }
     }
+    /**
+     * Palauttaa uuden GameObjektin jolla on alkuperäisen instanssin alkuparametrit sekä muunnos.
+     * @return 
+     */
     @Override
     public GameObject clone() {
         GameObject ret;
@@ -232,6 +334,10 @@ public abstract class GameObject {
         return ret;
     }
     
+    /**
+     * Palauttaa GameObjectin muunnoksen 2d-avaruudessa
+     * @return 
+     */
     public Vector3d getTransform() {
         return new Vector3d(localPosition.x, localPosition.y, localRotation.z);
     }
@@ -250,7 +356,10 @@ public abstract class GameObject {
     public boolean isMinimized() {
         return false;
     }
-
+    /**
+     * Pienentää peliobjektin, varsinainen toteutus implementoivien luokkien harteilla.
+     * @param minimized 
+     */
     public void setMinimized(boolean minimized) {
     }
 }

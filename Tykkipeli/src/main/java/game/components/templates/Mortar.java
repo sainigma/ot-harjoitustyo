@@ -11,7 +11,7 @@ import game.utils.PID;
 import game.utils.Vector3d;
 
 /**
- *
+ * 
  * @author suominka
  */
 public class Mortar extends GameObject {

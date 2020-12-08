@@ -10,7 +10,7 @@ import game.components.templates.MapScreen;
 import game.components.templates.ViewPort;
 import game.components.templates.Mortar;
 /**
- *
+ * GameObject luokan implementaatio pelin päänäkymien hallitsemiseen. Sekä kartta- että pelinäkymän juuri.
  * @author suominka
  */
 public class Level extends GameObject {
@@ -33,6 +33,9 @@ public class Level extends GameObject {
         return isFinished;
     }
     
+    /**
+     * Alustaa pelinäkymän, tykin ja taustan. Kutsutaan vain ensimmäisellä luontikerralla.
+     */
     private void init() {
         gameView = new ViewPort("game");        
         
@@ -46,7 +49,9 @@ public class Level extends GameObject {
         mortar.setTrueElevation(0f);
         initMap();
     }
-    
+    /**
+     * Alustaa karttanäkymän, kutsutaan joka kerta kun kenttä vaihtuu.
+     */
     private void initMap() {
         mapView = new ViewPort("map");
         mapScreen = new MapScreen("mapScreen", viewportScale);
@@ -56,6 +61,10 @@ public class Level extends GameObject {
         mapView.setMinimized(true);        
     }
     
+    /**
+     * Poistaa nykyisen karttanäkymän piirtojonosta ja alustaa uuden tilalle.
+     * Kenttien vaihtamiseen tarkoitettu metodi.
+     */
     public void reset() {
         remove(mapView);
         initMap();
