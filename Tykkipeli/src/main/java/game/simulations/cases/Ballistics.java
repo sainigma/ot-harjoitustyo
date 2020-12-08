@@ -31,7 +31,7 @@ public class Ballistics extends PhysicsSolver {
     }
     
     public void setArea(double diameter) {
-        frontalArea = Math.pow(diameter, 2)*Math.PI/4f;
+        frontalArea = Math.pow(diameter, 2) * Math.PI / 4f;
     }
     
     public void setTemperature(double temperature) {

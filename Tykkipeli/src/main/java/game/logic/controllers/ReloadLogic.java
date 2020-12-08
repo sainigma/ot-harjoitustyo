@@ -13,7 +13,7 @@ import game.components.templates.Mortar;
  * @author suominka
  */
 public class ReloadLogic {
-    Magazine magazine;
+    private Magazine magazine;
     private String[] warheads = {"light", "medium", "heavy"};
     private int[] cartouches = {1, 2, 3};
     private int reloadIndex = 0;
@@ -34,6 +34,10 @@ public class ReloadLogic {
     
     public void setMagazine(int light, int medium, int heavy, int charges) {
         this.magazine = new Magazine(light, medium, heavy, charges);
+    }
+    
+    public Magazine getMagazine() {
+        return magazine;
     }
     
     private void reloadSelector(int length) {

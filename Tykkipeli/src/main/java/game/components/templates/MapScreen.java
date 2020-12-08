@@ -57,7 +57,7 @@ public class MapScreen extends GameObject {
             plotter = new LineDrawer();
             plotter.setLineStep(75);
             plotter.setScale(mapTexScale);
-            plotter.setTransforms(new Vector3d(-256,256,0), new Vector3d(90,0,0), map.getPosition(), map.getRotation());
+            plotter.setTransforms(new Vector3d(-256, 256, 0), new Vector3d(90, 0, 0), map.getPosition(), map.getRotation());
         }
         public void setPlot(ArrayList<Vector3d> positions) {
             plotter.setPlot(positions);
@@ -145,9 +145,9 @@ public class MapScreen extends GameObject {
         public void setPosition(Vector3d position) {
             Vector3d pos = position.clone();
             icon.setPosition(new Vector3d(
-                    (pos.x-5000f)*mapTexScale,
-                    (pos.y+5000f)*mapTexScale,
-                    pos.z*mapTexScale
+                    (pos.x - 5000f) * mapTexScale,
+                    (pos.y + 5000f) * mapTexScale,
+                    pos.z * mapTexScale
             ));
         }
         public void setRotation(Vector3d rotation) {
@@ -201,7 +201,7 @@ public class MapScreen extends GameObject {
                 if (plotters.size() < i) {
                     Plotter p = new Plotter();
                     plotters.add(p);
-                    p.setColor(77f/255f, 64f/255f, 69f/255f);
+                    p.setColor(77f / 255f, 64f / 255f, 69f / 255f);
                 }
                 Plotter plotter = plotters.get(i - 1);
                 plotter.setPlot(stat.getPositions());
@@ -209,7 +209,7 @@ public class MapScreen extends GameObject {
             } else if (!historicalPlots.containsKey(solver)) {
                 Plotter plotter = new Plotter();
                 plotter.setPlot(stat.getPositions());
-                plotter.setColor(116f/255f, 103f/255f, 108f/255f);
+                plotter.setColor(116f / 255f, 103f / 255f, 108f / 255f);
                 historicalPlots.put(solver, plotter);
             }
         }
@@ -220,8 +220,8 @@ public class MapScreen extends GameObject {
     
     private void iconLoader() {
         for (String name : targetNames) {
-            GameObject icon = new GameObject(name + "Icon", "icons/" + name + ".png", new Vector3d(64,128), viewportScale) { };
-            icon.setRotation(new Vector3d(-90,0,0));
+            GameObject icon = new GameObject(name + "Icon", "icons/" + name + ".png", new Vector3d(64, 128), viewportScale) { };
+            icon.setRotation(new Vector3d(-90, 0, 0));
             targetIcons.put(name, icon);
         }
     }

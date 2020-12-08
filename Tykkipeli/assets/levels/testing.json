@@ -1,0 +1,28 @@
+{
+    "name":"Level for testing",
+    "descr":"Description here",
+    "type":"game",
+    "next":"e1m1",
+    "magazine":{
+        "light":20,
+        "medium":34,
+        "heavy":12,
+        "charges":50
+    },
+    "ships":[
+        {
+            "name":"windjammer",
+            "waypoints":[
+                [10000.0, -10000.0],
+                [0.0, 0.0]
+            ]
+        },
+        {
+            "name":"windjammer",
+            "waypoints":[
+                [0.0, -10000.0],
+                [0.0, 0.0]
+            ]
+        }
+    ]
+}

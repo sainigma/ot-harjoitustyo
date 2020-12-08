@@ -64,24 +64,17 @@ public class TargetLogic {
         this.name = obj.getString("icon");
     }
     
-    public void update(double deltatimeMillis) {
-        if (!initialized) {
-            return;
+    private boolean sleeping() {
+        if (active) {
+            return !active;
         }
-        timeAlive += (double)deltatimeMillis;
-        if (!active) {
-            if (health > 0) {
-                if (timeToSpawn < timeAlive) {
-                    active = true;
-                } else {
-                    System.out.println(timeAlive);
-                    return;
-                }
-            } else {
-                return;                
-            }
+        if (health > 0 && timeToSpawn < timeAlive) {
+            active = true;
         }
-        
+        return !active;
+    }
+    
+    private void moveShip(double deltatimeMillis) {
         double factor = deltatimeMillis / 16f;
         if (factor < 5f) {
             if (!sinking) {
@@ -92,7 +85,7 @@ public class TargetLogic {
                 position.x += deltaSpace * direction.x;
                 position.y += deltaSpace * direction.y;
                 position.z += deltaSpace * direction.z;
-            } else if (position.z > -200f){
+            } else if (position.z > -200f) {
                 position.z -= 0.2f;
             } else {
                 active = false;
@@ -100,18 +93,29 @@ public class TargetLogic {
         }
     }
     
+    public void update(double deltatimeMillis) {
+        if (!initialized) {
+            return;
+        }
+        timeAlive += (double) deltatimeMillis;
+        if (sleeping()) {
+            return;
+        }
+        moveShip(deltatimeMillis);
+    }
+    
     public void setWaypoints(JSONArray arr) {
         for (Object it : arr) {
             JSONArray subarr = (JSONArray) it;
-            float x = ((BigDecimal)subarr.get(0)).floatValue();
-            float y = ((BigDecimal)subarr.get(1)).floatValue();
+            float x = ((BigDecimal) subarr.get(0)).floatValue();
+            float y = ((BigDecimal) subarr.get(1)).floatValue();
             addWaypoint(x, y);
         }
         loadWaypoint(0);
     }
     
     public void addWaypoint(float x, float y) {
-        waypoints.add(new Vector3d(x,y,0));
+        waypoints.add(new Vector3d(x, y, 0));
     }
     
     private void loadWaypoint(int index) {
@@ -125,12 +129,16 @@ public class TargetLogic {
         return position;
     }
     
+    public Vector3d getDirection() {
+        return direction;
+    }
+    
     public Vector3d getRotation() {
         if (sinking && sinkAngle < 20f) {
             sinkAngle += 0.04f;
         }
         double rotation = -180f * Math.atan2(direction.y, direction.x) / Math.PI;
-        return new Vector3d(-90,rotation,sinkAngle);
+        return new Vector3d(-90, rotation, sinkAngle);
     }
     
     public String getName() {

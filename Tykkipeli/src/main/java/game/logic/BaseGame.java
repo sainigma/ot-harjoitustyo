@@ -24,6 +24,7 @@ public class BaseGame {
     private InputManager inputs = null;
     private Renderer renderer = null;
     
+    private boolean guiInitialized = false;
     public MortarLogic mortarLogic;
     public ReloadLogic reloadLogic;
     public ArrayList<TargetLogic> targets;
@@ -41,23 +42,22 @@ public class BaseGame {
         loadLevel("e1m1");
     }
     
+    public BaseGame(String level) {
+        loadLevel(level);
+    }
+    
     public void setRenderer(Renderer renderer) {
         if (renderer != null) {
             renderer.appendToRenderQueue(level);
+            guiInitialized = true;
         }
     }
     
     private void loadLevel(String name) {
         targetsLeft = 0;
         targets = new ArrayList<>();
-        if (level != null) {
-            level.reset();
-        } else {
-            level = new Level("basegame");
-        }
-        screenShaker = new ScreenShaker();
-        mortarLogic = new MortarLogic();
-        reloadLogic = new ReloadLogic(mortarLogic, level.mortar);
+        spawnLevel();
+        spawnObjects();
         JSONObject levelData = new JSONLoader("assets/levels/").read(name);
         JSONObject magazine = levelData.getJSONObject("magazine");
         reloadLogic.setMagazine(
@@ -68,6 +68,20 @@ public class BaseGame {
         );
         spawnTargets(levelData.getJSONArray("ships"));
         lastTime = System.nanoTime() / 1000000;
+    }
+    
+    private void spawnLevel() {
+        if (level != null) {
+            level.reset();
+        } else {
+            level = new Level("basegame");
+        }
+    }
+    
+    private void spawnObjects() {
+        screenShaker = new ScreenShaker();
+        mortarLogic = new MortarLogic();
+        reloadLogic = new ReloadLogic(mortarLogic, level.mortar);        
     }
     
     private void spawnTargets(JSONArray ships) {
@@ -86,7 +100,14 @@ public class BaseGame {
         reloadLogic.setInputManager(this.inputs);
     }
     
+    private int lastSolversActive = 0;
     private void shakeScreen() {
+        int solversActive = mortarLogic.activeSolvers.size();
+        if (solversActive < lastSolversActive) {
+            screenShaker.shake();
+        }
+        lastSolversActive = solversActive;
+
         screenShaker.update();
         float shake[] = level.mortar.getShake();
         float altShake = screenShaker.getShakevalue();
@@ -224,6 +245,23 @@ public class BaseGame {
         }
     }
     
+    private void damageTarget(TargetLogic target, Vector3d hitPosition, double maxDamage, double maxDistance) {
+        if (target.getHealth() < 0f) {
+            return;
+        }
+        Vector3d targetPos = target.getPosition();
+        double distance = new Vector3d(hitPosition.x - targetPos.x, hitPosition.z - targetPos.y, 0f).magnitude();
+        double damageFactor = distance / maxDistance;
+        if (damageFactor < 1f) {
+            double damage = maxDamage * (1 - Math.pow(damageFactor, 2));
+            target.reduceHealth((float) damage);
+            System.out.println("Target hit, inflicted " + damage + " damage");
+            if (target.isSinking()) {
+                targetsLeft -= 1;
+            }
+        }
+    }
+    
     private void checkHits(ArrayList<Statistic> hits) {
         for (Statistic hit : hits) {
             double maxDamage = hit.getPower() * 150f;
@@ -231,50 +269,21 @@ public class BaseGame {
             Vector3d hitPosition = hit.getLastPosition();
             
             for (TargetLogic target : targets) {
-                if (target.getHealth() > 0f) {
-                    Vector3d targetPos = target.getPosition();
-                    Vector3d distanceVector = new Vector3d(hitPosition.x - targetPos.x, hitPosition.z - targetPos.y, 0f);
-                    double distance = distanceVector.magnitude();
-                    double damageFactor = distance / maxDistance;
-                    if (damageFactor < 1f) {
-                        double damage = maxDamage * (1 - Math.pow(damageFactor, 2));
-                        target.reduceHealth((float) damage);
-                        System.out.println("Target hit, inflicted " + damage + " damage");
-                        if (target.isSinking()) {
-                            targetsLeft -= 1;
-                        }
-                    }
-                }
+                damageTarget(target, hitPosition, maxDamage, maxDistance);
             }
         }
     }
     
-    private void endLevel() {
-        System.out.println("No targets left, ending game");
+    public int getTargetsLeft() {
+        return targetsLeft;
     }
     
-    private boolean historyDebouncer;
-    private int lastSolversActive = 0;
-    public void update() {
-        if (inputs == null) {
-            return;
-        }
-        getDeltatimeMillis();
-        
-        float speedModifier = getSpeedModifier();
-        sharedControls(speedModifier);
-        gameViewLogic(speedModifier);
-        mapViewLogic(speedModifier);
-        
-        shakeScreen();
-        mortarLogic.solve(deltatimeMillis);
-        
-        int solversActive = mortarLogic.activeSolvers.size();
-        if (solversActive < lastSolversActive) {
-            screenShaker.shake();
-        }
-        lastSolversActive = solversActive;
-        
+    private void endLevel() {
+        //System.out.println("No targets left, ending game");
+
+    }
+    private boolean historyDebouncer;    
+    private void linkMapscreenToSolvers() {
         if (mortarLogic.hasActiveSolvers()) {
             level.mapScreen.setByHistory(mortarLogic.history);
             historyDebouncer = true;
@@ -284,15 +293,45 @@ public class BaseGame {
                 historyDebouncer = false;
             }
             level.mapScreen.freeProjectiles(0);
+        }        
+    }
+    
+
+    private void updateGUI() {
+        if (!guiInitialized) {
+            return;
         }
+        float speedModifier = getSpeedModifier();
+        sharedControls(speedModifier);
+        gameViewLogic(speedModifier);
+        mapViewLogic(speedModifier);
+
+        shakeScreen();        
+
+        linkMapscreenToSolvers();
+    }
+    
+    private void _update() {
+        if (guiInitialized && inputs == null) {
+            return;
+        }
+        
+        mortarLogic.solve(deltatimeMillis);
+        updateGUI();
         updateTargets();
         getHits();
-        if (targetsLeft <= 0 ) {
+        if (targetsLeft <= 0) {
             endLevel();
         }
     }
     
-    public void forcedUpdate(double deltatimeMillis) {
-        mortarLogic.solve(deltatimeMillis);
+    public void update() {
+        getDeltatimeMillis();
+        _update();
+    }
+    
+    public void update(double dtMillis) {
+        deltatimeMillis = dtMillis;
+        _update();
     }
 }

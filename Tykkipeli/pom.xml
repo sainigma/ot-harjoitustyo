@@ -174,13 +174,15 @@
                 <configuration>
                     <excludes>
                         <exlude>game/Main*</exlude>
-                        <exclude>game/utils/Sprite*</exclude>
-                        <exclude>game/utils/Renderer*</exclude>
-                        <exclude>game/utils/Texture*</exclude>
+                        <exclude>game/graphics/*</exclude>
                         <exclude>game/utils/Input*</exclude>
                         <exclude>game/components/GameObject*</exclude>
                         <exclude>game/components/Level*</exclude> 
                         <exclude>game/components/ViewPort*</exclude>
+                        <exclude>game/components/templates/MapScreen*</exclude>
+                        <exclude>game/components/Anim*</exclude>
+                        <exclude>game/components/Clip*</exclude>
+                        <exclude>game/components/Frame*</exclude>
                         
                     </excludes>
                 </configuration>

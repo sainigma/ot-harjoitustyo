@@ -22,7 +22,7 @@ public class JSONLoader {
     }
     public JSONObject read(String file) {
         try {
-            String raw = new String(Files.readAllBytes(Paths.get(path+file+".json")), StandardCharsets.UTF_8);
+            String raw = new String(Files.readAllBytes(Paths.get(path + file + ".json")), StandardCharsets.UTF_8);
             JSONObject obj = new JSONObject(raw);
             return obj;
         } catch (Exception e) {

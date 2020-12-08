@@ -5,8 +5,10 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
-    <suppress files="game.utils.Renderer" checks="[a-zA-Z0-9]*"/>
-    <suppress files="game.utils.Sprite" checks="[a-zA-Z0-9]*"/>
-    <suppress files="game.utils.Texture" checks="[a-zA-Z0-9]*"/>
-    <suppress files="game.utils.TextureLoader" checks="[a-zA-Z0-9]*"/>
+    <suppress files="game.graphics.Renderer" checks="[a-zA-Z0-9]*"/>
+    <suppress files="game.graphics.Sprite" checks="[a-zA-Z0-9]*"/>
+    <suppress files="game.graphics.Texture" checks="[a-zA-Z0-9]*"/>
+    <suppress files="game.graphics.TextureLoader" checks="[a-zA-Z0-9]*"/>
+    <suppress files="game.graphics.ImmediateDrawer" checks="[a-zA-Z0-9]*"/>
+    <suppress files="game.graphics.LineDrawer" checks="[a-zA-Z0-9]*"/>
 </suppressions>

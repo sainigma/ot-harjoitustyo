@@ -22,4 +22,5 @@
 | 03.12 | 2 | Ilmanvastus, gravitaation heikkeneminen ja ilman tiheyden muutos vaikuttaa nyt lentorataan. Testien kirjoitusta parabolisen ja ballistisen lentoradan vertailuun.
 | 04.12 | 4 | Piirtävien luokkien refaktorointia ja laajennusta, lentorata piirretään karttanäkymään nyt kaikille projektiileille
 | 07.12 | 6 | Maaliobjektit toteutettu, melko lähellä lopullista toteutusta. Loadareita: sekä kentän että maalien parametrit ladataan tiedostoista. Maaleihin voi osua ja peli loppuu kun maalit loppuu.
-| yht | 97 | |
+| 08.12 | 2 | Testien kirjoitusta päälogiikalle kentänlataukseen ja maalien upottamiseen liittyen. Projektin refaktorointia ja siistimistä.
+| yht | 99 | |

@@ -219,7 +219,7 @@ public class Mortar extends GameObject {
     public void addTraversal(float r) {
         setTraversal(traversal + r);
     }
-    private void setTraversal(float r) {
+    public void setTraversal(float r) {
         traversal = r;
         mountGrooves.setTexOffset(getTraversal() / 60, 0);
     }

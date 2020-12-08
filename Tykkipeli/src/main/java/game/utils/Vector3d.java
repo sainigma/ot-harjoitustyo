@@ -49,9 +49,6 @@ public class Vector3d {
     public Vector3d diff(Vector3d b) {
         return new Vector3d(x - b.x, y - b.y, z - b.z);
     }
-    public Vector3d lerpSigmoid(Vector3d a, Vector3d b, float t) {
-        return null;
-    }
     public Vector3d lerp(Vector3d a, Vector3d b, float t) {
         return a.scale(1 - t).add(b.scale(t));
     }

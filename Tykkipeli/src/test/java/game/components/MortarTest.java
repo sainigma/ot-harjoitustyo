@@ -1,3 +1,5 @@
+package game.components;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,7 +18,7 @@ import game.components.templates.Mortar;
  *
  * @author suominka
  */
-public class GameObjectTest {
+public class MortarTest {
     Mortar mortar;
     @Before
     public void setUp() {
