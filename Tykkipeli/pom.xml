@@ -12,6 +12,18 @@
     
     <profiles>
         <profile>
+            <id>lwjgl-natives-linux-amd64</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-linux</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
             <id>lwjgl-natives-linux-aarch64</id>
             <activation>
                 <os>
@@ -24,6 +36,42 @@
             </properties>
         </profile>
         <profile>
+            <id>lwjgl-natives-linux-arm</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <arch>arm</arch>
+                </os>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-linux-arm32</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
+            <id>lwjgl-natives-linux-arm32</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <arch>arm32</arch>
+                </os>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-linux-arm32</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
+            <id>lwjgl-natives-macos-amd64</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-macos</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
             <id>lwjgl-natives-windows-amd64</id>
             <activation>
                 <os>
@@ -33,6 +81,18 @@
             </activation>
             <properties>
                 <lwjgl.natives>natives-windows</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
+            <id>lwjgl-natives-windows-x86</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                    <arch>x86</arch>
+                </os>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-windows-x86</lwjgl.natives>
             </properties>
         </profile>
     </profiles>
@@ -56,6 +116,7 @@
                 <version>4.12</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                     <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl</artifactId>
@@ -66,19 +127,7 @@
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-bgfx</artifactId>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl-glfw</artifactId>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-nanovg</artifactId>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-nuklear</artifactId>
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
@@ -90,65 +139,37 @@
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-par</artifactId>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl-stb</artifactId>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-vulkan</artifactId>
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl</artifactId>
-                    <classifier>natives-linux</classifier>
+                    <classifier>${lwjgl.natives}</classifier>
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl-assimp</artifactId>
-                    <classifier>natives-linux</classifier>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-bgfx</artifactId>
-                    <classifier>natives-linux</classifier>
+                    <classifier>${lwjgl.natives}</classifier>
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl-glfw</artifactId>
-                    <classifier>natives-linux</classifier>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-nanovg</artifactId>
-                    <classifier>natives-linux</classifier>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-nuklear</artifactId>
-                    <classifier>natives-linux</classifier>
+                    <classifier>${lwjgl.natives}</classifier>
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl-openal</artifactId>
-                    <classifier>natives-linux</classifier>
+                    <classifier>${lwjgl.natives}</classifier>
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl-opengl</artifactId>
-                    <classifier>natives-linux</classifier>
-            </dependency>
-            <dependency>
-                    <groupId>org.lwjgl</groupId>
-                    <artifactId>lwjgl-par</artifactId>
-                    <classifier>natives-linux</classifier>
+                    <classifier>${lwjgl.natives}</classifier>
             </dependency>
             <dependency>
                     <groupId>org.lwjgl</groupId>
                     <artifactId>lwjgl-stb</artifactId>
-                    <classifier>natives-linux</classifier>
+                    <classifier>${lwjgl.natives}</classifier>
             </dependency>
             <dependency>
                     <groupId>org.json</groupId>

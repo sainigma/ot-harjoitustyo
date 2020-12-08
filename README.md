@@ -17,6 +17,7 @@ Peli on jo lähes valmis, pelimoottori on valmis ja pelilogiikka kattaa pääpel
 # Releaset
 
 [Viikko 6](https://github.com/sainigma/ot-harjoitustyo/releases/tag/0.8)
+
 [Viikko 5](https://github.com/sainigma/ot-harjoitustyo/releases/tag/0.6)
 
 # Komentorivitoiminnot
@@ -36,6 +37,13 @@ Tykkipeli kansion juuressa:
 Paketti luodaan target -kansioon, ja sen voi ajaa komennolla
 
     java -jar Tykkipeli-1.0-SNAPSHOT.jar
+
+Projekti käännetään lokaalin käyttöjärjestelmän perusteella, jos paketti halutaan kääntää toiselle käyttöjärjestelmälle, olemassaolevista komennoista tärkeimmät ovat
+    
+    mvn -P lwjgl-natives-linux-amd64 package
+    mvn -P lwjgl-natives-windows-amd64 package
+    mvn -P lwjgl-natives-macos-amd64 package
+    mvn -P lwjgl-natives-windows-x86 package
 
 ## Testit & dokumentaatio
 
