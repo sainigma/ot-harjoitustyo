@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package game.graphics;
+package game.graphics.primitives;
 
+import game.graphics.ImmediateDrawer;
+import game.graphics.Texture;
+import game.graphics.TextureLoader;
 import game.utils.Vector3d;
 import org.lwjgl.opengl.GL11;
 

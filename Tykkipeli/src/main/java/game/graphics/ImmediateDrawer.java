@@ -48,7 +48,7 @@ public abstract class ImmediateDrawer {
     public void _draw() {
     }
     
-    public void draw() {        
+    public void draw() {
         GL11.glPushMatrix();
         GL11.glScalef(scale, scale, scale);
         transform();

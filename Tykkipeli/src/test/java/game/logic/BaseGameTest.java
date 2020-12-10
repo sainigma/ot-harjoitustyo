@@ -139,7 +139,7 @@ public class BaseGameTest {
         TargetLogic ships[] = {logic.targets.get(0), logic.targets.get(1)};
         boolean a = verifyShip(
                 ships[0],
-                new Vector3d(10000f, -10000f, 0),
+                new Vector3d(4200f, -4200f, 0),
                 new Vector3d(-0.70f, 0.70f, 0f),
                 -135,
                 30

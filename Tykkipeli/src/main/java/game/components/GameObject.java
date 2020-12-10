@@ -6,7 +6,7 @@
 package game.components;
 
 import java.util.ArrayList;
-import game.graphics.Sprite;
+import game.graphics.primitives.Sprite;
 import game.graphics.TextureLoader;
 import game.utils.Vector3d;
 
@@ -355,6 +355,10 @@ public abstract class GameObject {
     
     public boolean isMinimized() {
         return false;
+    }
+    
+    public boolean isInitialized() {
+        return initialized;
     }
     /**
      * Pienentää peliobjektin, varsinainen toteutus implementoivien luokkien harteilla.

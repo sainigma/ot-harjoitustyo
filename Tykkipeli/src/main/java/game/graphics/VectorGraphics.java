@@ -13,12 +13,11 @@ import org.lwjgl.opengl.GL11;
  *
  * @author suominka
  */
-public class LineDrawer extends ImmediateDrawer {
-    private ArrayList<Vector3d> positions;
-    private boolean initialized = false;
+abstract public class VectorGraphics extends ImmediateDrawer{
+    private ArrayList<Vector3d> vertices;
+    private Color color;
     private int lineStep = 1;
     private float lineWidth = 1f;
-    private Color color;
     
     public class Color {
         private float r;
@@ -34,50 +33,49 @@ public class LineDrawer extends ImmediateDrawer {
         }
     }
     
-    public LineDrawer() {
-        setColor(0f,0f,0f);
+    public void setVertices(ArrayList<Vector3d> vertices) {
+        this.vertices = vertices;
     }
     
     public void setColor(float r, float b, float g) {
         this.color = new Color(r,b,g);
     }
     
-    public boolean isInitialized() {
-        return initialized;
-    }
-    
-    
-    public void setPlot(ArrayList<Vector3d> positions) {
-        this.positions = positions;
-        initialized = true;
+    public float[] getColor() {
+        return color.get();
     }
     
     public void setLineStep(int step) {
         lineStep = step;
     }
+    public int getLineStep() {
+        return lineStep;
+    }
     public void setLineWidth(float lineWidth) {
         this.lineWidth = lineWidth;
     }
-    
+    public float getLineWidth() {
+        return lineWidth;
+    }
     @Override
     public void _draw() {
-        if (positions == null) {
+        if (vertices == null) {
             return;
         }
         int i = 0;
         int j = 0;
-        int size = positions.size();
-        GL11.glColor3fv(color.get());
-        GL11.glLineWidth(lineWidth);
+        int size = vertices.size();
+        GL11.glColor3fv(getColor());
+        GL11.glLineWidth(getLineWidth());
         GL11.glBegin(GL11.GL_LINES);
         while (i < size) {
-            Vector3d pos = positions.get(i);
+            Vector3d pos = vertices.get(i);
             GL11.glVertex3d(pos.x, pos.y, -pos.z);
-            i += lineStep;
+            i += getLineStep();
             j += 1;
         }
         if (j % 2 != 0) {
-            Vector3d pos = positions.get(size-1);
+            Vector3d pos = vertices.get(size-1);
             GL11.glVertex3d(pos.x, pos.y, -pos.z);
         }
         GL11.glEnd();

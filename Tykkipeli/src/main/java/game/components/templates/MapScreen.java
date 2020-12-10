@@ -6,7 +6,8 @@
 package game.components.templates;
 
 import game.components.GameObject;
-import game.graphics.LineDrawer;
+import game.graphics.primitives.Circle;
+import game.graphics.primitives.Lines;
 import game.logic.controllers.Statistic;
 import game.logic.controllers.TargetLogic;
 import game.simulations.cases.Ballistics;
@@ -52,9 +53,9 @@ public class MapScreen extends GameObject {
     }
     
     class Plotter {
-        LineDrawer plotter;
+        Lines plotter;
         public Plotter() {
-            plotter = new LineDrawer();
+            plotter = new Lines();
             plotter.setLineStep(75);
             plotter.setScale(mapTexScale);
             plotter.setTransforms(new Vector3d(-256, 256, 0), new Vector3d(90, 0, 0), map.getPosition(), map.getRotation());
@@ -71,6 +72,29 @@ public class MapScreen extends GameObject {
         }
         public void setLineWidth(float lineWidth) {
             plotter.setLineWidth(lineWidth);
+        }
+    }
+    
+    class RangePlotter {
+        Circle plotter;
+        Vector3d mapPosition;
+        Vector3d localPosition;
+        
+        public RangePlotter(float range) {
+            plotter = new Circle(range,20);
+            plotter.setScale(mapTexScale);
+            plotter.setColor(77f / 255f, 64f / 255f, 69f / 255f);
+            plotter.setLineWidth(1f);
+            localPosition = new Vector3d(-256, 256, 2);
+            mapPosition = map.getPosition();
+        }
+        public void setPosition(Vector3d position) {
+            localPosition = position;
+            localPosition.z = 2f;
+        }
+        public void plot() {
+            plotter.setTransforms(localPosition, new Vector3d(), mapPosition, map.getRotation());
+            plotter.draw();
         }
     }
     
@@ -135,13 +159,23 @@ public class MapScreen extends GameObject {
     }
     
     class TargetIcon {
+        private float range;
         GameObject icon;
-        public TargetIcon(String name, Vector3d position, Vector3d rotation) {
+        RangePlotter rangePlotter;
+        public TargetIcon(String name, Vector3d position, Vector3d rotation, float range) {
             icon = targetIcons.get(name).clone();
+            this.range = range;
             setPosition(position);
             setRotation(rotation);
             map.append(icon);
+            if (range > 0f) {
+                rangePlotter = new RangePlotter(range);
+            } else {
+                rangePlotter = null;
+            }
+            
         }
+
         public void setPosition(Vector3d position) {
             Vector3d pos = position.clone();
             icon.setPosition(new Vector3d(
@@ -149,9 +183,18 @@ public class MapScreen extends GameObject {
                     (pos.y + 5000f) * mapTexScale,
                     pos.z * mapTexScale
             ));
+            if (rangePlotter != null) {
+                rangePlotter.setPosition(icon.getPosition());
+            }
         }
         public void setRotation(Vector3d rotation) {
             icon.setRotation(rotation);
+        }
+        public void plot() {
+            if (rangePlotter == null) {
+                return;
+            }
+            rangePlotter.plot();
         }
         public void kill() {
             map.remove(icon);
@@ -240,7 +283,7 @@ public class MapScreen extends GameObject {
     }
     
     public void spawnTarget(TargetLogic target) {
-        TargetIcon icon = new TargetIcon(target.getName(), target.getPosition(), target.getRotation());
+        TargetIcon icon = new TargetIcon(target.getName(), target.getPosition(), target.getRotation(), target.getRange());
         targets.put(target, icon);
     }
     
@@ -311,6 +354,12 @@ public class MapScreen extends GameObject {
         }
     }
     
+    private void plotRanges() {
+        for (TargetIcon target : targets.values()) {
+            target.plot();
+        }
+    }
+    
     private void plotHistoricalPlots() {
         if (historicalPlots.isEmpty()) {
             return;
@@ -325,6 +374,8 @@ public class MapScreen extends GameObject {
         if (!minimized) {
             plotPlotters();
             plotHistoricalPlots();
+            plotRanges();
+            //setVisible(false);
         }
     }
 }

@@ -20,8 +20,9 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Peliobjektien animointi animaatiotiedostoilla
 - [x] Projektiilin lentoradan piirto
 - [x] Edellisten projektiilien lentoradan piirto
+- [x] Näkymä tykin ammusten valintaan (MVP)
+- [x] Laivojen tulitusetäisyyden piirto
 - [ ] Latausanimaatio tykille (MVP)
-- [ ] Näkymä tykin ammusten valintaan (MVP)
 - [ ] Näkymä kentän lopettamiseen (MVP)
 - [ ] Päämenu (MVP)
 - [ ] Hiscorenäkymä (MVP)

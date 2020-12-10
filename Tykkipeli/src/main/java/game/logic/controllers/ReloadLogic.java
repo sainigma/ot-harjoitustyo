@@ -103,6 +103,9 @@ public class ReloadLogic {
             allowRoll = false;
             reloadUpdate = true;
         }
+        if (inputs.keyDownOnce("previous")) {
+            reset();
+        }
     }
     
     private void chooseCartouches() {
@@ -122,6 +125,13 @@ public class ReloadLogic {
             reloadScreen.exit();
             prevCartouche = reloadIndex;
             reload();
+        }
+        if (inputs.keyDownOnce("previous")) {
+            prevCartouche = reloadIndex;
+            magazine.addWarhead(prevWarhead);
+            reloadScreen.setCharges(0);
+            currentProjectile = null;
+            allowRoll = true;
         }
     }
     
@@ -185,6 +195,12 @@ public class ReloadLogic {
         } else if (!reloadFinished) {
             chooseCartouches();
         }
+    }
+    
+    public void reset() {
+        blockMovement = false;
+        currentProjectile = null;
+        reloadScreen.exit();
     }
     
     public void setProjectile(int warhead, int cartouches) {

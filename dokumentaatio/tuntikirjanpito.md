@@ -24,5 +24,5 @@
 | 07.12 | 6 | Maaliobjektit toteutettu, melko lähellä lopullista toteutusta. Loadareita: sekä kentän että maalien parametrit ladataan tiedostoista. Maaleihin voi osua ja peli loppuu kun maalit loppuu.
 | 08.12 | 5 | Testien kirjoitusta päälogiikalle kentänlataukseen ja maalien upottamiseen liittyen. Projektin refaktorointia ja siistimistä. Dokumentaation kirjoitusta ja palautuksen valmistelua.
 | 09.12 | 5 | Assettien tekoa latausnäkymään.
-| 10.12 | 3 | Latausnäkymällä on nyt graafinen käyttöliittymä. Ammusten/panosten valinta makasiinin inventaariosta riippuvainen.
-| yht | 110 | |
+| 10.12 | 5 | Latausnäkymällä on nyt graafinen käyttöliittymä. Ammusten/panosten valinta makasiinin inventaariosta riippuvainen. Laivojen tulitusetäisyys piirretään kartalle.
+| yht | 112 | |

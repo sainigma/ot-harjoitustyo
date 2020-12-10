@@ -21,6 +21,7 @@ public class TargetLogic {
     private String name;
     private float health;
     private float speedMs;
+    private float range;
     
     private Vector3d position;
     private Vector3d direction;
@@ -52,6 +53,10 @@ public class TargetLogic {
         return health;
     }
     
+    public float getRange() {
+        return range;
+    }
+    
     public boolean isSinking() {
         return sinking;
     }
@@ -62,6 +67,7 @@ public class TargetLogic {
         this.speedMs = speedKmh / 3.6f;
         this.health = obj.getFloat("health");
         this.name = obj.getString("icon");
+        this.range = obj.getFloat("rangeMeters");
     }
     
     private boolean sleeping() {

@@ -64,7 +64,7 @@ public class InputManager {
         
         keyMap.put(GLFW_KEY_SPACE, new String[]{"ok", "fire"});
         keyMap.put(GLFW_KEY_ENTER, new String[]{"ok"});
-        keyMap.put(GLFW_KEY_BACKSPACE, new String[]{"cancel"});
+        keyMap.put(GLFW_KEY_BACKSPACE, new String[]{"previous"});
         
         keyMap.put(GLFW_KEY_R, new String[]{"reload"});
         

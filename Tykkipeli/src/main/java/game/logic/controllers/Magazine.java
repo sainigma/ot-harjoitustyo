@@ -23,6 +23,10 @@ public class Magazine {
         this.cartouches = cartouches;
     }
     
+    public void addWarhead(int index) {
+        warheads[index] += 1;
+    }
+    
     public float getWarhead(int index) {
         if (index < 0 || index >= warheads.length) {
             return -1;

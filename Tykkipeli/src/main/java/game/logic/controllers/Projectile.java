@@ -31,7 +31,7 @@ public class Projectile {
         return cartouches;
     }
     public double getInitialVelocity() {
-        return 335 * (weight / 123f) * cartouches / 3f;
+        return 335 * (123f / weight) * cartouches / 3f;
     }
     public boolean initOk() {
         return weight > 0;
