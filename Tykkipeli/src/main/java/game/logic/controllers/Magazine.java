@@ -33,6 +33,22 @@ public class Magazine {
         }
         return -1;
     }
+    public boolean isEmpty() {
+        if (cartouches <= 0) {
+            return true;
+        }
+        int totalWarheads = 0;
+        for (int warhead : warheads) {
+            totalWarheads += warhead;
+        }
+        return totalWarheads <= 0;
+    }
+    public int cartouchesLeft() {
+        return cartouches;
+    }
+    public boolean warheadAvailable(int index) {
+        return warheads[index] > 0;
+    }
     public int getCartouche(int amount) {
         if (cartouches - amount >= 0) {
             cartouches -= amount;

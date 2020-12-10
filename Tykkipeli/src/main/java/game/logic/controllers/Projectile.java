@@ -17,7 +17,7 @@ public class Projectile {
     int cartouches;
     boolean initOk;
     public Projectile(float weight, int cartouches) {
-        if (weight <= 0 || cartouches <= 0) {
+        if (weight <= 0) {
             return;
         }
         this.weight = weight;

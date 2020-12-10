@@ -136,7 +136,6 @@ public class Mortar extends GameObject {
         } else if (control < -maxSpeed) { 
             control = -maxSpeed;
         }
-        //System.out.println(control);
         if (Math.abs(control) < 0.1f) {
             controller.deactivate();
         }
@@ -232,7 +231,6 @@ public class Mortar extends GameObject {
 
     public void addElevation(float r) {
         setElevation(-elevationWheelRot + r);
-        //System.out.println(elevationTarget + " " + getElevation());
     }
     public void setTrueElevation(float r) {
         float gunRot = -r;

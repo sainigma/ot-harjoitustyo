@@ -9,6 +9,7 @@ import game.components.templates.BackgroundCoast;
 import game.components.templates.MapScreen;
 import game.components.templates.ViewPort;
 import game.components.templates.Mortar;
+import game.components.templates.ReloadScreen;
 /**
  * GameObject luokan implementaatio pelin päänäkymien hallitsemiseen. Sekä kartta- että pelinäkymän juuri.
  * @author suominka
@@ -20,6 +21,7 @@ public class Level extends GameObject {
     public ViewPort mapView;
     public Mortar mortar;
     public MapScreen mapScreen;
+    public ReloadScreen reloadScreen;
     public GameObject background;
     
     private boolean isFinished = false;
@@ -37,28 +39,32 @@ public class Level extends GameObject {
      * Alustaa pelinäkymän, tykin ja taustan. Kutsutaan vain ensimmäisellä luontikerralla.
      */
     private void init() {
-        gameView = new ViewPort("game");        
-        
-        mortar = new Mortar("mortar", viewportScale);
-        background = new BackgroundCoast("coast", 1);
-        gameView.append(mortar);
-        gameView.append(background);
-        
-        append(gameView);
+        initGameView();
+        initMapView();
 
         mortar.setTrueElevation(0f);
-        initMap();
+        gameView.setVisible(true);
+        mapView.setMinimized(true);
+    }
+    private void initGameView() {
+        gameView = new ViewPort("game");        
+        mortar = new Mortar("mortar", viewportScale);
+        background = new BackgroundCoast("coast", 1);
+        reloadScreen = new ReloadScreen("reloadScreen", viewportScale);
+        
+        gameView.append(mortar);
+        gameView.append(background);
+        gameView.append(reloadScreen);
+        append(gameView);
     }
     /**
      * Alustaa karttanäkymän, kutsutaan joka kerta kun kenttä vaihtuu.
      */
-    private void initMap() {
+    private void initMapView() {
         mapView = new ViewPort("map");
         mapScreen = new MapScreen("mapScreen", viewportScale);
         mapView.append(mapScreen);
-        append(mapView);
-        gameView.setVisible(true);
-        mapView.setMinimized(true);        
+        append(mapView);        
     }
     
     /**
@@ -67,7 +73,7 @@ public class Level extends GameObject {
      */
     public void reset() {
         remove(mapView);
-        initMap();
+        initMapView();
     }
     
     @Override

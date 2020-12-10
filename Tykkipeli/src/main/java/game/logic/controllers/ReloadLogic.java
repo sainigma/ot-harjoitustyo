@@ -7,6 +7,7 @@ package game.logic.controllers;
 
 import game.utils.InputManager;
 import game.components.templates.Mortar;
+import game.components.templates.ReloadScreen;
 
 /**
  *
@@ -15,19 +16,28 @@ import game.components.templates.Mortar;
 public class ReloadLogic {
     private Magazine magazine;
     private String[] warheads = {"light", "medium", "heavy"};
-    private int[] cartouches = {1, 2, 3};
+    private int[] cartouches = {3, 2, 1};
+    
     private int reloadIndex = 0;
+    private int prevReloadIndex = 0;
+    private boolean allowRoll = true;
+    private int prevWarhead = 0;
+    private int prevCartouche = 2;
+    private boolean firstSelected = false;
+    
     private boolean reloadUpdate = true;
     private boolean reloadFinished = true;
     private boolean blockMovement = false;
-
+    
     Projectile currentProjectile;
     InputManager inputs = null;
     MortarLogic mortarLogic;
+    ReloadScreen reloadScreen;
     Mortar mortar;
     
-    public ReloadLogic(MortarLogic mortarLogic, Mortar mortar) {
+    public ReloadLogic(MortarLogic mortarLogic, Mortar mortar, ReloadScreen reloadScreen) {
         this.mortarLogic = mortarLogic;
+        this.reloadScreen = reloadScreen;
         this.mortar = mortar;
         this.magazine = new Magazine(12, 6, 3, 54);
     }
@@ -39,47 +49,78 @@ public class ReloadLogic {
     public Magazine getMagazine() {
         return magazine;
     }
-    
+    private int selectorDirection;
     private void reloadSelector(int length) {
         if (inputs.keyDownOnce("left")) {
             reloadIndex -= 1;
             reloadUpdate = true;
+            selectorDirection = -1;
         } else if (inputs.keyDownOnce("right")) {
             reloadIndex += 1;
-            reloadUpdate = true;    
+            reloadUpdate = true;
+            selectorDirection = 1;
         }
+        if (allowRoll) {
+            rollReloadIndex(length);
+        } else {
+            if (reloadIndex >= length) {
+                reloadIndex = length - 1;
+            } else if (reloadIndex < 0) {
+                reloadIndex = 0;
+            }
+        }
+    }
+    
+    private void rollReloadIndex(int length) {
         if (reloadIndex >= length) {
             reloadIndex = 0;
         } else if (reloadIndex < 0) {
             reloadIndex = length - 1;
-        }
+        }                    
     }
     
     private void chooseProjectile() {
         if (reloadUpdate) {
+            while (!magazine.warheadAvailable(reloadIndex)) {
+                reloadIndex += selectorDirection;
+                rollReloadIndex(warheads.length);
+            }
             reloadUpdate = false;
-            System.out.println("Select warhead, currently selected: " + warheads[reloadIndex]);            
+            reloadScreen.setWarhead(reloadIndex);
+        }
+        if (!firstSelected && (inputs.keyDownOnce("left") || inputs.keyDownOnce("right"))) {
+            firstSelected = true;
+            reloadScreen.setWarhead(reloadIndex);
         }
         reloadSelector(warheads.length);
-        
-        if (inputs.keyDownOnce("ok")) {
-            currentProjectile = new Projectile(magazine.getWarhead(reloadIndex), magazine.getCartouche(1));
+        if (inputs.keyDownOnce("ok") && firstSelected) {
+            currentProjectile = new Projectile(magazine.getWarhead(reloadIndex), 0);
             if (!currentProjectile.initOk()) {
                 currentProjectile = null;
             }
+            prevWarhead = reloadIndex;
+            reloadIndex = prevCartouche;
+            allowRoll = false;
             reloadUpdate = true;
         }
     }
     
     private void chooseCartouches() {
         if (reloadUpdate) {
+            System.out.println(magazine.cartouchesLeft());
+            while (cartouches[reloadIndex] > magazine.cartouchesLeft() && reloadIndex < 3) {
+                reloadIndex++;
+            }
             reloadUpdate = false;
-            System.out.println("Select cartouches, currently selected: " + cartouches[reloadIndex]);
+            reloadScreen.setCharges(3 - reloadIndex);
+            System.out.println("Select cartouches, currently selected: " + cartouches[reloadIndex]);                
         }
         reloadSelector(cartouches.length);
         
         if (inputs.keyDownOnce("ok")) {
-            currentProjectile.addCartouches(magazine.getCartouche(cartouches[reloadIndex] - 1));
+            currentProjectile.addCartouches(magazine.getCartouche(cartouches[reloadIndex]));
+            reloadScreen.exit();
+            prevCartouche = reloadIndex;
             reload();
         }
     }
@@ -116,12 +157,26 @@ public class ReloadLogic {
     
     public void reloadControls() {
         if (inputs.keyDownOnce("reload") && currentProjectile == null) {
+            if (magazine.isEmpty()) {
+                System.out.println("magazine empty!");
+                blockMovement = false;
+                return;
+            }
+            System.out.println("charges left: " + magazine.cartouchesLeft());
+            reloadScreen.enter();
+            reloadScreen.setCharges(0);
+            reloadScreen.setWarhead(3);
+            
+            firstSelected = false;
+            allowRoll = true;
             System.out.println("starting reload");
-            reloadUpdate = true;
+            reloadUpdate = false;
             blockMovement = true;
             reloadFinished = false;
             mortar.setElevationTarget(0f);
             mortar.setInclinometer(false);
+            
+            reloadIndex = prevWarhead;
         } else if (!blockMovement) {
             return;
         }

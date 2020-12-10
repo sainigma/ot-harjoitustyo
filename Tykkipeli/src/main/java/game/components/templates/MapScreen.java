@@ -291,6 +291,11 @@ public class MapScreen extends GameObject {
         }
     }
     
+    @Override
+    public boolean isMinimized() {
+        return minimized;
+    }
+    
     public void updateTarget(TargetLogic logic) {
         TargetIcon target = targets.get(logic);
         target.setPosition(logic.getPosition());

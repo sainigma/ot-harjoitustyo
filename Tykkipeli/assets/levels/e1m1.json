@@ -6,8 +6,8 @@
     "magazine":{
         "light":20,
         "medium":34,
-        "heavy":12,
-        "charges":50
+        "heavy":6,
+        "charges":32
     },
     "ships":[
         {

@@ -98,7 +98,7 @@ public class BaseGame {
     private void spawnObjects() {
         screenShaker = new ScreenShaker();
         mortarLogic = new MortarLogic();
-        reloadLogic = new ReloadLogic(mortarLogic, level.mortar);        
+        reloadLogic = new ReloadLogic(mortarLogic, level.mortar, level.reloadScreen);        
     }
     
     /**
@@ -169,7 +169,7 @@ public class BaseGame {
      * @param speedModifier 
      */
     private void traverse(float speedModifier) {
-        if (reloadLogic.isMovementBlocked()) {
+        if (reloadLogic.isMovementBlocked() && level.mapScreen.isMinimized()) {
             return;
         }
         float traversalSpeed = 0.05f;
