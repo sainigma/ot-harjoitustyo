@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
@@ -63,12 +64,13 @@ public class Renderer {
     private int resoX,resoY;
     private boolean alive = true;
     private boolean loading = true;
+    private boolean fullscreen = false;
     String windowname;
     Sprite loadingScreen;
     
     public Renderer(){
-        resoX = 1280;
-        resoY = 720;
+        resoX = 1920;
+        resoY = 1024;
         windowname = "Tykkipeli";
         objects = new ArrayList<>();
     }
@@ -138,7 +140,12 @@ public class Renderer {
         if(!glfwInit()){
             throw new IllegalStateException("oof");
         }
-        window = glfwCreateWindow(resoX,resoY,windowname,NULL,NULL);
+        if (fullscreen) {
+            window = glfwCreateWindow(resoX,resoY,windowname,glfwGetPrimaryMonitor(),NULL);
+        } else {
+            window = glfwCreateWindow(resoX,resoY,windowname,NULL,NULL);
+        }
+        
         if(window == NULL){
             throw new RuntimeException("tuplaoof");
         }
@@ -159,7 +166,7 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
         glAlphaFunc(GL_GREATER, 0.5f);
         glMatrixMode(GL_PROJECTION);
-        glOrtho(0, resoX, resoY, 0, -2000, 2000);
+        glOrtho(0, 1280, 720, 0, -2000, 2000);
         glClearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
         
         texLoader = new TextureLoader();

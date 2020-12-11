@@ -82,20 +82,18 @@ public class TargetLogic {
     
     private void moveShip(double deltatimeMillis) {
         double factor = deltatimeMillis / 16f;
-        if (factor < 5f) {
-            if (!sinking) {
-                if (health <= 0f) {
-                    sinking = true;
-                }
-                double deltaSpace = factor * speedMs * 16f / 1000f;
-                position.x += deltaSpace * direction.x;
-                position.y += deltaSpace * direction.y;
-                position.z += deltaSpace * direction.z;
-            } else if (position.z > -200f) {
-                position.z -= 0.2f;
-            } else {
-                active = false;
+        if (!sinking) {
+            if (health <= 0f) {
+                sinking = true;
             }
+            double deltaSpace = factor * speedMs * 16f / 1000f;
+            position.x += deltaSpace * direction.x;
+            position.y += deltaSpace * direction.y;
+            position.z += deltaSpace * direction.z;
+        } else if (position.z > -200f) {
+            position.z -= 0.2f;
+        } else {
+            active = false;
         }
     }
     

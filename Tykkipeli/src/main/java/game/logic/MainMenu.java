@@ -21,14 +21,13 @@ public class MainMenu implements LogicInterface {
     private boolean nextReadyToSpawn = false;
     private String nextLogicName = "";
     
-    private float viewportScale;
     private long lastTime;
     private boolean initialized = false;
     double deltatimeMillis = 0;
     MainMenuScreen menuScreen;
     
-    public MainMenu(float viewportScale) {
-        menuScreen = new MainMenuScreen("mainmenu", viewportScale);
+    public MainMenu() {
+        menuScreen = new MainMenuScreen("mainmenu");
     }
     
     @Override

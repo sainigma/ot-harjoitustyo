@@ -24,7 +24,7 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Laivojen tulitusetäisyyden piirto
 - [ ] Latausanimaatio tykille (MVP)
 - [ ] Näkymä kentän lopettamiseen (MVP)
-- [ ] Päämenu (MVP)
+- [x] Päämenu (MVP)
 - [ ] Hiscorenäkymä (MVP)
 - [ ] Tykin jalustan lähimaasto taustaa nopeammin liikkuvalle layerille, parallax
 - [ ] Tuulen suunnan ilmaisu

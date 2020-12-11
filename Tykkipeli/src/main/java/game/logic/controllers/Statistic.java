@@ -66,6 +66,14 @@ public class Statistic {
         return (float) (mass / 123f);
     }
     
+    public float getMass() {
+        return (float) mass;
+    }
+    
+    public float getElevation() {
+        return (float) elevation;
+    }
+    
     @Override
     public String toString() {
         return "final position: " + lastPosition;

@@ -26,7 +26,7 @@ public class BaseGameTest {
     
     @Before
     public void setUp() {
-        logic = new BaseGame("testing");
+        logic = new BaseGame("testing", 1f);
     }
     
     private void _reload(float elevation) {

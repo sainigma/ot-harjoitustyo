@@ -41,6 +41,8 @@ public class BaseGame implements LogicInterface{
     private long lastTime;
     private double deltatimeMillis;
     
+    private int score;
+    
     /**
      * Ilman parametreja konstruktori lataa ensimmäisen kentän.
      */
@@ -76,6 +78,7 @@ public class BaseGame implements LogicInterface{
      * @param name 
      */
     private void loadLevel(String name) {
+        score = 0;
         targetsLeft = 0;
         targets = new ArrayList<>();
         spawnLevel();
@@ -320,12 +323,35 @@ public class BaseGame implements LogicInterface{
         for (Statistic hit : hits) {
             double maxDamage = hit.getPower() * 150f;
             double maxDistance = 1000f;
-            Vector3d hitPosition = hit.getLastPosition();
             
             for (TargetLogic target : targets) {
-                damageTarget(target, hitPosition, maxDamage, maxDistance);
+                damageTarget(target, hit, maxDamage, maxDistance);
             }
         }
+    }
+    
+    private void addScore(Statistic hit, TargetLogic target, boolean destroyed) {
+        float mass = hit.getMass();
+        String targetType = target.getName();
+        float elevation = 0;
+        float baseModifier = destroyed ? 1 : 0.5f;
+        switch (targetType) {
+            case "ironclad":
+                baseModifier *= 2f;
+                break;
+            case "lineship":
+                baseModifier *= 1.7f;
+                break;
+            case "windjammer":
+                baseModifier *= 1.5f;
+                break;
+            default:
+                break;
+        }
+        baseModifier *= (elevation + 40) / 105f;
+        baseModifier *= 123f / mass;
+        score += (int) (baseModifier * 1000f);
+        System.out.println(score);
     }
     
     /**
@@ -338,10 +364,11 @@ public class BaseGame implements LogicInterface{
      * @param maxDamage
      * @param maxDistance 
      */
-    private void damageTarget(TargetLogic target, Vector3d hitPosition, double maxDamage, double maxDistance) {
+    private void damageTarget(TargetLogic target, Statistic hit, double maxDamage, double maxDistance) {
         if (target.getHealth() < 0f) {
             return;
         }
+        Vector3d hitPosition = hit.getLastPosition();
         Vector3d targetPos = target.getPosition();
         double distance = new Vector3d(hitPosition.x - targetPos.x, hitPosition.z - targetPos.y, 0f).magnitude();
         double damageFactor = distance / maxDistance;
@@ -351,6 +378,9 @@ public class BaseGame implements LogicInterface{
             System.out.println("Target hit, inflicted " + damage + " damage");
             if (target.isSinking()) {
                 targetsLeft -= 1;
+                addScore(hit, target, true);
+            } else {
+                addScore(hit, target, false);
             }
         }
     }

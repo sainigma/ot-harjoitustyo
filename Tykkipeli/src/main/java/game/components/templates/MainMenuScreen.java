@@ -74,16 +74,16 @@ public class MainMenuScreen extends GameObject{
     
     private void animatePosition(float t) {
         title.setPosition(new Vector3d().lerp(
-                new Vector3d(2048 * viewportScale, 0, 10),
-                new Vector3d(0, 0, 10), t)
+                new Vector3d(2048 * viewportScale, 0, 3),
+                new Vector3d(0, 0, 3), t)
         );
         backgroundFar.setPosition(new Vector3d().lerp(
                 new Vector3d(-100 * viewportScale, 0, 1),
                 new Vector3d(0, 0, 1), t)
         );
         backgroundNear.setPosition(new Vector3d().lerp(
-                new Vector3d(-300 * viewportScale, 0, 1),
-                new Vector3d(0, 0, 1), t)
+                new Vector3d(-300 * viewportScale, 0, 2),
+                new Vector3d(0, 0, 2), t)
         );
     }
     

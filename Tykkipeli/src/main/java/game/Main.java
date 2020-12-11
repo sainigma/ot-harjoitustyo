@@ -20,15 +20,14 @@ import game.logic.MainMenu;
 public class Main {
     Renderer renderer;
     public void init() {
-        float viewportScale = 720f / 1080f;
+        renderer = new Renderer();
+        //renderer.setConfig(conf);
         if (false) {
-            renderer = new Renderer();
             LogicInterface logic = new BaseGame();
             renderer.setLogic(logic);
             renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);            
         } else {
-            renderer = new Renderer();
-            LogicInterface logic = new MainMenu(viewportScale);
+            LogicInterface logic = new MainMenu();
             renderer.setLogic(logic);
             renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
         }

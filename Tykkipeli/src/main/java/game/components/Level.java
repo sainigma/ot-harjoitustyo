@@ -26,8 +26,10 @@ public class Level extends GameObject {
     
     private boolean isFinished = false;
     private float viewportScale = 720f / 1080f;    
-    public Level(String name) {
+    public Level(String name, float viewportScale) {
         super(name);
+        this.viewportScale = viewportScale;
+        System.out.println(this.viewportScale);
         init();
     }
     
