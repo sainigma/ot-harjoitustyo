@@ -6,7 +6,8 @@
 package game.graphics;
 
 import game.components.GameObject;
-import game.logic.BaseGame;
+import game.graphics.primitives.Sprite;
+import game.logic.LogicInterface;
 import game.utils.InputManager;
 import game.utils.Vector3d;
 import java.nio.IntBuffer;
@@ -54,14 +55,16 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class Renderer {
     ArrayList<GameObject> objects;
-    BaseGame logic = null;
+    LogicInterface logic = null;
     InputManager inputs;
     float[] clearColor = new float[]{0,0,0,1}; 
     private TextureLoader texLoader;
     private long window;
     private int resoX,resoY;
     private boolean alive = true;
+    private boolean loading = true;
     String windowname;
+    Sprite loadingScreen;
     
     public Renderer(){
         resoX = 1280;
@@ -77,10 +80,16 @@ public class Renderer {
         objects = new ArrayList<>();
     }
     
-    public void setLogic(BaseGame logic){
+    public void setLogic(LogicInterface logic){
+        if (logic == null) {
+            return;
+        }
         this.logic = logic;
         logic.setInputManager(inputs);
         logic.setRenderer(this);
+        if (texLoader != null) {
+            initObjects();
+        }
     }
     
     public void appendToRenderQueue(GameObject object){
@@ -108,15 +117,19 @@ public class Renderer {
         }
     }
     
-    private void updateObjects(){
-        for(GameObject object : objects){
-            object.draw();
-        }
+    private void updateObjects(){        
         if (logic != null) {
             logic.update();
         }
-        if (inputs != null) {
-            inputs.update();
+        if (!loading) {
+            for(GameObject object : objects){
+                object.draw();
+            }
+            if (inputs != null) {
+                inputs.update();
+            }            
+        } else {
+            loadingScreen.draw();
         }
     }
     
@@ -152,6 +165,12 @@ public class Renderer {
         texLoader = new TextureLoader();
         inputs = new InputManager(window);
         logic.setInputManager(inputs);
+        
+        loadingScreen = new Sprite(texLoader, "loading/placeholder.png");
+    }
+    
+    public void setLoading(boolean state) {
+        loading = state;
     }
     
     private void loop(){

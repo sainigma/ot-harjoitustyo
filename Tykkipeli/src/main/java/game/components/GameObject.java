@@ -271,7 +271,7 @@ public abstract class GameObject {
      * ei olla alustettu. Ei tee mitään jos GameObjectilta puuttuu sprite.
      */
     private void load() {
-        //System.out.println("Loading " + name);
+        System.out.println("Loading " + name);
         if (path != null) {
             sprite = new Sprite(texLoader, path, origin, scale);
             sprite.setTexOffset(texOffset);

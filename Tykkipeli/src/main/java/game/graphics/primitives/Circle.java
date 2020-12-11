@@ -23,7 +23,6 @@ public class Circle extends VectorGraphics {
     }
     
     private void createCircle(float radius) {
-        System.out.println("loin ympyrän");
         ArrayList<Vector3d> positions = new ArrayList<>();
         for (float f = 0; f < Math.PI * 2; f += step) {
             Vector3d position = new Vector3d();

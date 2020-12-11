@@ -3,6 +3,8 @@ package game;
 import game.components.Level;
 import game.logic.BaseGame;
 import game.graphics.Renderer;
+import game.logic.LogicInterface;
+import game.logic.MainMenu;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,10 +20,19 @@ import game.graphics.Renderer;
 public class Main {
     Renderer renderer;
     public void init() {
-        renderer = new Renderer();
-        BaseGame logic = new BaseGame();
-        renderer.setLogic(logic);
-        renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
+        float viewportScale = 720f / 1080f;
+        if (false) {
+            renderer = new Renderer();
+            LogicInterface logic = new BaseGame();
+            renderer.setLogic(logic);
+            renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);            
+        } else {
+            renderer = new Renderer();
+            LogicInterface logic = new MainMenu(viewportScale);
+            renderer.setLogic(logic);
+            renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
+        }
+
         run();
     }
     public void update() {

@@ -25,4 +25,5 @@
 | 08.12 | 5 | Testien kirjoitusta päälogiikalle kentänlataukseen ja maalien upottamiseen liittyen. Projektin refaktorointia ja siistimistä. Dokumentaation kirjoitusta ja palautuksen valmistelua.
 | 09.12 | 5 | Assettien tekoa latausnäkymään.
 | 10.12 | 5 | Latausnäkymällä on nyt graafinen käyttöliittymä. Ammusten/panosten valinta makasiinin inventaariosta riippuvainen. Laivojen tulitusetäisyys piirretään kartalle.
-| yht | 112 | |
+| 11.12 | 4 | Toteutin mainmenun, siirtymismekaniikan pelilogiikkojen välillä sekä latausruudut.
+| yht | 116 | |

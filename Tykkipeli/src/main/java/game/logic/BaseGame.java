@@ -20,9 +20,10 @@ import org.json.JSONObject;
  * Pääluokka pelin logiikalle
  * @author suominka
  */
-public class BaseGame {
+public class BaseGame implements LogicInterface{
     private InputManager inputs = null;
     private Renderer renderer = null;
+    LogicInterface parent = null;
     
     private boolean guiInitialized = false;
     public MortarLogic mortarLogic;
@@ -34,6 +35,8 @@ public class BaseGame {
     
     public ScreenShaker screenShaker;
     private boolean gunMovementActive = true;
+    
+    private boolean initialized = false;
     
     private long lastTime;
     private double deltatimeMillis;
@@ -57,9 +60,11 @@ public class BaseGame {
      * Asettaa logiikalle renderöijän, asetuksen yhteydessä Level lisätään renderöijän piirtojonoon.
      * @param renderer 
      */
+    @Override
     public void setRenderer(Renderer renderer) {
         if (renderer != null) {
             renderer.appendToRenderQueue(level);
+            renderer.setLoading(false);
             guiInitialized = true;
         }
     }
@@ -186,7 +191,7 @@ public class BaseGame {
      * @param speedModifier ruudunpäivitysnopeudesta ja nopeutusnapeista riippuva kerroin
      */
     private void gameControls(float speedModifier) {
-        if (!gunMovementActive || level.mortar.animator.isPlaying("mortar/firing")) {
+        if (!gunMovementActive || level.mortar.animator.isPlaying("mortar/firing") || reloadLogic.isMovementBlocked()) {
             return;
         }
         float elevationSpeed = 0.1f;
@@ -431,5 +436,10 @@ public class BaseGame {
     public void update(double dtMillis) {
         deltatimeMillis = dtMillis;
         _update();
+    }
+
+    @Override
+    public void setParent(LogicInterface parent) {
+        this.parent = parent;
     }
 }
