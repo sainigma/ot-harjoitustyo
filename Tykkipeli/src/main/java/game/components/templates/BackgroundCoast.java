@@ -9,7 +9,7 @@ import game.components.GameObject;
 import game.utils.Vector3d;
 
 /**
- *
+ *  RIKKI
  * @author suominka
  */
 public class BackgroundCoast extends GameObject {
@@ -22,7 +22,7 @@ public class BackgroundCoast extends GameObject {
         init();
     }
     private void init() {
-        background = new GameObject("bg_foreground", "background/taustaluonnos.png", new Vector3d(0, 0, 1), 1.12f) { };
+        background = new GameObject("bg_foreground", "background/taustaluonnos.png", new Vector3d(0, 0, 1)) { };
         append(background);
         background.setVertexOffset(
                 new float[]{0, 0},

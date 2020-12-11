@@ -19,7 +19,6 @@ import java.util.HashMap;
  * @author suominka
  */
 public class MapScreen extends GameObject {
-    private float viewportScale;
     private boolean minimized = true;
     private float mapTexScale = 520f / 10000f;
     Vector3d mapRotation = new Vector3d(0, 0, 0);
@@ -41,10 +40,9 @@ public class MapScreen extends GameObject {
     
     private double traversal;
     
-    public MapScreen(String name, float viewportScale) {
+    public MapScreen(String name) {
         super(name);
         this.traversal = 0f;
-        this.viewportScale = viewportScale;
         projectiles = new ArrayList<>();
         historicalPlots = new HashMap<>();
         targetIcons = new HashMap<>();
@@ -263,23 +261,23 @@ public class MapScreen extends GameObject {
     
     private void iconLoader() {
         for (String name : targetNames) {
-            GameObject icon = new GameObject(name + "Icon", "icons/" + name + ".png", new Vector3d(64, 128), viewportScale) { };
+            GameObject icon = new GameObject(name + "Icon", "icons/" + name + ".png", new Vector3d(64, 128)) { };
             icon.setRotation(new Vector3d(-90, 0, 0));
             targetIcons.put(name, icon);
         }
     }
     
     private void spawnChildren() {
-        projectileFront = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8), viewportScale) { };
-        projectileShadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16, 16), viewportScale) { };
+        projectileFront = new GameObject("mapprojectile", "mapview/projektiili.png", new Vector3d(8, 8)) { };
+        projectileShadow = new GameObject("mapprojectile", "mapview/projektiilivarjo.png", new Vector3d(16, 16)) { };
         
         iconLoader();
         
-        map = new GameObject("map3d", "mapview/kartta.png", new Vector3d(512, 512), viewportScale) { };
-        minimap = new GameObject("minimap", "mapview/karttamini.png", new Vector3d(128, 128), viewportScale) { };
+        map = new GameObject("map3d", "mapview/kartta.png", new Vector3d(512, 512)) { };
+        minimap = new GameObject("minimap", "mapview/karttamini.png", new Vector3d(128, 128)) { };
         
-        cursor = new GameObject("mapcursor", "mapview/suunta.png", new Vector3d(5, 7), viewportScale) { };
-        minicursor = new GameObject("mapcursor", "mapview/suuntamini.png", new Vector3d(0), viewportScale) { };
+        cursor = new GameObject("mapcursor", "mapview/suunta.png", new Vector3d(5, 7)) { };
+        minicursor = new GameObject("mapcursor", "mapview/suuntamini.png", new Vector3d(0)) { };
     }
     
     public void spawnTarget(TargetLogic target) {

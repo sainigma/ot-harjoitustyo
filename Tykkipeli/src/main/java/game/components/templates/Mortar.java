@@ -52,20 +52,20 @@ public class Mortar extends GameObject {
     private GameObject mountGrooves;
     private GameObject inclinometer;
     
-    public Mortar(String name, float viewportScale) {
+    public Mortar(String name) {
         super(name);
-        this.viewportScale = viewportScale;
+        this.viewportScale = 720f / 1080f;
         init();
     }
     
     private void spawnChildren() {
-        mount = new GameObject("mortarstand", "mortar/jalusta.png", new Vector3d(0), viewportScale) { };
+        mount = new GameObject("mortarstand", "mortar/jalusta.png", new Vector3d(0)) { };
         mountGrooves = new GameObject("mortargrooves", "mortar/urat.png", new Vector3d(512, 512, 0), viewportScale * 0.58f) { };
-        gun = new GameObject("mortartube", "mortar/tykki.png", new Vector3d(512, 512, 0), viewportScale) { };
-        cradle = new GameObject("mortarcradle", "mortar/karry.png", new Vector3d(398, 147, -1), viewportScale) { };
-        elevationWheel = new GameObject("mortarwheel", "mortar/ruori.png", new Vector3d(128, 128, -3), viewportScale) { };
-        elevationGear = new GameObject("mortargear", "mortar/ratas.png", new Vector3d(64, 64, -2), viewportScale) { };
-        inclinometer = new GameObject("inclinometer", "mortar/inklinometri.png", new Vector3d(32, 354), viewportScale) { };
+        gun = new GameObject("mortartube", "mortar/tykki.png", new Vector3d(512, 512, 0)) { };
+        cradle = new GameObject("mortarcradle", "mortar/karry.png", new Vector3d(398, 147, -1)) { };
+        elevationWheel = new GameObject("mortarwheel", "mortar/ruori.png", new Vector3d(128, 128, -3)) { };
+        elevationGear = new GameObject("mortargear", "mortar/ratas.png", new Vector3d(64, 64, -2)) { };
+        inclinometer = new GameObject("inclinometer", "mortar/inklinometri.png", new Vector3d(32, 354)) { };
         craneWheel = elevationWheel.clone();
         craneGear = elevationGear.clone();
     }

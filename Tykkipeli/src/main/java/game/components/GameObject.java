@@ -71,6 +71,20 @@ public abstract class GameObject {
      * @param name
      * @param path Polku pelikappaleen tekstuuriin, muotoa peliobjekti/tekstuuri.png
      * @param origin Kappaleen keskipiste, määritellään erikseen jos se on muu kuin tekstuurin vasen ylänurkka
+     */
+    public GameObject(String name, String path, Vector3d origin) {
+        this.origin = origin;
+        this.name = name;
+        this.path = path;
+        this.scale = 720f / 1080f;
+        init();
+    }
+    
+    /**
+     * Täydellinen konstruktori
+     * @param name
+     * @param path Polku pelikappaleen tekstuuriin, muotoa peliobjekti/tekstuuri.png
+     * @param origin Kappaleen keskipiste, määritellään erikseen jos se on muu kuin tekstuurin vasen ylänurkka
      * @param scale Renderöijän skaala, resoluution vaihtamiseen
      */
     public GameObject(String name, String path, Vector3d origin, float scale) {

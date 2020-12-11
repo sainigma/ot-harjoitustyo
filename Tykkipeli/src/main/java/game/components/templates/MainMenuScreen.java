@@ -31,17 +31,16 @@ public class MainMenuScreen extends GameObject{
         return (backgroundStatic.isInitialized() && backgroundFar.isInitialized() && backgroundNear.isInitialized() && title.isInitialized());
     }
     
-    public MainMenuScreen(String name, float viewportScale) {
+    public MainMenuScreen(String name) {
         super(name);
-        this.viewportScale = viewportScale;
         init();
     }
     
     public void init() {
-        backgroundStatic = new GameObject("taustatausta", "menu/taustatausta.png", new Vector3d(), viewportScale) { };
-        backgroundFar = new GameObject("takatausta", "menu/takatausta.png", new Vector3d(), viewportScale) { };
-        backgroundNear = new GameObject("etutausta", "menu/etutausta.png", new Vector3d(), viewportScale) { };
-        title = new GameObject("otsikko", "menu/otsikko.png", new Vector3d(), viewportScale) { };
+        backgroundStatic = new GameObject("taustatausta", "menu/taustatausta.png", new Vector3d()) { };
+        backgroundFar = new GameObject("takatausta", "menu/takatausta.png", new Vector3d()) { };
+        backgroundNear = new GameObject("etutausta", "menu/etutausta.png", new Vector3d()) { };
+        title = new GameObject("otsikko", "menu/otsikko.png", new Vector3d()) { };
         
         backgroundStatic.setDepth(0);
         backgroundFar.setDepth(1);
@@ -74,15 +73,15 @@ public class MainMenuScreen extends GameObject{
     
     private void animatePosition(float t) {
         title.setPosition(new Vector3d().lerp(
-                new Vector3d(2048 * viewportScale, 0, 3),
+                new Vector3d(2048, 0, 3),
                 new Vector3d(0, 0, 3), t)
         );
         backgroundFar.setPosition(new Vector3d().lerp(
-                new Vector3d(-100 * viewportScale, 0, 1),
+                new Vector3d(-100, 0, 1),
                 new Vector3d(0, 0, 1), t)
         );
         backgroundNear.setPosition(new Vector3d().lerp(
-                new Vector3d(-300 * viewportScale, 0, 2),
+                new Vector3d(-300, 0, 2),
                 new Vector3d(0, 0, 2), t)
         );
     }

@@ -26,10 +26,8 @@ public class Level extends GameObject {
     
     private boolean isFinished = false;
     private float viewportScale = 720f / 1080f;    
-    public Level(String name, float viewportScale) {
+    public Level(String name) {
         super(name);
-        this.viewportScale = viewportScale;
-        System.out.println(this.viewportScale);
         init();
     }
     
@@ -50,9 +48,9 @@ public class Level extends GameObject {
     }
     private void initGameView() {
         gameView = new ViewPort("game");        
-        mortar = new Mortar("mortar", viewportScale);
+        mortar = new Mortar("mortar");
         background = new BackgroundCoast("coast", 1);
-        reloadScreen = new ReloadScreen("reloadScreen", viewportScale);
+        reloadScreen = new ReloadScreen("reloadScreen");
         
         gameView.append(mortar);
         gameView.append(background);
@@ -64,7 +62,7 @@ public class Level extends GameObject {
      */
     private void initMapView() {
         mapView = new ViewPort("map");
-        mapScreen = new MapScreen("mapScreen", viewportScale);
+        mapScreen = new MapScreen("mapScreen");
         mapView.append(mapScreen);
         append(mapView);        
     }

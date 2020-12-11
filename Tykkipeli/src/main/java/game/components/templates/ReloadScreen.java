@@ -26,16 +26,15 @@ public class ReloadScreen extends GameObject {
     GameObject charges[] = {null, null, null};
     GameObject warheads[] = {null, null, null};
     GameObject background;
-    float viewportScale;
+    float viewportScale = 720f / 1080f;
     
-    public ReloadScreen(String name, float viewportScale) {
+    public ReloadScreen(String name) {
         super(name);
-        this.viewportScale = viewportScale;
         init();
     }
     
     public void init() {
-        background = new GameObject("reloadBackground", "reloadView/ammusvalintaTausta.png", new Vector3d(), viewportScale) { };
+        background = new GameObject("reloadBackground", "reloadView/ammusvalintaTausta.png", new Vector3d()) { };
         background.setDepth(20);
         
         spawnCharges();
