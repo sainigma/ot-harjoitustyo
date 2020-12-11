@@ -67,6 +67,7 @@ public class BaseGame implements LogicInterface{
         if (renderer != null) {
             renderer.appendToRenderQueue(level);
             renderer.setLoading(false);
+            this.renderer = renderer;
             guiInitialized = true;
         }
     }
@@ -224,6 +225,9 @@ public class BaseGame implements LogicInterface{
         }
         if (inputs.keyDownOnce("toggle map") || (inputs.keyDownOnce("cancel") && !level.mapView.isMinimized())) {
             toggleView();
+        }
+        if (inputs.keyDownOnce("quit")) {
+            renderer.close();
         }
         rotateMap(speedModifier);
     }

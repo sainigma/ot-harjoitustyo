@@ -65,6 +65,9 @@ public class InputManager {
         keyMap.put(GLFW_KEY_SPACE, new String[]{"ok", "fire"});
         keyMap.put(GLFW_KEY_ENTER, new String[]{"ok"});
         keyMap.put(GLFW_KEY_BACKSPACE, new String[]{"previous"});
+        keyMap.put(GLFW_KEY_ESCAPE, new String[]{"previous"});
+        
+        keyMap.put(GLFW_KEY_F10, new String[]{"quit"});
         
         keyMap.put(GLFW_KEY_R, new String[]{"reload"});
         
@@ -77,7 +80,7 @@ public class InputManager {
         keyMap.put(GLFW_KEY_Q, new String[]{"rotate map left"});
         keyMap.put(GLFW_KEY_E, new String[]{"rotate map right"});
         
-        keyMap.put(GLFW_KEY_ESCAPE, new String[]{"quit"});
+        
     }
     
     private void collectKeys() {

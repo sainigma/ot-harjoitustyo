@@ -13,9 +13,13 @@ import game.utils.Vector3d;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.GLFW_DECORATED;
+import static org.lwjgl.glfw.GLFW.GLFW_FOCUS_ON_SHOW;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
@@ -27,11 +31,13 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL11.GL_GREATER;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
@@ -64,13 +70,14 @@ public class Renderer {
     private int resoX,resoY;
     private boolean alive = true;
     private boolean loading = true;
-    private boolean fullscreen = false;
+    private boolean windowed = true;
+    private boolean fullscreen = true;
     String windowname;
     Sprite loadingScreen;
     
     public Renderer(){
-        resoX = 1920;
-        resoY = 1024;
+        resoX = 1280;
+        resoY = 720;
         windowname = "Tykkipeli";
         objects = new ArrayList<>();
     }
@@ -140,7 +147,15 @@ public class Renderer {
         if(!glfwInit()){
             throw new IllegalStateException("oof");
         }
-        if (fullscreen) {
+        
+        
+        if (windowed && fullscreen) {
+            glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+            GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            resoX = mode.width();
+            resoY = mode.height();
+            window = glfwCreateWindow(resoX,resoY,windowname,NULL,NULL);
+        } else if (fullscreen) {
             window = glfwCreateWindow(resoX,resoY,windowname,glfwGetPrimaryMonitor(),NULL);
         } else {
             window = glfwCreateWindow(resoX,resoY,windowname,NULL,NULL);

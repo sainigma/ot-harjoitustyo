@@ -22,7 +22,7 @@ public class MortarTest {
     Mortar mortar;
     @Before
     public void setUp() {
-        mortar = new Mortar("mortar", 1);
+        mortar = new Mortar("mortar");
     }
     private void sleep(double target){
         long start = System.nanoTime() / 1000000;
