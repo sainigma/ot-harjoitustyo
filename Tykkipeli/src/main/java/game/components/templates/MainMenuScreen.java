@@ -13,9 +13,7 @@ import game.utils.Vector3d;
  *
  * @author suominka
  */
-public class MainMenuScreen extends GameObject{
-    float viewportScale;
-    
+public class MainMenuScreen extends GameObject {
     GameObject backgroundStatic;
     GameObject backgroundFar;
     GameObject backgroundNear;

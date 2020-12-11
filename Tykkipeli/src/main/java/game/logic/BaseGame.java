@@ -20,7 +20,7 @@ import org.json.JSONObject;
  * Pääluokka pelin logiikalle
  * @author suominka
  */
-public class BaseGame implements LogicInterface{
+public class BaseGame implements LogicInterface {
     private InputManager inputs = null;
     private Renderer renderer = null;
     LogicInterface parent = null;

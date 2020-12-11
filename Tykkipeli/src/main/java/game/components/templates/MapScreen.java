@@ -79,7 +79,7 @@ public class MapScreen extends GameObject {
         Vector3d localPosition;
         
         public RangePlotter(float range) {
-            plotter = new Circle(range,20);
+            plotter = new Circle(range, 20);
             plotter.setScale(mapTexScale);
             plotter.setColor(77f / 255f, 64f / 255f, 69f / 255f);
             plotter.setLineWidth(1f);

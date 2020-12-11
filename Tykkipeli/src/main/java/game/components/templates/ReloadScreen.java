@@ -46,8 +46,8 @@ public class ReloadScreen extends GameObject {
     }
     
     private void animatePosition(float t) {
-        Vector3d hidden = new Vector3d(0,1080 * viewportScale, 10);
-        Vector3d visible = new Vector3d(0,0,10);
+        Vector3d hidden = new Vector3d(0, 1080 * viewportScale, 10);
+        Vector3d visible = new Vector3d(0, 0, 10);
         background.setPosition(new Vector3d().lerp(hidden, visible, t));
     }
     
@@ -56,9 +56,9 @@ public class ReloadScreen extends GameObject {
         charges[0].translate((offsetX - 102) * viewportScale, 500 * viewportScale);
         background.append(charges[0]);
         for (int i = 1; i < 3; i++) {
-            Vector3d pos = charges[i-1].getPosition();
+            Vector3d pos = charges[i - 1].getPosition();
             charges[i] = charges[0].clone();
-            charges[i].setPosition(pos.add(new Vector3d(-102*viewportScale,0,0)));
+            charges[i].setPosition(pos.add(new Vector3d(-102 * viewportScale, 0, 0)));
             background.append(charges[i]);
         }
     }

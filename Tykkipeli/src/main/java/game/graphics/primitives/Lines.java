@@ -17,7 +17,7 @@ public class Lines extends VectorGraphics {
     private boolean initialized = false;
     
     public Lines() {
-        setColor(0f,0f,0f);
+        setColor(0f, 0f, 0f);
     }
     
     public boolean isInitialized() {

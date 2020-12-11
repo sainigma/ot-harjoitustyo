@@ -88,7 +88,7 @@ public class MainMenu implements LogicInterface {
     
     private LogicInterface spawnLogic(String name) {
         LogicInterface newLogic = null;
-        switch(name) {
+        switch (name) {
             case "baseGame":
                 newLogic = new BaseGame();
                 break;

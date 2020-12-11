@@ -17,7 +17,7 @@ public class Circle extends VectorGraphics {
     private float step;
     
     public Circle(float radius, int vertices) {
-        setColor(0f,0f,0f);
+        setColor(0f, 0f, 0f);
         step = (float) (Math.PI / vertices);
         createCircle(radius);
     }

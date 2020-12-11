@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
  *
  * @author suominka
  */
-abstract public class VectorGraphics extends ImmediateDrawer{
+abstract public class VectorGraphics extends ImmediateDrawer {
     private ArrayList<Vector3d> vertices;
     private Color color;
     private int lineStep = 1;
@@ -29,7 +29,7 @@ abstract public class VectorGraphics extends ImmediateDrawer{
             this.g = g;
         }
         public float[] get() {
-            return new float[] {r,b,g};
+            return new float[] {r, b, g};
         }
     }
     
@@ -38,7 +38,7 @@ abstract public class VectorGraphics extends ImmediateDrawer{
     }
     
     public void setColor(float r, float b, float g) {
-        this.color = new Color(r,b,g);
+        this.color = new Color(r, b, g);
     }
     
     public float[] getColor() {
@@ -57,17 +57,11 @@ abstract public class VectorGraphics extends ImmediateDrawer{
     public float getLineWidth() {
         return lineWidth;
     }
-    @Override
-    public void _draw() {
-        if (vertices == null) {
-            return;
-        }
+    private void drawLines() {
         int i = 0;
         int j = 0;
         int size = vertices.size();
-        GL11.glColor3fv(getColor());
-        GL11.glLineWidth(getLineWidth());
-        GL11.glBegin(GL11.GL_LINES);
+        
         while (i < size) {
             Vector3d pos = vertices.get(i);
             GL11.glVertex3d(pos.x, pos.y, -pos.z);
@@ -75,9 +69,19 @@ abstract public class VectorGraphics extends ImmediateDrawer{
             j += 1;
         }
         if (j % 2 != 0) {
-            Vector3d pos = vertices.get(size-1);
+            Vector3d pos = vertices.get(size - 1);
             GL11.glVertex3d(pos.x, pos.y, -pos.z);
         }
+    }
+    @Override
+    public void _draw() {
+        if (vertices == null) {
+            return;
+        }
+        GL11.glColor3fv(getColor());
+        GL11.glLineWidth(getLineWidth());
+        GL11.glBegin(GL11.GL_LINES);
+        drawLines();
         GL11.glEnd();
     }
 }
