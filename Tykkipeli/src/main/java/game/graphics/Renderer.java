@@ -71,7 +71,7 @@ public class Renderer {
     private boolean alive = true;
     private boolean loading = true;
     private boolean windowed = true;
-    private boolean fullscreen = true;
+    private boolean fullscreen = false;
     String windowname;
     Sprite loadingScreen;
     
@@ -82,11 +82,11 @@ public class Renderer {
         objects = new ArrayList<>();
     }
     
-    public Renderer(int resolutionX, int resolutionY, String title){
-        resoX = resolutionX;
-        resoY = resolutionY;
-        windowname = title;
-        objects = new ArrayList<>();
+    public void setDisplay(int width, int height, boolean windowed, boolean fullscreen) {
+        resoX = width;
+        resoY = height;
+        this.windowed = windowed;
+        this.fullscreen = fullscreen;
     }
     
     public void setLogic(LogicInterface logic){
@@ -99,6 +99,10 @@ public class Renderer {
         if (texLoader != null) {
             initObjects();
         }
+    }
+    
+    public void passKeyConfig() {
+        
     }
     
     public void appendToRenderQueue(GameObject object){
