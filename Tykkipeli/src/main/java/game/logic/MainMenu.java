@@ -40,8 +40,7 @@ public class MainMenu implements LogicInterface {
         menuScreen = new MainMenuScreen("mainmenu");
         menuScreen.setVisible(false);
         text = new Text();
-        text.setVisible(false);
-        menuScreen.append(text);
+        menuScreen.menuEmpty.append(text);
         text.translate(650, 450);
         text.setContent("Paina ENTER aloittaaksesi");
     }
@@ -72,9 +71,8 @@ public class MainMenu implements LogicInterface {
             spawnNext();
         }
         if (!uiActive) {
-            if (menuScreen.getAnimatedPosition() > 0.9f) {
+            if (menuScreen.getAnimatedPosition() > 0.85f) {
                 uiActive = true;
-                text.setVisible(true);
             } else {
                 return;
             }

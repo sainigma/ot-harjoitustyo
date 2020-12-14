@@ -6,7 +6,6 @@
 package game.components.templates;
 
 import game.components.GameObject;
-import game.components.Text;
 import game.utils.PID;
 import game.utils.Vector3d;
 
@@ -15,15 +14,16 @@ import game.utils.Vector3d;
  * @author suominka
  */
 public class MainMenuScreen extends GameObject {
-    GameObject backgroundStatic;
-    GameObject backgroundFar;
-    GameObject backgroundNear;
-    GameObject title;
+    private GameObject backgroundStatic;
+    private GameObject backgroundFar;
+    private GameObject backgroundNear;
+    public GameObject title;
+    public GameObject menuEmpty;
     
     float animatedPosition = 0f;
     float animatedTarget = 0f;
     boolean animating = false;
-    PID animator = new PID(0.02f, 0f, 0.8f, 100f);
+    PID animator = new PID(0.015f, 0f, 0.4f, 100f);
     
     @Override
     public boolean isInitialized() {
@@ -40,7 +40,12 @@ public class MainMenuScreen extends GameObject {
         backgroundFar = new GameObject("takatausta", "menu/takatausta.png", new Vector3d()) { };
         backgroundNear = new GameObject("etutausta", "menu/etutausta.png", new Vector3d()) { };
         title = new GameObject("otsikko", "menu/otsikko.png", new Vector3d()) { };
-        
+        menuEmpty = new GameObject("menuempty") { };
+        /*
+        EndScreen poista = new EndScreen("");
+        append(poista);
+        */
+
         backgroundStatic.setDepth(0);
         backgroundFar.setDepth(1);
         backgroundNear.setDepth(2);
@@ -50,6 +55,7 @@ public class MainMenuScreen extends GameObject {
         append(backgroundFar);
         append(backgroundNear);
         append(title);
+        append(menuEmpty);
         
         //enter();
     }
@@ -80,6 +86,10 @@ public class MainMenuScreen extends GameObject {
                 new Vector3d(2048, 0, 3),
                 new Vector3d(0, 0, 3), t)
         );
+        menuEmpty.setPosition(new Vector3d().lerp(
+                new Vector3d(3048, 0, 3),
+                new Vector3d(0, 0, 3), t)
+        );
         backgroundFar.setPosition(new Vector3d().lerp(
                 new Vector3d(-100, 0, 1),
                 new Vector3d(0, 0, 1), t)
@@ -97,7 +107,7 @@ public class MainMenuScreen extends GameObject {
         float error = animatedTarget - animatedPosition;
         float control = (float) animator.getControl(error, deltatimeMillis);
         animatedPosition += control;
-        if (Math.abs(error) < 0.001f) {
+        if (Math.abs(error) < 0.00001f) {
             animating = false;
             animatedPosition = animatedTarget;
         }

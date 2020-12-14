@@ -24,6 +24,7 @@ public class MapScreen extends GameObject {
     private float mapTexScale = 520f / 10000f;
     Vector3d mapRotation = new Vector3d(0, 0, 0);
     
+    public GameObject overlay;
     public GameObject map;
     public GameObject minimap;
     GameObject projectileFront;
@@ -38,7 +39,6 @@ public class MapScreen extends GameObject {
     
     GameObject cursor;
     GameObject minicursor;
-    Text testi = new Text();
     
     private double traversal;
     
@@ -110,7 +110,6 @@ public class MapScreen extends GameObject {
             this.shadow = projectileShadow.clone();
             map.append(front);
             map.append(shadow);
-            map.append(testi);
             setVisible(false);
             power = 0;
         }
@@ -277,6 +276,7 @@ public class MapScreen extends GameObject {
         
         map = new GameObject("map3d", "mapview/kartta.png", new Vector3d(512, 512)) { };
         minimap = new GameObject("minimap", "mapview/karttamini.png", new Vector3d(128, 128)) { };
+        overlay = new GameObject("overlay") { };
         
         cursor = new GameObject("mapcursor", "mapview/suunta.png", new Vector3d(5, 7)) { };
         minicursor = new GameObject("mapcursor", "mapview/suuntamini.png", new Vector3d(0)) { };
@@ -317,9 +317,11 @@ public class MapScreen extends GameObject {
         
         map.append(cursor);
         minimap.append(minicursor);
-        
+
+        append(overlay);        
         append(map);
         append(minimap);
+
     }
     
     @Override

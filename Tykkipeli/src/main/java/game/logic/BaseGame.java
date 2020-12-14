@@ -30,6 +30,7 @@ public class BaseGame implements LogicInterface {
     private boolean guiInitialized = false;
     public MortarLogic mortarLogic;
     public ReloadLogic reloadLogic;
+    public EndLogic endLogic;
     public ArrayList<TargetLogic> targets;
     public Level level = null;
     
@@ -108,11 +109,10 @@ public class BaseGame implements LogicInterface {
     private void spawnMessengers() {
         scoreDisplay = new Text();
         messenger = new Text();
-        messenger.translate(0, 32);
-        level.gameView.append(scoreDisplay);
-        level.gameView.append(messenger);
-        level.mapScreen.map.append(scoreDisplay);
-        level.mapScreen.map.append(messenger);
+        scoreDisplay.translate(8, 8);
+        messenger.translate(8, 32 + 8);
+        level.mapScreen.overlay.append(scoreDisplay);
+        level.mapScreen.overlay.append(messenger);
     }
     
     private void spawnLevel() {
@@ -128,6 +128,7 @@ public class BaseGame implements LogicInterface {
         mortarLogic = new MortarLogic();
         reloadLogic = new ReloadLogic(mortarLogic, level.mortar, level.reloadScreen);
         reloadLogic.setMessenger(messenger);
+        endLogic = new EndLogic(level.endScreen);
     }
     
     /**
@@ -234,7 +235,7 @@ public class BaseGame implements LogicInterface {
     private void mapControls(float speedModifier) {
         traverse(speedModifier);
         if (inputs.keyDownOnce("reload")) {
-            if (reloadLogic.getProjectile() == null) {
+            if (reloadLogic.getProjectile() == null && reloadLogic.isReloadFinished()) {
                 toggleView();
                 reloadLogic.startReload();                
             }
@@ -479,8 +480,7 @@ public class BaseGame implements LogicInterface {
      * Keskeneräinen metodi, lopullisessa versiossa tarjoilee käyttäjälle käyttöliittymän seuraavaan kenttään siirtymiseen tai pelin lopettamiseen.
      */
     private void endLevel() {
-        //System.out.println("No targets left, ending game");
-
+        endLogic.activate();
     }
     
     /**
@@ -507,13 +507,18 @@ public class BaseGame implements LogicInterface {
         if (!guiInitialized) {
             return;
         }
+        shakeScreen();        
+        animateScore();
+        
+        if (endLogic.isActive()) {
+            endLogic.endControls();
+            return;
+        }
         float speedModifier = getSpeedModifier();
         sharedControls(speedModifier);
         gameViewLogic(speedModifier);
         mapViewLogic(speedModifier);
 
-        shakeScreen();        
-        animateScore();
         linkMapscreenToSolvers();
     }
     

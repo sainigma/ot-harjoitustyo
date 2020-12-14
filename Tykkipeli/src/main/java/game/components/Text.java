@@ -21,7 +21,7 @@ public class Text implements DrawCallInterface{
     private ArrayList<Letter> letters;
     private TextureLoader texLoader;
     
-    public Vector3d localPosition = new Vector3d(0,0,100);
+    public Vector3d localPosition = new Vector3d(0,0,10);
     public Vector3d localRotation = new Vector3d();
     public Vector3d globalPosition = new Vector3d();
     public Vector3d globalRotation = new Vector3d();
@@ -124,7 +124,7 @@ public class Text implements DrawCallInterface{
             return;
         }
         for (Letter letter : letters) {
-            letter.setGlobalTransforms(localPosition, new Vector3d());
+            letter.setGlobalTransforms(globalPosition.add(localPosition), new Vector3d());
             letter.draw();
         }
     }

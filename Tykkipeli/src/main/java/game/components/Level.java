@@ -6,11 +6,11 @@
 package game.components;
 
 import game.components.templates.BackgroundCoast;
+import game.components.templates.EndScreen;
 import game.components.templates.MapScreen;
 import game.components.templates.ViewPort;
 import game.components.templates.Mortar;
 import game.components.templates.ReloadScreen;
-import game.graphics.Renderer;
 /**
  * GameObject luokan implementaatio pelin päänäkymien hallitsemiseen. Sekä kartta- että pelinäkymän juuri.
  * @author suominka
@@ -23,7 +23,9 @@ public class Level extends GameObject {
     public Mortar mortar;
     public MapScreen mapScreen;
     public ReloadScreen reloadScreen;
+    public EndScreen endScreen;
     public GameObject background;
+    public GameObject overlay;
     
     private boolean isFinished = false;
     private float viewportScale = 720f / 1080f;    
@@ -40,9 +42,11 @@ public class Level extends GameObject {
      * Alustaa pelinäkymän, tykin ja taustan. Kutsutaan vain ensimmäisellä luontikerralla.
      */
     private void init() {
+        overlay = new GameObject("overlay") { };
+        
         initGameView();
         initMapView();
-
+        
         mortar.setTrueElevation(0f);
         gameView.setVisible(true);
         mapView.setMinimized(true);
@@ -53,10 +57,14 @@ public class Level extends GameObject {
         mortar = new Mortar("mortar");
         background = new BackgroundCoast("coast", 1);
         reloadScreen = new ReloadScreen("reloadScreen");
+        endScreen = new EndScreen("endScreen");
+        
+        endScreen.setVisible(false);
         
         gameView.append(mortar);
         gameView.append(background);
         gameView.append(reloadScreen);
+        gameView.append(endScreen);
         append(gameView);
     }
     /**
@@ -65,6 +73,7 @@ public class Level extends GameObject {
     private void initMapView() {
         mapView = new ViewPort("map");
         mapScreen = new MapScreen("mapScreen");
+        //mapScreen.setOverlay(overlay);
         mapView.append(mapScreen);
         append(mapView);        
     }
