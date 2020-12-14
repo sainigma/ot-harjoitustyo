@@ -49,25 +49,26 @@ public class Text implements DrawCallInterface{
         hasText = false;
         int i = 0;
         int spaces = 0;
-        int lineChanges = 0;
+        float lineChanges = 0;
         for (char c : content.toCharArray()) {
             if (c == '\n') {
-                System.out.println("rivinvaihto");
-                lineChanges += 2;
+                lineChanges += 2f;
                 spaces = 0;
             } else {
                 if (i + 1 > letters.size()) {
                     spawnLetter();
                 }
                 Letter letter = letters.get(i);
+                letter.reset();
                 letter.setIndex(getLetterIndex(c));
                 letter.setPosition(spaces, lineChanges);
                 spaces++;
                 i++;
             }
         }
-        while (letters.size() < this.content.length()) {
-            spawnLetter();
+        while (i < letters.size()) {
+            letters.get(i).setIndex(15);
+            i++;
         }
     }
     
@@ -118,6 +119,9 @@ public class Text implements DrawCallInterface{
     public void draw() {
         if (hasText) {
             setLetters();
+        }
+        if (!visible) {
+            return;
         }
         for (Letter letter : letters) {
             letter.setGlobalTransforms(localPosition, new Vector3d());

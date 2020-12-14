@@ -72,6 +72,7 @@ public class Renderer {
     private boolean loading = true;
     private boolean windowed = true;
     private boolean fullscreen = false;
+    private boolean initialized = false;
     String windowname;
     Sprite loadingScreen;
     
@@ -115,6 +116,9 @@ public class Renderer {
     
     public void setBackground(float r, float g, float b){
         clearColor = new float[]{r,g,b,1};
+        if (initialized) {
+            glClearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
+        }
     }
     
     public void run(){
@@ -193,6 +197,7 @@ public class Renderer {
         logic.setInputManager(inputs);
         
         loadingScreen = new Sprite(texLoader, "loading/placeholder.png");
+        initialized = true;
     }
     
     public void setLoading(boolean state) {

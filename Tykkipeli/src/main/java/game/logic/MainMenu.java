@@ -9,7 +9,6 @@ import game.components.Text;
 import game.components.templates.MainMenuScreen;
 import game.graphics.Renderer;
 import game.utils.InputManager;
-import game.utils.Vector3d;
 
 /**
  *
@@ -24,16 +23,26 @@ public class MainMenu implements LogicInterface {
     private String nextLogicName = "";
     
     private long lastTime;
+    private long timer = 0;
     private boolean initialized = false;
     double deltatimeMillis = 0;
     MainMenuScreen menuScreen;
     Text text;
     
+    private int menuIndex = -1;
+    private String menuItems[] = {
+        " UUSI PELI\nhighscroret\nlopeta",
+        "uusi peli\n HIGHSCORET\nlopeta",
+        "uusi peli\nhighscroret\n LOPETA"
+    };
+    
     public MainMenu() {
         menuScreen = new MainMenuScreen("mainmenu");
-        Text text = new Text();
+        menuScreen.setVisible(false);
+        text = new Text();
+        text.setVisible(false);
         menuScreen.append(text);
-        text.translate(600, 300);
+        text.translate(650, 450);
         text.setContent("Paina ENTER aloittaaksesi");
     }
     
@@ -47,16 +56,65 @@ public class MainMenu implements LogicInterface {
         this.renderer = renderer;
         renderer.appendToRenderQueue(menuScreen);
     }
-    
+
+    private boolean intro = false;
+    private boolean uiActive = false;
     private void updateGUI() {
+        if (!intro && timer > 16 * 3) {
+            renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
+            intro = true;
+            menuScreen.enter();
+        }
         if (inputs == null) {
             return;
         }
         if (nextReadyToSpawn) {
             spawnNext();
         }
+        if (!uiActive) {
+            if (menuScreen.getAnimatedPosition() > 0.9f) {
+                uiActive = true;
+                text.setVisible(true);
+            } else {
+                return;
+            }
+        }
         if (inputs.keyDownOnce("ok")) {
-            next("baseGame");
+            if (menuIndex == -1) {
+                text.translate(100, 0);
+                menuIndex = 0;
+                text.setContent(menuItems[0]);
+            } else {
+                switch(menuIndex) {
+                    case 0:
+                        next("baseGame");
+                        break;
+                    case 1:
+                        next("highscore");
+                        break;
+                    case 2:
+                       next("close");
+                       break;
+                }
+            }
+        }
+        if (menuIndex >= 0) {
+            boolean hasChanged = false;
+            if (inputs.keyDownOnce("up")) {
+                menuIndex--;
+                hasChanged = true;
+            } else if (inputs.keyDownOnce("down")) {
+                menuIndex++;
+                hasChanged = true;
+            }
+            if (hasChanged) {
+                if (menuIndex >= menuItems.length) {
+                    menuIndex = 0;
+                } else if (menuIndex < 0) {
+                    menuIndex = menuItems.length - 1;
+                }
+                text.setContent(menuItems[menuIndex]);
+            }
         }
         if (inputs.keyDownOnce("previous")) {
             next("close");
@@ -68,6 +126,7 @@ public class MainMenu implements LogicInterface {
         if (lastTime > 0) {
             deltatimeMillis = (double) (time - lastTime);
         }
+        timer += deltatimeMillis;
         lastTime = time;
     }
     
@@ -79,7 +138,7 @@ public class MainMenu implements LogicInterface {
             }
         }
     }
-    
+   
     @Override
     public void update() {
         getDeltatimeMillis();
@@ -103,7 +162,7 @@ public class MainMenu implements LogicInterface {
                 renderer.close();
                 break;
             default:
-                break;
+                throw new IllegalArgumentException("Level identifier not found");
         }
         return newLogic;
     }

@@ -6,6 +6,7 @@
 package game.components.templates;
 
 import game.components.GameObject;
+import game.components.Text;
 import game.graphics.primitives.Circle;
 import game.graphics.primitives.Lines;
 import game.logic.controllers.Statistic;
@@ -23,8 +24,8 @@ public class MapScreen extends GameObject {
     private float mapTexScale = 520f / 10000f;
     Vector3d mapRotation = new Vector3d(0, 0, 0);
     
-    GameObject map;
-    GameObject minimap;
+    public GameObject map;
+    public GameObject minimap;
     GameObject projectileFront;
     GameObject projectileShadow;
     String [] targetNames = {"windjammer", "frigate", "ironclad", "lineship"};
@@ -37,6 +38,7 @@ public class MapScreen extends GameObject {
     
     GameObject cursor;
     GameObject minicursor;
+    Text testi = new Text();
     
     private double traversal;
     
@@ -108,7 +110,7 @@ public class MapScreen extends GameObject {
             this.shadow = projectileShadow.clone();
             map.append(front);
             map.append(shadow);
-            
+            map.append(testi);
             setVisible(false);
             power = 0;
         }

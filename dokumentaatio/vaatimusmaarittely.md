@@ -24,7 +24,7 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Laivojen tulitusetäisyyden piirto
 - [x] Fullscreen/borderless fullscreen/windowed, tuki resoluution vaihdolle
 - [x] Päämenu (MVP)
-- [ ] Kirjainten piirto
+- [x] Kirjainten piirto
 - [ ] Latausanimaatio tykille (MVP)
 - [ ] Näkymä kentän lopettamiseen (MVP)
 - [ ] Hiscorenäkymä (MVP)

@@ -41,7 +41,7 @@ public class Main {
 
         LogicInterface logic = new MainMenu();
         renderer.setLogic(logic);
-        renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
+        renderer.setBackground(0, 0, 0);
 
         run();
     }

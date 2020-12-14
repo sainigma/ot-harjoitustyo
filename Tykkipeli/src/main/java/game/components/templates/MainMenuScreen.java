@@ -51,10 +51,11 @@ public class MainMenuScreen extends GameObject {
         append(backgroundNear);
         append(title);
         
-        enter();
+        //enter();
     }
     
     public void enter() {
+        setVisible(true);
         animating = true;
         animatedPosition = 0f;
         animatePosition(animatedPosition);
@@ -68,6 +69,10 @@ public class MainMenuScreen extends GameObject {
         animatePosition(animatedPosition);
         animatedTarget = 0f;
         animator.activate();
+    }
+    
+    public float getAnimatedPosition() {
+        return animatedPosition;
     }
     
     private void animatePosition(float t) {

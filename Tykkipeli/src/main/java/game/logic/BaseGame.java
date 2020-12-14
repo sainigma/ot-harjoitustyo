@@ -7,10 +7,12 @@ package game.logic;
 
 import game.logic.controllers.*;
 import game.components.Level;
+import game.components.Text;
 import game.components.templates.ScreenShaker;
 import game.utils.InputManager;
 import game.graphics.Renderer;
 import game.utils.JSONLoader;
+import game.utils.PID;
 import game.utils.Vector3d;
 import java.util.ArrayList;
 import org.json.JSONArray;
@@ -41,7 +43,13 @@ public class BaseGame implements LogicInterface {
     private long lastTime;
     private double deltatimeMillis;
     
-    private int score;
+    private int score = 0;
+    private float scoreTarget;
+    private float tempScore;
+    private Text scoreDisplay;
+    private PID scorePID = new PID(0.05f, 0, 0.5f, 1f);
+    
+    private Text messenger;
     
     /**
      * Ilman parametreja konstruktori lataa ensimmäisen kentän.
@@ -83,6 +91,7 @@ public class BaseGame implements LogicInterface {
         targetsLeft = 0;
         targets = new ArrayList<>();
         spawnLevel();
+        spawnMessengers();
         spawnObjects();
         JSONObject levelData = new JSONLoader("assets/levels/").read(name);
         JSONObject magazine = levelData.getJSONObject("magazine");
@@ -96,6 +105,16 @@ public class BaseGame implements LogicInterface {
         lastTime = System.nanoTime() / 1000000;
     }
     
+    private void spawnMessengers() {
+        scoreDisplay = new Text();
+        messenger = new Text();
+        messenger.translate(0, 32);
+        level.gameView.append(scoreDisplay);
+        level.gameView.append(messenger);
+        level.mapScreen.map.append(scoreDisplay);
+        level.mapScreen.map.append(messenger);
+    }
+    
     private void spawnLevel() {
         if (level != null) {
             level.reset();
@@ -107,7 +126,8 @@ public class BaseGame implements LogicInterface {
     private void spawnObjects() {
         screenShaker = new ScreenShaker();
         mortarLogic = new MortarLogic();
-        reloadLogic = new ReloadLogic(mortarLogic, level.mortar, level.reloadScreen);        
+        reloadLogic = new ReloadLogic(mortarLogic, level.mortar, level.reloadScreen);
+        reloadLogic.setMessenger(messenger);
     }
     
     /**
@@ -213,6 +233,12 @@ public class BaseGame implements LogicInterface {
      */
     private void mapControls(float speedModifier) {
         traverse(speedModifier);
+        if (inputs.keyDownOnce("reload")) {
+            if (reloadLogic.getProjectile() == null) {
+                toggleView();
+                reloadLogic.startReload();                
+            }
+        }
     }
     
     /**
@@ -266,6 +292,9 @@ public class BaseGame implements LogicInterface {
             level.mortar.setPowerModifier(powerModifier);
             reloadLogic.resetProjectile();
             level.mortar.animator.playAnimation("mortar/firing");
+            setMessage("Tulta!");
+        } else {
+            setMessage("Tykki ei ole ladattu!\nPaina R ladataksesi");
         }
     }
     
@@ -327,11 +356,31 @@ public class BaseGame implements LogicInterface {
         for (Statistic hit : hits) {
             double maxDamage = hit.getPower() * 150f;
             double maxDistance = 1000f;
-            
+            int prevScore = score;
             for (TargetLogic target : targets) {
                 damageTarget(target, hit, maxDamage, maxDistance);
             }
+            if (prevScore == score) {
+                setMessage("Iskulla ei ollut vaikutusta");
+            }
         }
+    }
+    
+    private void setScore(int score) {
+        tempScore = this.score;
+        this.score = score;
+        scoreTarget = score;
+        scorePID.activate();
+    }
+    
+    private void setScoreDisplay(int score) {
+        String message = "Pisteet ";
+        String scoreString = Integer.toString(score);
+        for (int i = scoreString.length(); i < 9; i++) {
+            message += "0";
+        }
+        message += scoreString;
+        scoreDisplay.setContent(message);
     }
     
     private void addScore(Statistic hit, TargetLogic target, boolean destroyed) {
@@ -355,7 +404,32 @@ public class BaseGame implements LogicInterface {
         baseModifier *= (elevation + 40) / 105f;
         baseModifier *= 123f / mass;
         score += (int) (baseModifier * 1000f);
-        System.out.println(score);
+        setScore(score);
+    }
+    
+    private void animateScore() {
+        if (scoreTarget < 0f) {
+            return;
+        }
+        float error = scoreTarget - tempScore;
+        if (error > 50f) {
+            error = 50f;
+        }
+        float control = (float) scorePID.getControl(error, deltatimeMillis);
+        if (control > 100f) {
+            control = 100f;
+        }
+        tempScore += control;
+        setScoreDisplay((int)tempScore);
+        if (scoreTarget - tempScore < 1f) {
+            scorePID.deactivate();
+            scoreTarget = -1f;
+            setScoreDisplay(score);
+        }
+    }
+    
+    private void setMessage(String message) {
+        messenger.setContent(message);
     }
     
     /**
@@ -379,13 +453,18 @@ public class BaseGame implements LogicInterface {
         if (damageFactor < 1f) {
             double damage = maxDamage * (1 - Math.pow(damageFactor, 2));
             target.reduceHealth((float) damage);
-            System.out.println("Target hit, inflicted " + damage + " damage");
+            String message = "Osuma! " + (int) damage + " pistettä vahinkoa";
             if (target.isSinking()) {
                 targetsLeft -= 1;
                 addScore(hit, target, true);
+                message += "\n" + target.getName() + " uppoaa";
+                if (targetsLeft > 0) {
+                    message += "\nkohteita jäljellä " + Integer.toString(targetsLeft);
+                }
             } else {
                 addScore(hit, target, false);
             }
+            setMessage(message);
         }
     }
     /**
@@ -434,7 +513,7 @@ public class BaseGame implements LogicInterface {
         mapViewLogic(speedModifier);
 
         shakeScreen();        
-
+        animateScore();
         linkMapscreenToSolvers();
     }
     

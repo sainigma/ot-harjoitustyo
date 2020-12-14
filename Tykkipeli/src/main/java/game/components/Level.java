@@ -10,6 +10,7 @@ import game.components.templates.MapScreen;
 import game.components.templates.ViewPort;
 import game.components.templates.Mortar;
 import game.components.templates.ReloadScreen;
+import game.graphics.Renderer;
 /**
  * GameObject luokan implementaatio pelin päänäkymien hallitsemiseen. Sekä kartta- että pelinäkymän juuri.
  * @author suominka
@@ -46,6 +47,7 @@ public class Level extends GameObject {
         gameView.setVisible(true);
         mapView.setMinimized(true);
     }
+    
     private void initGameView() {
         gameView = new ViewPort("game");        
         mortar = new Mortar("mortar");

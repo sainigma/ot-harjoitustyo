@@ -63,7 +63,12 @@ public class Letter extends ImmediateDrawer {
         texOffset[1] = - (1 / 16f) * (i / 16);
     }
 
-    public void setPosition(int spaces, int lineChanges) {
+    public void reset() {
+        localPosition.x = 0;
+        localPosition.y = 0;
+    }
+    
+    public void setPosition(int spaces, float lineChanges) {
         localPosition.x += spaces * 16f;
         localPosition.y += lineChanges * 16f;
     }

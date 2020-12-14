@@ -5,6 +5,7 @@
  */
 package game.logic.controllers;
 
+import game.components.Text;
 import game.utils.InputManager;
 import game.components.templates.Mortar;
 import game.components.templates.ReloadScreen;
@@ -29,6 +30,8 @@ public class ReloadLogic {
     private boolean reloadFinished = true;
     private boolean blockMovement = false;
     
+    private Text messenger;
+    
     Projectile currentProjectile;
     InputManager inputs = null;
     MortarLogic mortarLogic;
@@ -40,6 +43,17 @@ public class ReloadLogic {
         this.reloadScreen = reloadScreen;
         this.mortar = mortar;
         this.magazine = new Magazine(12, 6, 3, 54);
+    }
+    
+    public void setMessenger(Text messenger) {
+        this.messenger = messenger;
+    }
+    
+    private void setMessage(String message) {
+        if (messenger == null) {
+            return;
+        }
+        messenger.setContent(message);
     }
     
     public void setMagazine(int light, int medium, int heavy, int charges) {
@@ -104,6 +118,7 @@ public class ReloadLogic {
             reloadUpdate = true;
         }
         if (inputs.keyDownOnce("previous")) {
+            setMessage("");
             reset();
         }
     }
@@ -116,7 +131,7 @@ public class ReloadLogic {
             }
             reloadUpdate = false;
             reloadScreen.setCharges(3 - reloadIndex);
-            System.out.println("Select cartouches, currently selected: " + cartouches[reloadIndex]);                
+            setMessage("Valitse latauspanos");       
         }
         reloadSelector(cartouches.length);
         
@@ -127,6 +142,7 @@ public class ReloadLogic {
             reload();
         }
         if (inputs.keyDownOnce("previous")) {
+            setMessage("Valitse kranaatti");
             prevCartouche = reloadIndex;
             magazine.addWarhead(prevWarhead);
             reloadScreen.setCharges(0);
@@ -137,7 +153,7 @@ public class ReloadLogic {
     
     private void reload() {
         if (mortarLogic.addProjectile(currentProjectile)) {
-            System.out.println("reload finished");
+            setMessage("Tulivalmis!");
             System.out.println(magazine);
             reloadFinished = true;
             blockMovement = false;
@@ -164,29 +180,35 @@ public class ReloadLogic {
     public boolean isMovementBlocked() {
         return blockMovement;
     }
-    
-    public void reloadControls() {
-        if (inputs.keyDownOnce("reload") && currentProjectile == null) {
-            if (magazine.isEmpty()) {
-                System.out.println("magazine empty!");
+    public void startReload() {
+        if (currentProjectile != null) {
+            setMessage("Tykki on jo ladattu!");
+            return;
+        }
+        if (magazine.isEmpty()) {
+                System.out.println("Ampumatarvikkeet loppu!");
                 blockMovement = false;
                 return;
             }
-            System.out.println("charges left: " + magazine.cartouchesLeft());
-            reloadScreen.enter();
-            reloadScreen.setCharges(0);
-            reloadScreen.setWarhead(3);
-            
-            firstSelected = false;
-            allowRoll = true;
-            System.out.println("starting reload");
-            reloadUpdate = false;
-            blockMovement = true;
-            reloadFinished = false;
-            mortar.setElevationTarget(0f);
-            mortar.setInclinometer(false);
-            
-            reloadIndex = prevWarhead;
+        reloadScreen.enter();
+        reloadScreen.setCharges(0);
+        reloadScreen.setWarhead(3);
+
+        firstSelected = false;
+        allowRoll = true;
+        setMessage("Valitse kranaatti");
+        reloadUpdate = false;
+        blockMovement = true;
+        reloadFinished = false;
+        mortar.setElevationTarget(0f);
+        mortar.setInclinometer(false);
+
+        reloadIndex = prevWarhead;
+    }
+    
+    public void reloadControls() {
+        if (inputs.keyDownOnce("reload")) {
+            startReload();
         } else if (!blockMovement) {
             return;
         }
