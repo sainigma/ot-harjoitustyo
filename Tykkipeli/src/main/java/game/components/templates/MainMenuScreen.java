@@ -6,6 +6,7 @@
 package game.components.templates;
 
 import game.components.GameObject;
+import game.components.Text;
 import game.utils.PID;
 import game.utils.Vector3d;
 

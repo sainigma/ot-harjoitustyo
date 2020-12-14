@@ -24,6 +24,17 @@ public class Sprite extends ImmediateDrawer {
     private float[][] vertices;
     private float[][] uvmap;
     
+    public Sprite(TextureLoader loader, String path, Vector3d origin, float scale) {
+        super();
+        setScale(scale);
+        _load(loader, path, origin);
+    }
+
+    public Sprite(TextureLoader loader, String path) {
+        super();
+        _load(loader, path, new Vector3d(0));
+    }
+    
     private void _load(TextureLoader loader, String path, Vector3d origin) {
         texture = loader.loadTexture("./assets/textures/" + path);
         if (width == -1) {
@@ -42,17 +53,6 @@ public class Sprite extends ImmediateDrawer {
             width = arr[0];
             height = arr[1];            
         }
-    }
-    
-    public Sprite(TextureLoader loader, String path, Vector3d origin, float scale) {
-        super();
-        setScale(scale);
-        _load(loader, path, origin);
-    }
-
-    public Sprite(TextureLoader loader, String path) {
-        super();
-        _load(loader, path, new Vector3d(0));
     }
     
     @Override

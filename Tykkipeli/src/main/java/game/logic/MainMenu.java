@@ -5,9 +5,11 @@
  */
 package game.logic;
 
+import game.components.Text;
 import game.components.templates.MainMenuScreen;
 import game.graphics.Renderer;
 import game.utils.InputManager;
+import game.utils.Vector3d;
 
 /**
  *
@@ -25,9 +27,14 @@ public class MainMenu implements LogicInterface {
     private boolean initialized = false;
     double deltatimeMillis = 0;
     MainMenuScreen menuScreen;
+    Text text;
     
     public MainMenu() {
         menuScreen = new MainMenuScreen("mainmenu");
+        Text text = new Text();
+        menuScreen.append(text);
+        text.translate(600, 300);
+        text.setContent("Paina ENTER aloittaaksesi");
     }
     
     @Override

@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
  */
 public abstract class ImmediateDrawer {
     private float scale = 1f;
-    private Vector3d localPosition = new Vector3d(0);
+    public Vector3d localPosition = new Vector3d(0);
     private Vector3d localRotation = new Vector3d(0);
     private Vector3d globalPosition = new Vector3d(0);
     private Vector3d globalRotation = new Vector3d(0);
@@ -56,17 +56,26 @@ public abstract class ImmediateDrawer {
         GL11.glPopMatrix();
     }
     
+    public void setPosition(Vector3d position) {
+        localPosition.set(position);
+    }
+    
     public void setGlobalRotation(Vector3d rotation) {
-        this.globalRotation = rotation;
+        this.globalRotation.set(rotation);
     }
     
     public void setGlobalPosition(Vector3d position) {
-        this.globalPosition = position;
+        this.globalPosition.set(position);
     }
     
     public void setTransforms(Vector3d localPosition, Vector3d localRotation, Vector3d globalPosition, Vector3d globalRotation){
         this.localPosition.set(localPosition);
         this.localRotation.set(localRotation);
+        this.globalPosition.set(globalPosition);
+        this.globalRotation.set(globalRotation);
+    }
+    
+    public void setGlobalTransforms(Vector3d globalPosition, Vector3d globalRotation) {
         this.globalPosition.set(globalPosition);
         this.globalRotation.set(globalRotation);
     }

@@ -5,6 +5,7 @@
  */
 package game.components.templates;
 
+import game.components.DrawCallInterface;
 import game.utils.Vector3d;
 import game.components.GameObject;
 import java.util.Random;
@@ -56,7 +57,7 @@ public class ViewPort extends GameObject {
     @Override
     public void setMinimized(boolean state) {
         minimized = state;
-        for (GameObject child : children) {
+        for (DrawCallInterface child : children) {
             child.setMinimized(minimized);
         }
     }

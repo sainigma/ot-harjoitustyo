@@ -19,8 +19,8 @@ import game.utils.Vector3d;
  * @author suominka
  */
 
-public abstract class GameObject {
-    public ArrayList<GameObject> children = new ArrayList<>();
+public abstract class GameObject implements DrawCallInterface{
+    public ArrayList<DrawCallInterface> children = new ArrayList<>();
     private Sprite sprite;
     
     private boolean initialized = false;
@@ -52,20 +52,6 @@ public abstract class GameObject {
         this.path = null;
         this.initialized = true; //empty
     }
-    /*
-    public GameObject(String name, String path) {
-        this.name = name;
-        this.path = path;
-        init();
-    }
-    */
-    /*
-    public GameObject(String name, String path, Vector3d origin) {
-        this.origin = origin;
-        this.name = name;
-        this.path = path;
-        init();
-    }*/
     /**
      * Täydellinen konstruktori
      * @param name
@@ -146,7 +132,7 @@ public abstract class GameObject {
      */
     public void setTextureLoader(TextureLoader loader) {
         texLoader = loader;
-        for (GameObject child : children) {
+        for (DrawCallInterface child : children) {
             child.setTextureLoader(loader);
         }
         load();
@@ -240,11 +226,23 @@ public abstract class GameObject {
      * Lisää kappaleen lapseksi, eli lisää sen GameObjectin piirtojonoon.
      * @param child 
      */
-    public void append(GameObject child) {
+    public void append(DrawCallInterface child) {
         if (texLoader != null) {
             child.setTextureLoader(texLoader);
         }
         children.add(child);
+    }
+
+    public TextureLoader getTextureLoader() {
+        return texLoader;
+    }
+    
+    /**
+     *
+     * @param child
+     */
+    public void append(GameObject child) {
+        append((DrawCallInterface) child);
     }
     /**
      * Poistaa kappaleen lapsista, eli poistaa sen GameObjectin piirtojonosta.
@@ -273,10 +271,10 @@ public abstract class GameObject {
         if (!hasUpdated) {
             return;
         }
-        for (GameObject child : children) {
-            child.hasUpdated = true;
-            child.globalPosition.set(globalPosition.add(localPosition));
-            child.globalRotation.set(globalRotation.add(localRotation));
+        for (DrawCallInterface child : children) {
+            child.setUpdated(true);
+            child.setGlobalPosition(globalPosition.add(localPosition));
+            child.setGlobalRotation(globalRotation.add(localRotation));
         }
         hasUpdated = false;
     }
@@ -284,7 +282,7 @@ public abstract class GameObject {
      * Spriten alustusmetodi. Kutsutaan GameObjectin piirtometodista jos spriteä
      * ei olla alustettu. Ei tee mitään jos GameObjectilta puuttuu sprite.
      */
-    private void load() {
+    public void load() {
         System.out.println("Loading " + name);
         if (path != null) {
             sprite = new Sprite(texLoader, path, origin, scale);
@@ -292,7 +290,7 @@ public abstract class GameObject {
             sprite.setVertexOffset(vertexOffset);
             sprite.setCrop(crop);
         }
-        for (GameObject child : children) {
+        for (DrawCallInterface child : children) {
             child.load();
         }
         initialized = true;
@@ -302,12 +300,12 @@ public abstract class GameObject {
      */
     private void _draw() {
         if (!visible) {
-            for (GameObject child : children) {
+            for (DrawCallInterface child : children) {
                 child.update();
             }
             return;
         }
-        for (GameObject child : children) {
+        for (DrawCallInterface child : children) {
             child.draw();
         }
         if (sprite != null && visible) {
@@ -379,5 +377,20 @@ public abstract class GameObject {
      * @param minimized 
      */
     public void setMinimized(boolean minimized) {
+    }
+
+    @Override
+    public void setGlobalPosition(Vector3d position) {
+        globalPosition = position;
+    }
+
+    @Override
+    public void setGlobalRotation(Vector3d rotation) {
+        globalRotation = rotation;
+    }
+
+    @Override
+    public void setUpdated(boolean state) {
+        hasUpdated = state;
     }
 }
