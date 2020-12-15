@@ -49,10 +49,6 @@ public class EndScreen extends GameObject {
         setPosition(new Vector3d().lerp(hidden, visible, t));
     }
     
-    public boolean animating() {
-        return animator.getAnimatedPosition() < 0.5f;
-    }
-    
     public void animate(double deltatimeMillis) {
         if (!animator.animating()) {
             return;
@@ -98,6 +94,10 @@ public class EndScreen extends GameObject {
         choise = 0;
         choises.setVisible(true);
         setChoise();
+    }
+    
+    public void disableChoises() {
+        choises.setVisible(false);
     }
     
     public void choiseIncrement() {

@@ -102,8 +102,8 @@ public class EndLogic {
                 next = "close";
                 break;
         }
+        endScreen.disableChoises();
         resolution = true;
-        endScreen.exit();
     }
     
     public String getNext() {
@@ -143,9 +143,6 @@ public class EndLogic {
     
     public boolean hasResolution() {
         return resolution;
-    }
-    public boolean animating() {
-        return endScreen.animating();
     }
     public void update(double deltatimeMillis) {
         activate();

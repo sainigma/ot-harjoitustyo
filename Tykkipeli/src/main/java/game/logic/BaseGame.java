@@ -28,6 +28,7 @@ public class BaseGame implements LogicInterface {
     private Renderer renderer = null;
     LogicInterface parent = null;
     
+    ScoreManager scoreManager;
     private String currentLevel;
     private String nextLevel;
     
@@ -39,6 +40,9 @@ public class BaseGame implements LogicInterface {
     public Level level = null;
     
     private int targetsLeft = 0;
+    
+    private String nextLogicName;
+    private boolean hasNext = false;
     
     public ScreenShaker screenShaker;
     private boolean gunMovementActive = true;
@@ -140,6 +144,7 @@ public class BaseGame implements LogicInterface {
         reloadLogic = new ReloadLogic(mortarLogic, level.mortar, level.reloadScreen);
         reloadLogic.setMessenger(messenger);
         endLogic = new EndLogic(level.endScreen);
+        scoreManager = new ScoreManager();
     }
     
     /**
@@ -511,10 +516,16 @@ public class BaseGame implements LogicInterface {
         return newLogic;
     }
     
+    private void spawnNext() {
+        scoreManager.saveScore();
+        renderer.setLogic(spawnLogic(nextLogicName));        
+    }
+    
     private void next(String name) {
         renderer.setLoading(true);
         renderer.removeFromRenderQueue(level);
-        renderer.setLogic(spawnLogic(name));
+        nextLogicName = name;
+        hasNext = true;
     }
     
     /**
@@ -522,7 +533,7 @@ public class BaseGame implements LogicInterface {
      */
     private void endLevel() {
         if (endLogic.hasResolution()) {
-            if (endLogic.isActive() && !endLogic.animating()) {
+            if (endLogic.isActive()) {
                 endLogic.deactivate();
                 next(endLogic.getNext());
             }
@@ -536,10 +547,13 @@ public class BaseGame implements LogicInterface {
             int warheadScore = magazine.getWarheadsLeft(0) * 25 + magazine.getWarheadsLeft(1) * 200 + magazine.getWarheadsLeft(2) * 400;
             int chargeScore = magazine.getChargesLeft() * 20;
             endLogic.setScores(score, warheadScore, chargeScore);
-            ScoreManager scoreManager = new ScoreManager();
-            scoreManager.saveScore(score + warheadScore + chargeScore, currentLevel);
+            scoreManager.setScore(score + warheadScore + chargeScore, currentLevel);
+            scoreDisplay.setVisible(false);
+            messenger.translate(0, -32);
         }
         endLogic.update(deltatimeMillis);
+        shakeScreen();        
+        animateScore();
     }
     
     /**
@@ -591,6 +605,11 @@ public class BaseGame implements LogicInterface {
      * Logiikan sisäinen pääpäivitysmetodi. Kutsutaan julkisista update-metodeista.
      */
     private void _update() {
+        if (hasNext) {
+            hasNext = false;
+            spawnNext();
+            return;
+        }
         if (guiInitialized && inputs == null) {
             return;
         }

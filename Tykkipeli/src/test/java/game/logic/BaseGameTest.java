@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import game.logic.BaseGame;
 import game.logic.controllers.Projectile;
 import game.logic.controllers.TargetLogic;
 import game.utils.Vector3d;
