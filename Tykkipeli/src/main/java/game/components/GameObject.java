@@ -283,7 +283,6 @@ public abstract class GameObject implements DrawCallInterface{
      * ei olla alustettu. Ei tee mitään jos GameObjectilta puuttuu sprite.
      */
     public void load() {
-        System.out.println("Loading " + name);
         if (path != null) {
             sprite = new Sprite(texLoader, path, origin, scale);
             sprite.setTexOffset(texOffset);

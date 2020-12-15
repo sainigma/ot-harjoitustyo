@@ -14,6 +14,7 @@ import game.graphics.Renderer;
 import game.utils.JSONLoader;
 import game.utils.PID;
 import game.utils.ScoreManager;
+import game.utils.Services;
 import game.utils.Vector3d;
 import java.util.ArrayList;
 import org.json.JSONArray;
@@ -58,6 +59,7 @@ public class BaseGame implements LogicInterface {
     private float scoreTarget;
     private float tempScore;
     private Text scoreDisplay;
+    private Text windDisplay;
     private PID scorePID = new PID(0.05f, 0, 0.5f, 1f);
     
     private Text messenger;
@@ -106,6 +108,7 @@ public class BaseGame implements LogicInterface {
         spawnLevel();
         spawnMessengers();
         spawnObjects();
+        setWind();
         JSONObject levelData = new JSONLoader("assets/levels/").read(name);
         JSONObject magazine = levelData.getJSONObject("magazine");
         nextLevel = levelData.has("next") ? levelData.getString("next") : "close";
@@ -121,11 +124,27 @@ public class BaseGame implements LogicInterface {
         level.mortar.setTraversal((float) (Math.random()*90f));
     }
     
+    private void setWind() {
+        Services services = new Services();
+        JSONObject obj = services.getJSONObject("http://192.168.0.100/api/mainsite/tykkipeli");
+        if (obj == null) {
+            return;
+        }
+        JSONObject wind = obj.getJSONObject("wind");
+        double speed = wind.getDouble("speed");
+        double direction = wind.getDouble("direction");
+        windDisplay.setContent("Tuulen suunta " + (int) direction + " astetta, nopeus " + (int) speed +"m/s");
+        mortarLogic.setWind(speed, direction);
+    }
+    
     private void spawnMessengers() {
         scoreDisplay = new Text();
         messenger = new Text();
+        windDisplay = new Text();
+        windDisplay.translate(8, 720 - 32);
         scoreDisplay.translate(8, 8);
         messenger.translate(8, 32 + 8);
+        level.mapScreen.overlay.append(windDisplay);
         level.mapScreen.overlay.append(scoreDisplay);
         level.mapScreen.overlay.append(messenger);
     }
@@ -549,6 +568,7 @@ public class BaseGame implements LogicInterface {
             endLogic.setScores(score, warheadScore, chargeScore);
             scoreManager.setScore(score + warheadScore + chargeScore, currentLevel);
             scoreDisplay.setVisible(false);
+            windDisplay.setVisible(false);
             messenger.translate(0, -32);
         }
         endLogic.update(deltatimeMillis);

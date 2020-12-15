@@ -27,6 +27,10 @@ public class MortarLogic {
     double aboveSeaLevel = 15f;
     double chamberHeight = 2.2f;
     
+    boolean useWind = false;
+    double windSpeed = 0f;
+    double windDirection = 0f;
+    
     public Vector3d latest = new Vector3d();
     
     public MortarLogic() {
@@ -61,6 +65,12 @@ public class MortarLogic {
         this.traversal = traversal;
     }
     
+    public void setWind(double windSpeed, double direction) {
+        this.windSpeed = windSpeed;
+        this.windDirection = direction;
+        useWind = true;
+    }
+    
     private void startSolver() {
         Ballistics solver = new Ballistics();
         float mass = currentProjectile.weight;
@@ -70,7 +80,9 @@ public class MortarLogic {
         direction.setByAzimuthAltitude(traversal, elevation);
         Vector3d velocity = direction.clone().scale(currentProjectile.getInitialVelocity());
         solver.set(new Vector3d(0, aboveSeaLevel + chamberHeight, 0), velocity, mass, 0.001f);
-        //solver.enableLogging();
+        if (useWind) {
+            solver.setWind(windSpeed, windDirection);
+        }
         activeSolvers.add(solver);
         history.put(solver, new Statistic(elevation, traversal, mass, cartouches, solver));
     }

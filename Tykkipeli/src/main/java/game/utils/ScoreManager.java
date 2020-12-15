@@ -5,15 +5,9 @@
  */
 package game.utils;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
-import java.time.Duration;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import org.json.JSONArray;
@@ -23,6 +17,7 @@ import org.json.JSONArray;
  * @author suominka
  */
 public class ScoreManager {
+    Services services = new Services();
     String basePath = "http://192.168.0.100/api/tykkipeli/";
     String key = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJAT56gluyCXd78b3+35xl/nJSE3ryxRAR3a0ECsHSsd+UNKSkRY/qvXiLlNrhxIut45KqFBXQIhjfrcbRnSawcCAwEAAQ==";
     private int statusCode = 0;
@@ -106,40 +101,11 @@ public class ScoreManager {
         String message = "{\"name\":\"" + score.name + "\", \"score\":\"" + score.score + "\"}";
         message = encrypt(message);
         String body = "{\"raw\":\"" + message + "\"}";
-        HttpClient client = HttpClient.newHttpClient();
-        URI serverURI = URI.create(basePath + score.level);
-        HttpRequest req = HttpRequest.newBuilder()
-                .uri(serverURI)
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .timeout(Duration.ofMillis(300))
-                .build();
-        try {
-            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
-            statusCode = res.statusCode();
-        } catch (IOException | InterruptedException ex) {
-            System.out.println("Connection to server failed: timeout");
-            statusCode = -1;
-        }
+        statusCode = services.post(basePath + score.level, body);
     }
     
     private JSONArray fetchScore(String level) {
-        HttpClient client = HttpClient.newHttpClient();
-        URI serverURI = URI.create(basePath + level);
-        HttpRequest req = HttpRequest.newBuilder()
-                .uri(serverURI)
-                .header("Accept", "application/json")
-                .GET()
-                .timeout(Duration.ofMillis(300))
-                .build();
-        try {
-            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
-            JSONArray scores = new JSONArray(res.body());
-            return scores;
-        } catch (IOException | InterruptedException ex) {
-            System.out.println("Connection to server failed: timeout");            
-        }
-        return null;
+        return services.getJSONArray(basePath + level);
     }
     
     public int getStatusCode() {

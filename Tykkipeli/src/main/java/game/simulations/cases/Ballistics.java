@@ -24,14 +24,28 @@ public class Ballistics extends PhysicsSolver {
     double airDensityGround;
     double latitudeRadians;
     
+    private Vector3d wind = new Vector3d();
+    private boolean useWind = false;
+    
     public Ballistics() {
-        super(); //Sets world specific parameters
+        super();
         set(new Vector3d(), new Vector3d(), 0.0001f);
         setConstants();
     }
     
     public void setArea(double diameter) {
         frontalArea = Math.pow(diameter, 2) * Math.PI / 4f;
+    }
+    
+    public void setWind(boolean state) {
+        useWind = state;
+    }
+    
+    public void setWind(double speed, double direction) {
+        useWind = true;
+        wind = new Vector3d(0, 0, 1);
+        wind.rotateY(direction);
+        wind = wind.scale(speed);
     }
     
     public void setTemperature(double temperature) {
@@ -48,7 +62,7 @@ public class Ballistics extends PhysicsSolver {
         double localCoeff = Math.pow(scalarVelocity, 2) * trueAirDensity * dragCoeff * frontalArea / (2 * getMass());
         Vector3d drag = velocity.clone();
         drag.normalize();
-        drag.scale(localCoeff);
+        drag = drag.scale(localCoeff);
         return drag;
     }
     
@@ -60,6 +74,9 @@ public class Ballistics extends PhysicsSolver {
     public Vector3d solveAcceleration() {
         Vector3d velocity = getVelocity();
         Vector3d drag = getDrag(velocity);
+        if (useWind) {
+            drag = drag.add(getDrag(wind));
+        }
         double coriolisAcceleration = getCoriolisAcceleration(velocity);
         return new Vector3d(-drag.x + coriolisAcceleration, gravity(0) - drag.y, -drag.z);
     }

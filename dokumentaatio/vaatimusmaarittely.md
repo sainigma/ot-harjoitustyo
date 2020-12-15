@@ -26,11 +26,11 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Päämenu (MVP)
 - [x] Kirjainten piirto
 - [x] Näkymä kentän lopettamiseen (MVP)
+- [x] Tuulen suunnan ilmaisu
+- [ ] Hiscorenäkymä (MVP)
 - [ ] Lopetusnäkymän tahditus/silmäkarkki
 - [ ] Latausanimaatio tykille (MVP)
-- [ ] Hiscorenäkymä (MVP)
 - [ ] Tykin jalustan lähimaasto taustaa nopeammin liikkuvalle layerille, parallax
-- [ ] Tuulen suunnan ilmaisu
 - [ ] Aktiivisen projektiilin alkuparametrien piirto karttanäkymään
 
 ### Fysiikkasolveri
@@ -39,7 +39,7 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Simulaatio toimii 3d-avaruudessa
 - [x] Solveri toimii dynaamisella kiihtyvyydellä
 - [x] Ilmanvastus, gravitaation muutos, ilman tiheyden muutos, coriolis vaikuttaa lentorataan
-- [ ] Tuuli otetaan huomioon simulaatiossa
+- [x] Tuuli otetaan huomioon simulaatiossa
 
 ## Pelilogiikka
 
@@ -55,8 +55,9 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Maaliobjektit
 - [x] Projektiilin osumien jälkikäsittely (osuiko maaliin)
 - [x] Pisteidenlasku (MVP)
+- [x] Pisteiden tallentaminen verkkoon
 - [x] Pelin päättyminen (MVP)
-- [ ] Pisteiden tallentaminen
+- [ ] Pisteiden tallentaminen lokaalisti (MVP)
 - [ ] Seuraavaan waypointtiin siirtyminen maalikappaleelle
 - [ ] Näppäinasetusten lataaminen tiedostosta
 - [ ] Häviöstate (maali pääsee karkuun/liian lähelle)

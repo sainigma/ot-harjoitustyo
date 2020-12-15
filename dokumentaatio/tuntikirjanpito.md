@@ -27,5 +27,5 @@
 | 10.12 | 5 | Latausnäkymällä on nyt graafinen käyttöliittymä. Ammusten/panosten valinta makasiinin inventaariosta riippuvainen. Laivojen tulitusetäisyys piirretään kartalle.
 | 11.12 | 6 | Toteutin mainmenun, siirtymismekaniikan pelilogiikkojen välillä sekä latausruudut. Tuki usealle näyttötilalle.
 | 14.12 | 8 | Tekstuuriatlas -tyyppisen tekstinpiirron toteutus, projektin refaktorointia. Käyttöliittymien ja käyttäjälle viestimisen toteutusta ja hienosäätöä, ominaisuuksien siirtoa komentolinjalta GUI:hin. Pelin lopetuslogiikan ja käyttöliittymän alustusta.
-| 15.12 | 7 | Pelin lopetuslogiikan työstämistä, lopetusruudun työstöä. Projektin refaktorointia. Pistetallentimen alustusta. Reittien tekoa serverikommunikointiin, salauskirjastoihin tutustumista, backendin tekoa.
-| yht | 133 | |
+| 15.12 | 8 | Pelin lopetuslogiikan työstämistä, lopetusruudun työstöä. Projektin refaktorointia. Pistetallentimen alustusta. Reittien tekoa serverikommunikointiin, salauskirjastoihin tutustumista, backendin tekoa. Tuuli vaikuttaa projektiiliin, nopeus ja suuruus haetaan ilmatieteenlaitoksen rajapinnasta (backendin kautta, koska rajapinta sylkee paljon dataa)
+| yht | 134 | |
