@@ -25,8 +25,9 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Fullscreen/borderless fullscreen/windowed, tuki resoluution vaihdolle
 - [x] Päämenu (MVP)
 - [x] Kirjainten piirto
+- [x] Näkymä kentän lopettamiseen (MVP)
+- [ ] Lopetusnäkymän tahditus/silmäkarkki
 - [ ] Latausanimaatio tykille (MVP)
-- [ ] Näkymä kentän lopettamiseen (MVP)
 - [ ] Hiscorenäkymä (MVP)
 - [ ] Tykin jalustan lähimaasto taustaa nopeammin liikkuvalle layerille, parallax
 - [ ] Tuulen suunnan ilmaisu
@@ -53,10 +54,11 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Kenttien spawnaus parametrisesti
 - [x] Maaliobjektit
 - [x] Projektiilin osumien jälkikäsittely (osuiko maaliin)
+- [x] Pisteidenlasku (MVP)
+- [x] Pelin päättyminen (MVP)
+- [ ] Pisteiden tallentaminen
 - [ ] Seuraavaan waypointtiin siirtyminen maalikappaleelle
 - [ ] Näppäinasetusten lataaminen tiedostosta
-- [ ] Pisteidenlasku (MVP)
-- [ ] Pelin päättyminen (MVP)
 - [ ] Häviöstate (maali pääsee karkuun/liian lähelle)
 - [ ] Hiiritapahtumien seuraaminen, klikattavat objektit
 

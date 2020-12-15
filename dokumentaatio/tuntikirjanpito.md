@@ -27,4 +27,5 @@
 | 10.12 | 5 | Latausnäkymällä on nyt graafinen käyttöliittymä. Ammusten/panosten valinta makasiinin inventaariosta riippuvainen. Laivojen tulitusetäisyys piirretään kartalle.
 | 11.12 | 6 | Toteutin mainmenun, siirtymismekaniikan pelilogiikkojen välillä sekä latausruudut. Tuki usealle näyttötilalle.
 | 14.12 | 8 | Tekstuuriatlas -tyyppisen tekstinpiirron toteutus, projektin refaktorointia. Käyttöliittymien ja käyttäjälle viestimisen toteutusta ja hienosäätöä, ominaisuuksien siirtoa komentolinjalta GUI:hin. Pelin lopetuslogiikan ja käyttöliittymän alustusta.
-| yht | 126 | |
+| 15.12 | 4 | Pelin lopetuslogiikan työstämistä, lopetusruudun työstöä. Projektin refaktorointia. Pistetallentimen alustusta.
+| yht | 130 | |

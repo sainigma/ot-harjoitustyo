@@ -6,7 +6,7 @@
 package game.components.templates;
 
 import game.components.GameObject;
-import game.utils.PID;
+import game.components.animation.PIDAnimator;
 import game.utils.Vector3d;
 
 /**
@@ -20,10 +20,7 @@ public class MainMenuScreen extends GameObject {
     public GameObject title;
     public GameObject menuEmpty;
     
-    float animatedPosition = 0f;
-    float animatedTarget = 0f;
-    boolean animating = false;
-    PID animator = new PID(0.015f, 0f, 0.4f, 100f);
+    PIDAnimator animator = new PIDAnimator(0.015f, 0f, 0.4f, 100f);
     
     @Override
     public boolean isInitialized() {
@@ -41,10 +38,6 @@ public class MainMenuScreen extends GameObject {
         backgroundNear = new GameObject("etutausta", "menu/etutausta.png", new Vector3d()) { };
         title = new GameObject("otsikko", "menu/otsikko.png", new Vector3d()) { };
         menuEmpty = new GameObject("menuempty") { };
-        /*
-        EndScreen poista = new EndScreen("");
-        append(poista);
-        */
 
         backgroundStatic.setDepth(0);
         backgroundFar.setDepth(1);
@@ -56,29 +49,21 @@ public class MainMenuScreen extends GameObject {
         append(backgroundNear);
         append(title);
         append(menuEmpty);
-        
-        //enter();
     }
     
     public void enter() {
         setVisible(true);
-        animating = true;
-        animatedPosition = 0f;
-        animatePosition(animatedPosition);
-        animatedTarget = 1f;
-        animator.activate();
+        animator.enter();
+        animatePosition(0);
     }
     
     public void exit() {
-        animating = true;
-        animatedPosition = 1f;
-        animatePosition(animatedPosition);
-        animatedTarget = 0f;
-        animator.activate();
+        animator.exit();
+        animatePosition(1);
     }
     
     public float getAnimatedPosition() {
-        return animatedPosition;
+        return animator.getAnimatedPosition();
     }
     
     private void animatePosition(float t) {
@@ -101,17 +86,10 @@ public class MainMenuScreen extends GameObject {
     }
     
     private void animate(double deltatimeMillis) {
-        if (!animating) {
+        if (!animator.animating()) {
             return;
         }
-        float error = animatedTarget - animatedPosition;
-        float control = (float) animator.getControl(error, deltatimeMillis);
-        animatedPosition += control;
-        if (Math.abs(error) < 0.00001f) {
-            animating = false;
-            animatedPosition = animatedTarget;
-        }
-        animatePosition(animatedPosition);
+        animatePosition(animator.animate(deltatimeMillis));
     }
     
     public void update() {

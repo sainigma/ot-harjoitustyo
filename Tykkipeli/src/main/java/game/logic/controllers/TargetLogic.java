@@ -108,11 +108,23 @@ public class TargetLogic {
         moveShip(deltatimeMillis);
     }
     
+    private float getWaypoint(Object waypoint) {
+        try {
+            if (waypoint instanceof Integer) {
+                return ((Integer) waypoint).floatValue();
+            }
+            return ((BigDecimal) waypoint).floatValue();
+        } catch (ClassCastException e) {
+            throw new ClassCastException("level data malformed, check ship waypoints.");
+        }
+    }
+    
     public void setWaypoints(JSONArray arr) {
         for (Object it : arr) {
             JSONArray subarr = (JSONArray) it;
-            float x = ((BigDecimal) subarr.get(0)).floatValue();
-            float y = ((BigDecimal) subarr.get(1)).floatValue();
+            float x = getWaypoint(subarr.get(0));
+            float y = getWaypoint(subarr.get(1));
+
             addWaypoint(x, y);
         }
         loadWaypoint(0);

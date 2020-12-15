@@ -6,6 +6,7 @@
 package game.components.templates;
 
 import game.components.GameObject;
+import game.components.animation.PIDAnimator;
 import game.utils.PID;
 import game.utils.Vector3d;
 
@@ -17,11 +18,7 @@ public class ReloadScreen extends GameObject {
     
     int offsetX = 970;
     
-    float animatedPosition = 0f;
-    float animatedTarget = 0f;
-    boolean animating = false;
-    
-    PID animator = new PID(0.1f, 0f, 0.2f, 100f);
+    PIDAnimator animator = new PIDAnimator(0.1f, 0f, 0.2f, 100f);
     
     GameObject charges[] = {null, null, null};
     GameObject warheads[] = {null, null, null};
@@ -44,11 +41,28 @@ public class ReloadScreen extends GameObject {
         
         animatePosition(0f);
     }
+
+    public void enter() {
+        animator.enter();
+        animatePosition(0);
+    }
     
+    public void exit() {
+        animator.exit();
+        animatePosition(1f);
+    }    
+
     private void animatePosition(float t) {
         Vector3d hidden = new Vector3d(0, 1080 * viewportScale, 10);
         Vector3d visible = new Vector3d(0, 0, 10);
         background.setPosition(new Vector3d().lerp(hidden, visible, t));
+    }
+
+    private void animate(double deltatimeMillis) {
+        if (!animator.animating()) {
+            return;
+        }
+        animatePosition(animator.animate(deltatimeMillis));
     }
     
     private void spawnCharges() {
@@ -63,22 +77,6 @@ public class ReloadScreen extends GameObject {
         }
     }
     
-    public void enter() {
-        animating = true;
-        animatedPosition = 0f;
-        animatePosition(animatedPosition);
-        animatedTarget = 1f;
-        animator.activate();
-    }
-    
-    public void exit() {
-        animating = true;
-        animatedPosition = 1f;
-        animatePosition(animatedPosition);
-        animatedTarget = 0f;
-        animator.activate();
-    }
-    
     private void spawnWarheads() {
         String names[] = {"light", "medium", "heavy"};
         int i = 0;
@@ -88,20 +86,6 @@ public class ReloadScreen extends GameObject {
             background.append(warheads[i]);
             i++;
         }
-    }
-    
-    private void animate(double deltatimeMillis) {
-        if (!animating) {
-            return;
-        }
-        float error = animatedTarget - animatedPosition;
-        float control = (float) animator.getControl(error, deltatimeMillis);
-        animatedPosition += control;
-        if (Math.abs(error) < 0.001f) {
-            animating = false;
-            animatedPosition = animatedTarget;
-        }
-        animatePosition(animatedPosition);
     }
     
     public void setCharges(int chargesSelected) {

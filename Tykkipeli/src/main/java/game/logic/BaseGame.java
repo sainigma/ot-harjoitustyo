@@ -13,6 +13,7 @@ import game.utils.InputManager;
 import game.graphics.Renderer;
 import game.utils.JSONLoader;
 import game.utils.PID;
+import game.utils.ScoreManager;
 import game.utils.Vector3d;
 import java.util.ArrayList;
 import org.json.JSONArray;
@@ -27,6 +28,9 @@ public class BaseGame implements LogicInterface {
     private Renderer renderer = null;
     LogicInterface parent = null;
     
+    private String currentLevel;
+    private String nextLevel;
+    
     private boolean guiInitialized = false;
     public MortarLogic mortarLogic;
     public ReloadLogic reloadLogic;
@@ -40,6 +44,8 @@ public class BaseGame implements LogicInterface {
     private boolean gunMovementActive = true;
     
     private boolean initialized = false;
+    
+    private boolean lost = false;
     
     private long lastTime;
     private double deltatimeMillis;
@@ -88,6 +94,8 @@ public class BaseGame implements LogicInterface {
      * @param name 
      */
     private void loadLevel(String name) {
+        
+        currentLevel = name;
         score = 0;
         targetsLeft = 0;
         targets = new ArrayList<>();
@@ -96,6 +104,8 @@ public class BaseGame implements LogicInterface {
         spawnObjects();
         JSONObject levelData = new JSONLoader("assets/levels/").read(name);
         JSONObject magazine = levelData.getJSONObject("magazine");
+        nextLevel = levelData.has("next") ? levelData.getString("next") : "close";
+        
         reloadLogic.setMagazine(
                 magazine.getInt("light"),
                 magazine.getInt("medium"),
@@ -104,6 +114,7 @@ public class BaseGame implements LogicInterface {
         );
         spawnTargets(levelData.getJSONArray("ships"));
         lastTime = System.nanoTime() / 1000000;
+        level.mortar.setTraversal((float) (Math.random()*90f));
     }
     
     private void spawnMessengers() {
@@ -147,11 +158,12 @@ public class BaseGame implements LogicInterface {
     }
     
     /**
-     * Vastaanottaa ja asettaa itselleen syötteidenkuuntelijan
+     * Vastaanottaa ja asettaa itselleen ja lapsilogiikoille syötteidenkuuntelijan
      * @param inputs 
      */
     public void setInputManager(InputManager inputs) {
         this.inputs = inputs;
+        endLogic.setInputManager(this.inputs);
         reloadLogic.setInputManager(this.inputs);
     }
     
@@ -202,7 +214,7 @@ public class BaseGame implements LogicInterface {
         if (reloadLogic.isMovementBlocked() && level.mapScreen.isMinimized()) {
             return;
         }
-        float traversalSpeed = 0.05f;
+        float traversalSpeed = 0.5f;
         if (inputs.keyDown("traverse right")) {
             level.mortar.addToTraverseTarget(-traversalSpeed * speedModifier);
         } else if (inputs.keyDown("traverse left")) {
@@ -254,7 +266,8 @@ public class BaseGame implements LogicInterface {
             toggleView();
         }
         if (inputs.keyDownOnce("quit")) {
-            renderer.close();
+            targetsLeft--;
+            //renderer.close();
         }
         rotateMap(speedModifier);
     }
@@ -476,11 +489,57 @@ public class BaseGame implements LogicInterface {
         return targetsLeft;
     }
     
+    private LogicInterface spawnLogic(String name) {
+        LogicInterface newLogic = null;
+        switch(name) {
+            case "next":
+                if (nextLevel.equals("close")) {
+                    newLogic = spawnLogic("close");
+                } else {
+                    newLogic = new BaseGame(nextLevel);
+                }
+                break;
+            case "replay":
+                newLogic = new BaseGame(currentLevel);
+                break;
+            case "close":
+                newLogic = new MainMenu();
+                break;
+            default:
+                throw new IllegalArgumentException("Level identifier not found");
+        }
+        return newLogic;
+    }
+    
+    private void next(String name) {
+        renderer.setLoading(true);
+        renderer.removeFromRenderQueue(level);
+        renderer.setLogic(spawnLogic(name));
+    }
+    
     /**
      * Keskeneräinen metodi, lopullisessa versiossa tarjoilee käyttäjälle käyttöliittymän seuraavaan kenttään siirtymiseen tai pelin lopettamiseen.
      */
     private void endLevel() {
-        endLogic.activate();
+        if (endLogic.hasResolution()) {
+            if (endLogic.isActive() && !endLogic.animating()) {
+                endLogic.deactivate();
+                next(endLogic.getNext());
+            }
+            return;
+        }
+        if (!endLogic.isActive()) {
+            guiInitialized = false;
+            level.gameView.setVisible(true);
+            level.mapView.setMinimized(true);
+            Magazine magazine = reloadLogic.getMagazine();
+            int warheadScore = magazine.getWarheadsLeft(0) * 25 + magazine.getWarheadsLeft(1) * 200 + magazine.getWarheadsLeft(2) * 400;
+            int chargeScore = magazine.getChargesLeft() * 20;
+            endLogic.setScores(score, warheadScore, chargeScore);
+            ScoreManager scoreManager = new ScoreManager();
+            scoreManager.saveScore(score + warheadScore + chargeScore, currentLevel);
+        }
+        endLogic.update(deltatimeMillis);
     }
     
     /**
@@ -510,16 +569,22 @@ public class BaseGame implements LogicInterface {
         shakeScreen();        
         animateScore();
         
-        if (endLogic.isActive()) {
-            endLogic.endControls();
-            return;
-        }
         float speedModifier = getSpeedModifier();
         sharedControls(speedModifier);
         gameViewLogic(speedModifier);
         mapViewLogic(speedModifier);
 
         linkMapscreenToSolvers();
+    }
+    
+    private void endConditions() {
+        if (targetsLeft <= 0) {
+            endLogic.setWinState(true);
+            endLevel();
+        } else if (lost) {
+            endLogic.setWinState(false);
+            endLevel();
+        }
     }
     
     /**
@@ -534,9 +599,7 @@ public class BaseGame implements LogicInterface {
         updateGUI();
         updateTargets();
         getHits();
-        if (targetsLeft <= 0) {
-            endLevel();
-        }
+        endConditions();
     }
     
     /**

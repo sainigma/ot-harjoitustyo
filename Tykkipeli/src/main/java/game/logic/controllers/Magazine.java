@@ -27,6 +27,17 @@ public class Magazine {
         warheads[index] += 1;
     }
     
+    public int getWarheadsLeft(int index) {
+        if (index < 0 || index >= warheads.length) {
+            return -1;
+        }
+        return warheads[index];
+    }
+    
+    public int getChargesLeft() {
+        return cartouches;
+    }
+    
     public float getWarhead(int index) {
         if (index < 0 || index >= warheads.length) {
             return -1;
