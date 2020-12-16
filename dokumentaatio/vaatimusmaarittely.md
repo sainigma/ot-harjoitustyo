@@ -57,7 +57,8 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Pisteidenlasku (MVP)
 - [x] Pisteiden tallentaminen verkkoon
 - [x] Pelin päättyminen (MVP)
-- [ ] Pisteiden tallentaminen lokaalisti (MVP)
+- [x] Pisteiden tallentaminen lokaalisti (MVP)
+- [ ] Pisteiden järjestely
 - [ ] Seuraavaan waypointtiin siirtyminen maalikappaleelle
 - [ ] Näppäinasetusten lataaminen tiedostosta
 - [ ] Häviöstate (maali pääsee karkuun/liian lähelle)

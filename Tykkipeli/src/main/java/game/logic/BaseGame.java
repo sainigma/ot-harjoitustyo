@@ -291,8 +291,8 @@ public class BaseGame implements LogicInterface {
             toggleView();
         }
         if (inputs.keyDownOnce("quit")) {
-            targetsLeft--;
-            //renderer.close();
+            lost = true;
+            
         }
         rotateMap(speedModifier);
     }
@@ -531,7 +531,9 @@ public class BaseGame implements LogicInterface {
     }
     
     private void spawnNext() {
-        scoreManager.saveScore();
+        if (!lost) {
+            scoreManager.saveScore();            
+        }
         renderer.setLogic(spawnLogic(nextLogicName));        
     }
     

@@ -23,7 +23,7 @@ public class EndScreen extends GameObject {
     int choise = 0;
     boolean winState = true;
     String [] winChoises = {"SEURAAVA KENTTÄ   lopeta", "seuraava kenttä   LOPETA"};
-    String [] loseChoises = {"UUSI PELI         lopeta", "uusi peli         LOPETA"};
+    String [] loseChoises = {"YRITÄ UUDESTAAN   lopeta", "yritä uudestaan   LOPETA"};
     
     PIDAnimator animator = new PIDAnimator(0.1f, 0f, 0.2f, 100f);
     

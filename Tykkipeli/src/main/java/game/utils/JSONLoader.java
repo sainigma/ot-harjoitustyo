@@ -5,6 +5,7 @@
  */
 package game.utils;
 
+import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,10 +27,20 @@ public class JSONLoader {
             JSONObject obj = new JSONObject(raw);
             return obj;
         } catch (Exception e) {
+            System.out.println(e + ": file read error");
             return null;
         }
     }
-    public boolean save(JSONObject object) {
-        return false;
+    public void save(JSONObject object, String file) {
+        if (object == null) {
+            return;
+        }
+        try {
+            FileWriter fWriter = new FileWriter(path + file + ".json");
+            fWriter.write(object.toString());
+            fWriter.close();
+        } catch (Exception e) {
+            System.out.println(e + ": file write error");
+        }
     }
 }

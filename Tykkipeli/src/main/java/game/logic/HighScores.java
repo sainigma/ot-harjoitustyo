@@ -75,6 +75,7 @@ public class HighScores implements LogicInterface {
         if (scores == null || !scores.has(level) || scores.getJSONArray(level).length() == 0) {
             content += "\n ei pisteitä";
         } else {
+            System.out.println(scores);
             for (Object singleScore : scores.getJSONArray(level)) {
                 JSONArray singleScoreArr = (JSONArray) singleScore;
                 try {

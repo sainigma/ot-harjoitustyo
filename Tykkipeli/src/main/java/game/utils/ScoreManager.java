@@ -53,7 +53,26 @@ public class ScoreManager {
         saveGlobal();
     }
     
+    private JSONObject createScores() {
+        JSONObject scores = new JSONObject();
+        scores.put(score.level, new JSONArray());
+        return scores;
+    }
+    
     private void saveLocal() {
+        JSONObject scores = getLocalScores();
+        if (scores == null) {
+            scores = createScores();
+        }
+        JSONArray newScore = new JSONArray();
+        newScore.put(score.name);
+        newScore.put(score.score);
+        JSONArray levelScores = scores.getJSONArray(score.level);
+        levelScores.put(newScore);
+        scores.put(score.level, levelScores);
+        
+        JSONLoader loader = new JSONLoader("");
+        loader.save(scores, "scores");
     }
     
     private PublicKey getKey() {
