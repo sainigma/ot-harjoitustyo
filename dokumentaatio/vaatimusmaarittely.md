@@ -27,7 +27,7 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Kirjainten piirto
 - [x] Näkymä kentän lopettamiseen (MVP)
 - [x] Tuulen suunnan ilmaisu
-- [ ] Hiscorenäkymä (MVP)
+- [x] Hiscorenäkymä (MVP)
 - [ ] Lopetusnäkymän tahditus/silmäkarkki
 - [ ] Latausanimaatio tykille (MVP)
 - [ ] Tykin jalustan lähimaasto taustaa nopeammin liikkuvalle layerille, parallax

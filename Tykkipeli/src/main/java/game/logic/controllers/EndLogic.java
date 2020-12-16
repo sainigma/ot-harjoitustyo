@@ -69,6 +69,10 @@ public class EndLogic {
         endScreen.setWinState(winState);
     }
     
+    public void finalStageReached() {
+        endScreen.finalStageReached();
+    }
+    
     private void endControls() {
         if (!active) {
             return;

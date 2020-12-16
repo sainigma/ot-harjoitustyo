@@ -43,6 +43,10 @@ public class EndScreen extends GameObject {
         animatePosition(1f);
     }
     
+    public void finalStageReached() {
+        winChoises = new String [] {"                  LOPETA", "                  LOPETA"};
+    }
+    
     private void animatePosition(float t) {
         Vector3d hidden = new Vector3d(0, 1080, 100);
         Vector3d visible = new Vector3d(0, 0, 100);

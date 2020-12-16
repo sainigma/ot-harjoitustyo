@@ -15,6 +15,7 @@ import game.utils.JSONLoader;
 import game.utils.PID;
 import game.utils.ScoreManager;
 import game.utils.Services;
+import game.utils.Timing;
 import game.utils.Vector3d;
 import java.util.ArrayList;
 import org.json.JSONArray;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 public class BaseGame implements LogicInterface {
     private InputManager inputs = null;
     private Renderer renderer = null;
+    private Timing timing;
     LogicInterface parent = null;
     
     ScoreManager scoreManager;
@@ -52,7 +54,6 @@ public class BaseGame implements LogicInterface {
     
     private boolean lost = false;
     
-    private long lastTime;
     private double deltatimeMillis;
     
     private int score = 0;
@@ -100,7 +101,7 @@ public class BaseGame implements LogicInterface {
      * @param name 
      */
     private void loadLevel(String name) {
-        
+        timing = new Timing();
         currentLevel = name;
         score = 0;
         targetsLeft = 0;
@@ -120,20 +121,20 @@ public class BaseGame implements LogicInterface {
                 magazine.getInt("charges")
         );
         spawnTargets(levelData.getJSONArray("ships"));
-        lastTime = System.nanoTime() / 1000000;
         level.mortar.setTraversal((float) (Math.random()*90f));
     }
     
     private void setWind() {
         Services services = new Services();
-        JSONObject obj = services.getJSONObject("http://192.168.0.100/api/mainsite/tykkipeli");
-        if (obj == null) {
+        JSONObject obj = services.getJSONObject("mainsite/tykkipeli");
+        if (obj == null || !obj.has("wind")) {
+            windDisplay.setContent("Tuulen hakeminen verkosta epäonnistui");
             return;
         }
         JSONObject wind = obj.getJSONObject("wind");
         double speed = wind.getDouble("speed");
         double direction = wind.getDouble("direction");
-        windDisplay.setContent("Tuulen suunta " + (int) direction + " astetta, nopeus " + (int) speed +"m/s");
+        windDisplay.setContent("Tuuli  " + (int) speed + " mps suuntaan " + (int) direction +"°");
         mortarLogic.setWind(speed, direction);
     }
     
@@ -341,12 +342,6 @@ public class BaseGame implements LogicInterface {
         level.mapView.toggleMinimized();        
     }
     
-    private void getDeltatimeMillis() {
-        long time = System.nanoTime() / 1000000;
-        deltatimeMillis = (double) (time - lastTime);
-        lastTime = time;
-    }
-    
     private void gameViewLogic(float speedModifier) {
         if (!level.gameView.isVisible()) {
             return;
@@ -527,7 +522,7 @@ public class BaseGame implements LogicInterface {
                 newLogic = new BaseGame(currentLevel);
                 break;
             case "close":
-                newLogic = new MainMenu();
+                newLogic = new HighScores();
                 break;
             default:
                 throw new IllegalArgumentException("Level identifier not found");
@@ -560,6 +555,9 @@ public class BaseGame implements LogicInterface {
         }
         if (!endLogic.isActive()) {
             guiInitialized = false;
+            if (nextLevel.equals("close")) {
+                endLogic.finalStageReached();
+            }
             level.gameView.setVisible(true);
             level.mapView.setMinimized(true);
             Magazine magazine = reloadLogic.getMagazine();
@@ -624,7 +622,7 @@ public class BaseGame implements LogicInterface {
     /**
      * Logiikan sisäinen pääpäivitysmetodi. Kutsutaan julkisista update-metodeista.
      */
-    private void _update() {
+    private void updateLogic() {
         if (hasNext) {
             hasNext = false;
             spawnNext();
@@ -645,8 +643,8 @@ public class BaseGame implements LogicInterface {
      * Logiikan julkinen päivitysmetodi. Hakee piirtoon kuluneen ajan ennen sisäisen päivitysmetodin kutsumista.
      */
     public void update() {
-        getDeltatimeMillis();
-        _update();
+        deltatimeMillis = timing.getDeltatimeMillis();
+        updateLogic();
     }
     
     /**
@@ -655,7 +653,7 @@ public class BaseGame implements LogicInterface {
      */
     public void update(double dtMillis) {
         deltatimeMillis = dtMillis;
-        _update();
+        updateLogic();
     }
 
     @Override

@@ -19,14 +19,17 @@ import org.json.JSONObject;
  * @author suominka
  */
 public class Services {
+    private String basepath = "http://192.168.0.100/api/";
+    private int timeoutMillis = 1000;
+    
     public int post(String path, String body) {
         HttpClient client = HttpClient.newHttpClient();
-        URI serverURI = URI.create(path);
+        URI serverURI = URI.create(basepath + path);
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(serverURI)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(body))
-                .timeout(Duration.ofMillis(300))
+                .timeout(Duration.ofMillis(timeoutMillis))
                 .build();
         try {
             HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
@@ -37,6 +40,24 @@ public class Services {
         }
     }
     
+    public HttpResponse<String> get(String path) {
+        HttpClient client = HttpClient.newHttpClient();
+        URI serverURI = URI.create(basepath + path);
+        HttpRequest req = HttpRequest.newBuilder()
+                .uri(serverURI)
+                .header("Accept", "application/json")
+                .GET()
+                .timeout(Duration.ofMillis(timeoutMillis))
+                .build();
+        try {
+            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+            return res;
+        } catch (IOException | InterruptedException ex) {
+            System.out.println("Connection to server failed: timeout");            
+        }
+        return null;
+    }
+    
     public JSONArray getJSONArray(String path) {
         HttpResponse<String> res = get(path);
         JSONArray array = new JSONArray(res.body());
@@ -45,24 +66,9 @@ public class Services {
     
     public JSONObject getJSONObject(String path) {
         HttpResponse<String> res = get(path);
-        JSONObject object = new JSONObject(res.body());
-        return object;
-    }
-    
-    public HttpResponse<String> get(String path) {
-        HttpClient client = HttpClient.newHttpClient();
-        URI serverURI = URI.create(path);
-        HttpRequest req = HttpRequest.newBuilder()
-                .uri(serverURI)
-                .header("Accept", "application/json")
-                .GET()
-                .timeout(Duration.ofMillis(300))
-                .build();
-        try {
-            HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
-            return res;
-        } catch (IOException | InterruptedException ex) {
-            System.out.println("Connection to server failed: timeout");            
+        if (res != null) {
+            JSONObject object = new JSONObject(res.body());
+            return object;
         }
         return null;
     }

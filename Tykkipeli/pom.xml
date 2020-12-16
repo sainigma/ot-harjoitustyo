@@ -193,18 +193,19 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.3</version>
                 <configuration>
+                    <includes>
+                        <include>game/components/Animator*</include>
+                        <include>game/components/templates/Mortar*</include>
+                        <include>game/components/animation/*</include>
+                        <include>game/logic/BaseGame*</include>
+                        <include>game/logic/controllers/*</include>
+                        <include>game/simulations/*</include>
+                        <include>game/simulations/cases/*</include>
+                        <include>game/utils/*</include>
+                    </includes>
                     <excludes>
-                        <exlude>game/Main*</exlude>
-                        <exclude>game/graphics/*</exclude>
                         <exclude>game/utils/Input*</exclude>
-                        <exclude>game/components/GameObject*</exclude>
-                        <exclude>game/components/Level*</exclude> 
-                        <exclude>game/components/ViewPort*</exclude>
-                        <exclude>game/components/templates/MapScreen*</exclude>
-                        <exclude>game/components/Anim*</exclude>
-                        <exclude>game/components/Clip*</exclude>
-                        <exclude>game/components/Frame*</exclude>
-                        
+                        <exclude>game/logic/controllers/EndLogic*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

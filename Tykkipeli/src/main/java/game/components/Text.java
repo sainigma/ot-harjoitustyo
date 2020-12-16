@@ -82,6 +82,8 @@ public class Text implements DrawCallInterface{
             return cValue - 65 + 48;
         } else if (letterMap.containsKey(c)) {
             return letterMap.get(c);
+        } else {
+            System.out.println("unmapped character: " + c + ", code: " + cValue);
         }
         return 15;
     }
@@ -165,6 +167,7 @@ public class Text implements DrawCallInterface{
     }
 
     private void fillLetterMap() {
+        letterMap.put(' ', 15);
         letterMap.put('ä', 42);
         letterMap.put('ö', 43);
         letterMap.put('Ä', 74);

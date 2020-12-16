@@ -2,7 +2,6 @@
     "name":"Eka kenttä",
     "descr":"Kuvaus tähän",
     "type":"game",
-    "next":"e1m2",
     "magazine":{
         "light":20,
         "medium":34,

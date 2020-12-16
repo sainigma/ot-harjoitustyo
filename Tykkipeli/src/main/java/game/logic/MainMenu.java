@@ -9,6 +9,7 @@ import game.components.Text;
 import game.components.templates.MainMenuScreen;
 import game.graphics.Renderer;
 import game.utils.InputManager;
+import game.utils.Timing;
 
 /**
  *
@@ -17,13 +18,12 @@ import game.utils.InputManager;
 public class MainMenu implements LogicInterface {
     Renderer renderer = null;
     InputManager inputs = null;
+    private Timing timing;
     
     private LogicInterface parent;
     private boolean nextReadyToSpawn = false;
     private String nextLogicName = "";
     
-    private long lastTime;
-    private long timer = 0;
     private boolean initialized = false;
     double deltatimeMillis = 0;
     MainMenuScreen menuScreen;
@@ -37,6 +37,7 @@ public class MainMenu implements LogicInterface {
     };
     
     public MainMenu() {
+        timing = new Timing();
         menuScreen = new MainMenuScreen("mainmenu");
         menuScreen.setVisible(false);
         text = new Text();
@@ -59,7 +60,7 @@ public class MainMenu implements LogicInterface {
     private boolean intro = false;
     private boolean uiActive = false;
     private void updateGUI() {
-        if (!intro && timer > 16 * 3) {
+        if (!intro && timing.getTimer() > 16 * 3) {
             renderer.setBackground(249f / 255f, 240f / 255f, 223f / 255f);
             intro = true;
             menuScreen.enter();
@@ -88,7 +89,7 @@ public class MainMenu implements LogicInterface {
                         next("baseGame");
                         break;
                     case 1:
-                        next("highscore");
+                        next("highscores");
                         break;
                     case 2:
                        next("close");
@@ -119,16 +120,7 @@ public class MainMenu implements LogicInterface {
         }
     }
     
-    private void getDeltatimeMillis() {
-        long time = System.nanoTime() / 1000000;
-        if (lastTime > 0) {
-            deltatimeMillis = (double) (time - lastTime);
-        }
-        timer += deltatimeMillis;
-        lastTime = time;
-    }
-    
-    private void _update() {
+    private void updateLogic() {
         if (!initialized) {
             if (menuScreen.isInitialized()) {
                 initialized = true;
@@ -139,15 +131,15 @@ public class MainMenu implements LogicInterface {
    
     @Override
     public void update() {
-        getDeltatimeMillis();
-        _update();
+        deltatimeMillis = timing.getDeltatimeMillis();
+        updateLogic();
         updateGUI();
     }
 
     @Override
     public void update(double dtMillis) {
         deltatimeMillis = dtMillis;
-        _update();
+        updateLogic();
     }
     
     private LogicInterface spawnLogic(String name) {
@@ -155,6 +147,9 @@ public class MainMenu implements LogicInterface {
         switch (name) {
             case "baseGame":
                 newLogic = new BaseGame();
+                break;
+            case "highscores":
+                newLogic = new HighScores();
                 break;
             case "close":
                 renderer.close();

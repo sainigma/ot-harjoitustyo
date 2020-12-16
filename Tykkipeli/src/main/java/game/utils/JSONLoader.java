@@ -29,4 +29,7 @@ public class JSONLoader {
             return null;
         }
     }
+    public boolean save(JSONObject object) {
+        return false;
+    }
 }

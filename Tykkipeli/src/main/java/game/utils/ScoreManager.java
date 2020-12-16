@@ -11,6 +11,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -18,7 +19,7 @@ import org.json.JSONArray;
  */
 public class ScoreManager {
     Services services = new Services();
-    String basePath = "http://192.168.0.100/api/tykkipeli/";
+    String basePath = "tykkipeli/";
     String key = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJAT56gluyCXd78b3+35xl/nJSE3ryxRAR3a0ECsHSsd+UNKSkRY/qvXiLlNrhxIut45KqFBXQIhjfrcbRnSawcCAwEAAQ==";
     private int statusCode = 0;
     
@@ -66,6 +67,15 @@ public class ScoreManager {
             System.out.println("Invalid key!");
             return null;
         }
+    }
+    
+    public JSONObject getLocalScores() {
+        JSONLoader loader = new JSONLoader("");
+        return loader.read("scores");
+    }
+    
+    public JSONObject getGlobalScores() {
+        return services.getJSONObject(basePath);
     }
     
     public JSONArray getScores(String level) {
