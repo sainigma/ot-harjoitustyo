@@ -292,7 +292,6 @@ public class BaseGame implements LogicInterface {
         }
         if (inputs.keyDownOnce("quit")) {
             lost = true;
-            
         }
         rotateMap(speedModifier);
     }
@@ -364,6 +363,9 @@ public class BaseGame implements LogicInterface {
         for (TargetLogic target : targets) {
             target.update(deltatimeMillis);
             level.mapScreen.updateTarget(target);
+            if (target.hasWon()) {
+                lost = true;
+            }
         }
     }
     
@@ -532,7 +534,8 @@ public class BaseGame implements LogicInterface {
     
     private void spawnNext() {
         if (!lost) {
-            scoreManager.saveScore();            
+            scoreManager.setName(endLogic.getName());
+            scoreManager.saveScore();
         }
         renderer.setLogic(spawnLogic(nextLogicName));        
     }
@@ -557,6 +560,7 @@ public class BaseGame implements LogicInterface {
         }
         if (!endLogic.isActive()) {
             guiInitialized = false;
+            endLogic.setWinState(!lost);
             if (nextLevel.equals("close")) {
                 endLogic.finalStageReached();
             }
@@ -613,14 +617,13 @@ public class BaseGame implements LogicInterface {
     
     private void endConditions() {
         if (targetsLeft <= 0) {
-            endLogic.setWinState(true);
             endLevel();
         } else if (lost) {
-            endLogic.setWinState(false);
             endLevel();
         }
     }
     
+    private boolean notifiedOfEnding = false;
     /**
      * Logiikan sisäinen pääpäivitysmetodi. Kutsutaan julkisista update-metodeista.
      */
@@ -630,6 +633,16 @@ public class BaseGame implements LogicInterface {
             spawnNext();
             return;
         }
+        if (reloadLogic.isEmpty()) {
+            if (!notifiedOfEnding) {
+                notifiedOfEnding = true;
+                setMessage("Ampumatarvikkeet loppu!");
+            }
+            if (!mortarLogic.hasActiveSolvers() && targetsLeft > 0) {
+                lost = true;
+            }
+        }
+        
         if (guiInitialized && inputs == null) {
             return;
         }

@@ -180,13 +180,15 @@ public class ReloadLogic {
     public boolean isMovementBlocked() {
         return blockMovement;
     }
+    public boolean isEmpty() {
+        return magazine.isEmpty();
+    }
     public void startReload() {
         if (currentProjectile != null) {
             setMessage("Tykki on jo ladattu!");
             return;
         }
         if (magazine.isEmpty()) {
-                System.out.println("Ampumatarvikkeet loppu!");
                 blockMovement = false;
                 return;
             }

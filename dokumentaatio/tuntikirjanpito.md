@@ -28,5 +28,5 @@
 | 11.12 | 6 | Toteutin mainmenun, siirtymismekaniikan pelilogiikkojen välillä sekä latausruudut. Tuki usealle näyttötilalle.
 | 14.12 | 8 | Tekstuuriatlas -tyyppisen tekstinpiirron toteutus, projektin refaktorointia. Käyttöliittymien ja käyttäjälle viestimisen toteutusta ja hienosäätöä, ominaisuuksien siirtoa komentolinjalta GUI:hin. Pelin lopetuslogiikan ja käyttöliittymän alustusta.
 | 15.12 | 8 | Pelin lopetuslogiikan työstämistä, lopetusruudun työstöä. Projektin refaktorointia. Pistetallentimen alustusta. Reittien tekoa serverikommunikointiin, salauskirjastoihin tutustumista, backendin tekoa. Tuuli vaikuttaa projektiiliin, nopeus ja suuruus haetaan ilmatieteenlaitoksen rajapinnasta (backendin kautta, koska rajapinta sylkee paljon dataa)
-| 16.12 | 4 | Pistetallentimen viimeistelyä. Highscorenäkymän tekemistä, pisteet haetaan näkymään sekä paikallisesta arkistosta sekä netistä. Refaktorointia.
-| yht | 138 | |
+| 16.12 | 6 | Pistetallentimen viimeistelyä. Highscorenäkymän tekemistä, pisteet haetaan näkymään sekä paikallisesta arkistosta sekä netistä. Refaktorointia. Pelin lopetusruudun hienosäätöä, nimensyöttö. Projektin viimeistelyä toimintojen puolesta.
+| yht | 140 | |

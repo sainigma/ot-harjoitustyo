@@ -165,7 +165,7 @@ public class HighScores implements LogicInterface {
         } else if (inputs.keyDownOnce("left")) {
             shiftView(640f);
         }
-        if (inputs.keyDownOnce("previous") || inputs.keyDownOnce("quit")) {
+        if (inputs.keyDownOnce("previous") || inputs.keyDownOnce("quit") || inputs.keyDownOnce("ok")) {
             exit();
         }
     }

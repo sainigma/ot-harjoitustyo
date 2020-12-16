@@ -8,7 +8,11 @@ package game.utils;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import javax.crypto.Cipher;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,10 +31,14 @@ public class ScoreManager {
         String name;
         String level;
         int score;
-        public Score(String name, String level, int score) {
-            this.name = name.toUpperCase().substring(0, 3);
+        public Score(String level, int score) {
+            this.name = "AAA";
             this.level = level;
             this.score = score;
+        }
+        
+        public void setName(String name) {
+            this.name = name.toUpperCase().substring(0, 3);
         }
     }
     Score score;
@@ -42,7 +50,11 @@ public class ScoreManager {
     }
     
     public void setScore(int points, String level) {
-        score = new Score(getName(), level, points);
+        score = new Score(level, points);
+    }
+    
+    public void setName(String name) {
+        score.setName(name);
     }
     
     public void saveScore() {
@@ -59,17 +71,39 @@ public class ScoreManager {
         return scores;
     }
     
+    class levelScoreComparator implements Comparator <JSONArray> {
+        public int compare(JSONArray a, JSONArray b) {
+            return b.getInt(1) - a.getInt(1);
+        }
+    }
+    
+    private JSONArray sortLevelScores(JSONArray levelScores) {
+        JSONArray sortedArr = new JSONArray();
+        List list = new ArrayList<>();
+        for (Object item : levelScores) {
+            list.add((JSONArray) item);
+        }
+        Collections.sort(list, new levelScoreComparator());
+        for (Object item : list) {
+            sortedArr.put((JSONArray) item);
+        }
+        return sortedArr;
+    }
+    
     private void saveLocal() {
         JSONObject scores = getLocalScores();
         if (scores == null) {
             scores = createScores();
+        }
+        if (!scores.has(score.level)) {
+            scores.put(score.level, new JSONArray());
         }
         JSONArray newScore = new JSONArray();
         newScore.put(score.name);
         newScore.put(score.score);
         JSONArray levelScores = scores.getJSONArray(score.level);
         levelScores.put(newScore);
-        scores.put(score.level, levelScores);
+        scores.put(score.level, sortLevelScores(levelScores));
         
         JSONLoader loader = new JSONLoader("");
         loader.save(scores, "scores");

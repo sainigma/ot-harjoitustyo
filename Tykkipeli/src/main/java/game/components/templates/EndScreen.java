@@ -20,6 +20,8 @@ public class EndScreen extends GameObject {
     GameObject background;
     Text messenger;
     Text choises;
+    Text title;
+    Text nameEntry;
     int choise = 0;
     boolean winState = true;
     String [] winChoises = {"SEURAAVA KENTTÄ   lopeta", "seuraava kenttä   LOPETA"};
@@ -65,15 +67,21 @@ public class EndScreen extends GameObject {
         background.setDepth(40);
         messenger = new Text();
         choises = new Text();
+        title = new Text();
+        nameEntry = new Text();
+        title.translate(576, 280);
+        nameEntry.translate(576 + 48, 280 + 32);
+        nameEntry.setVisible(false);
         choises.translate(450, 360);
         choises.setVisible(false);
         messenger.translate(490, 168);
+        background.append(title);
+        background.append(nameEntry);
         background.append(choises);
         background.append(messenger);
         append(background);
         background.translate(0, 32 * 2);
         background.setDepth(1000);
-        setScore(new int[] {100,100});
     }
     
     public void setScore(int[] scores) {
@@ -82,12 +90,14 @@ public class EndScreen extends GameObject {
         int i = 0;
         for (int score : scores) {
             if (score >= 0) {
-                message += titles[i];
-                String scoreString = Integer.toString(score);
-                for (int j = scoreString.length(); j < 9; j++) {
-                    message += "0";
+                if (i < titles.length) {
+                    message += titles[i];
+                    String scoreString = Integer.toString(score);
+                    for (int j = scoreString.length(); j < 9; j++) {
+                        message += "0";
+                    }
+                    message += scoreString;
                 }
-                message += scoreString;
             }
             i++;
         }
@@ -127,8 +137,34 @@ public class EndScreen extends GameObject {
         }
     }
     
+    public void setNameEntryVisibility(boolean state) {
+        title.setVisible(state);
+        nameEntry.setVisible(state);
+        if (state) {
+            messenger.setVisible(false);
+            title.setContent("Syötä nimi");            
+            nameEntry.setContent("A");
+        } else {
+            messenger.setVisible(true);
+        }
+    }
+    
+    public void setNameEntry(String content) {
+        nameEntry.setContent(content);
+    }
+    
+    public void hideTitle() {
+        title.setVisible(false);
+    }
+    
     public void setWinState(boolean winState) {
         this.winState = winState;
+        System.out.println("asd");
+        if (winState) {
+            title.setContent(" VOITTO!  ");
+        } else {
+            title.setContent(" HÄVIÖ!!  ");
+        }
     }
     
     public int getChoise() {

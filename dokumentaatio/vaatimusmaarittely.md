@@ -28,8 +28,9 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Näkymä kentän lopettamiseen (MVP)
 - [x] Tuulen suunnan ilmaisu
 - [x] Hiscorenäkymä (MVP)
-- [ ] Lopetusnäkymän tahditus/silmäkarkki
-- [ ] Latausanimaatio tykille (MVP)
+- [x] Lopetusnäkymän tahditus/silmäkarkki
+- [ ] Kenttädatan salaus
+- [ ] Latausanimaatio tykille
 - [ ] Tykin jalustan lähimaasto taustaa nopeammin liikkuvalle layerille, parallax
 - [ ] Aktiivisen projektiilin alkuparametrien piirto karttanäkymään
 
@@ -58,10 +59,10 @@ MVP merkinnät omaan käyttöön, merkitsee minimum viable product -ominaisuuksi
 - [x] Pisteiden tallentaminen verkkoon
 - [x] Pelin päättyminen (MVP)
 - [x] Pisteiden tallentaminen lokaalisti (MVP)
-- [ ] Pisteiden järjestely
+- [x] Pisteiden järjestely
+- [ ] Häviöstate (maali pääsee karkuun/liian lähelle) (MVP)
 - [ ] Seuraavaan waypointtiin siirtyminen maalikappaleelle
 - [ ] Näppäinasetusten lataaminen tiedostosta
-- [ ] Häviöstate (maali pääsee karkuun/liian lähelle)
 - [ ] Hiiritapahtumien seuraaminen, klikattavat objektit
 
 ## Pelisilmukka

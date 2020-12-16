@@ -21,13 +21,19 @@ public class EndLogic {
     
     private boolean winState;
     
+    private boolean nameEntry = false;
+    private boolean confirmed = false;
+    private boolean animateScores = false;
     private boolean resolution = false;
     private String next = "";
     
+    private String name = "";
+    private int letterSelected = (int)'A';
+    
     private int scoreIndex = -1;
     private int scoreTarget;
-    private int[] scores = {-1, -1, -1, -1};
-    private int[] displayScores = {-1, -1, -1, -1};
+    private int[] scores = {-1, -1, -1, -1, -1};
+    private int[] displayScores = {-1, -1, -1, -1, -1};
     
     private boolean scoresFinished = false;
     
@@ -57,11 +63,16 @@ public class EndLogic {
         active = false;
     }
     
+    public String getName() {
+        return name;
+    }
+    
     public void setScores(int shipScore, int warheadScore, int chargeScore) {
         scores[0] = shipScore + 10000;
         scores[1] = warheadScore;
         scores[2] = chargeScore;
         scores[3] = scores[0] + scores[1] + scores[2];
+        scores[4] = 1000;
     }
     
     public void setWinState(boolean winState) {
@@ -73,23 +84,69 @@ public class EndLogic {
         endScreen.finalStageReached();
     }
     
+    private void acceptLetter() {
+        name += (char) letterSelected;
+        letterSelected = (int) 'A';
+        endScreen.setNameEntry(name + (char) letterSelected);
+        if (name.length() == 3) {
+            nameEntry = false;
+            endScreen.setNameEntryVisibility(false);
+            endScreen.enableChoises();
+        }
+    }
+    
+    private void processOK() {
+        if (!confirmed) {
+            confirmed = true;
+            endScreen.hideTitle();
+            if (winState) {
+                animateScores = true;
+            } else {
+                endScreen.enableChoises();
+                scoresFinished = true;
+            }
+            return;
+        }
+        if (!scoresFinished) {
+            nextScore();                
+        } else if (nameEntry) {
+            acceptLetter();
+        } else {
+            setNext();
+        }
+    }
+    
+    private void processHorizontal(int direction) {
+        if (nameEntry) {
+            letterSelected += direction;
+            if (letterSelected < (int) 'A') {
+                letterSelected = (int) 'Z';
+            } else if (letterSelected > (int) 'Z') {
+                letterSelected = (int) 'A';
+            }
+            endScreen.setNameEntry(name + (char) letterSelected);
+            return;
+        }
+        if (scoresFinished && !resolution) {
+            if (direction > 0) {
+                endScreen.choiseIncrement();
+            } else {
+                endScreen.choiseDecrement();
+            }
+        }
+    }
+    
     private void endControls() {
         if (!active) {
             return;
         }
         if (inputs.keyDownOnce("ok")) {
-            if (!scoresFinished) {
-                nextScore();                
-            } else {
-                setNext();
-            }
+            processOK();
         }
-        if (scoresFinished && !resolution) {
-            if (inputs.keyDownOnce("right")) {
-                endScreen.choiseIncrement();
-            } else if (inputs.keyDownOnce("left")) {
-                endScreen.choiseDecrement();
-            }
+        boolean left = inputs.keyDownOnce("left");
+        boolean right = inputs.keyDownOnce("right");
+        if (left || right) {
+            processHorizontal(left ? -1 : 1);
         }
     }
     
@@ -127,12 +184,13 @@ public class EndLogic {
             scoreAnimator.enter();
         } else {
             scoresFinished = true;
-            endScreen.enableChoises();
+            endScreen.setNameEntryVisibility(true);
+            nameEntry = true;
         }
     }
     
     private void animateScores(double deltatimeMillis) {
-        if (scoresFinished) {
+        if (scoresFinished || !animateScores) {
             return;
         }
         if (!scoreAnimator.animating()) {

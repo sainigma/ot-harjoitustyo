@@ -36,6 +36,8 @@ public class TargetLogic {
     
     private double sinkAngle = 0f;
     
+    private boolean victory = false;
+    
     public TargetLogic(String name) {
         this.name = name;
         this.waypoints = new ArrayList<>();
@@ -90,11 +92,19 @@ public class TargetLogic {
             position.x += deltaSpace * direction.x;
             position.y += deltaSpace * direction.y;
             position.z += deltaSpace * direction.z;
-        } else if (position.z > -200f) {
+            
+            if (position.magnitude() < range) {
+                victory = true;
+            }
+        } else if (position.z > -2000f) {
             position.z -= 0.2f;
         } else {
             active = false;
         }
+    }
+    
+    public boolean hasWon() {
+        return victory;
     }
     
     public void update(double deltatimeMillis) {
