@@ -71,6 +71,8 @@ public class InputManager {
         
         keyMap.put(GLFW_KEY_R, new String[]{"reload"});
         
+        keyMap.put(GLFW_KEY_H, new String[]{"help"});
+        
         keyMap.put(GLFW_KEY_LEFT_SHIFT, new String[]{"modifier faster"});
         keyMap.put(GLFW_KEY_LEFT_CONTROL, new String[]{"modifier slower"});
         keyMap.put(GLFW_KEY_RIGHT_SHIFT, new String[]{"modifier faster"});

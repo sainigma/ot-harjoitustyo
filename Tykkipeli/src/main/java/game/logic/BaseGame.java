@@ -5,6 +5,7 @@
  */
 package game.logic;
 
+import game.components.GameObject;
 import game.logic.controllers.*;
 import game.components.Level;
 import game.components.Text;
@@ -56,11 +57,14 @@ public class BaseGame implements LogicInterface {
     
     private double deltatimeMillis;
     
+    private boolean instructionsVisible = false;
+    private GameObject instructionsBackground;
     private int score = 0;
     private float scoreTarget;
     private float tempScore;
     private Text scoreDisplay;
     private Text windDisplay;
+    private Text instructions;
     private PID scorePID = new PID(0.05f, 0, 0.5f, 1f);
     
     private Text messenger;
@@ -94,12 +98,6 @@ public class BaseGame implements LogicInterface {
         }
     }
     
-    /**
-     * Luokan alustusmetodi joka kutsutaan konstruktorista.
-     * Kutsuu lapsiobjektien luonnin, hakee kentän parametrit tiedostosta, sekä asettaa em. parametrit lapsiobjekteihin.
-     * Lisäksi kutsuu maaliobjektien spawnaamisen kenttäparametrien perusteella.
-     * @param name 
-     */
     private void loadLevel(String name) {
         timing = new Timing();
         currentLevel = name;
@@ -107,6 +105,7 @@ public class BaseGame implements LogicInterface {
         targetsLeft = 0;
         targets = new ArrayList<>();
         spawnLevel();
+        instructionsBackground = new GameObject("instructionsBackground", "background/instructionBackground.png", new Vector3d(), 1f) { };
         spawnMessengers();
         spawnObjects();
         setWind();
@@ -138,16 +137,9 @@ public class BaseGame implements LogicInterface {
         mortarLogic.setWind(speed, direction);
     }
     
-    private void spawnMessengers() {
-        scoreDisplay = new Text();
-        messenger = new Text();
-        windDisplay = new Text();
-        windDisplay.translate(8, 720 - 32);
-        scoreDisplay.translate(8, 8);
-        messenger.translate(8, 32 + 8);
-        level.mapScreen.overlay.append(windDisplay);
-        level.mapScreen.overlay.append(scoreDisplay);
-        level.mapScreen.overlay.append(messenger);
+    private void toggleInstructions() {
+        instructionsVisible = !instructionsVisible;
+        instructionsBackground.setVisible(instructionsVisible);
     }
     
     private void spawnLevel() {
@@ -162,15 +154,32 @@ public class BaseGame implements LogicInterface {
         screenShaker = new ScreenShaker();
         mortarLogic = new MortarLogic();
         reloadLogic = new ReloadLogic(mortarLogic, level.mortar, level.reloadScreen);
+        instructionsBackground.setDepth(100);
+        instructionsBackground.translate(850, 8);
+        instructionsBackground.setVisible(instructionsVisible);
+        level.mapScreen.overlay.append(instructionsBackground);
         reloadLogic.setMessenger(messenger);
         endLogic = new EndLogic(level.endScreen);
         scoreManager = new ScoreManager();
     }
     
-    /**
-     * Luo maaliobjektit kenttäparametreista saadun listan perusteella.
-     * @param ships Kenttäparametrien ships-avaimella määritelty lista
-     */
+    private void spawnMessengers() {
+        scoreDisplay = new Text();
+        messenger = new Text();
+        instructions = new Text();
+        windDisplay = new Text();
+        windDisplay.translate(8, 720 - 32);
+        scoreDisplay.translate(8, 8);
+        instructions.translate(8, 8);
+        messenger.translate(8, 32 + 8);
+        messenger.setContent("Paina H avataksesi ohjeet");
+        instructions.setContent("Kontrollit\nYLEISET \n nuolet  valinta\n  ENTER  ok\nTYKKI\n nuolet  liikutus\n  SHIFT  nopeutus\n   CTRL  hidastus\n   VÄLI  laukaisu\n      R  lataus\nMUUT         \n   M  iso karttanäkymä\n Q&E  kartan pyöritys\n   H  näytä/piilota ohje\n F10  luovuta");
+        level.mapScreen.overlay.append(windDisplay);
+        level.mapScreen.overlay.append(scoreDisplay);
+        level.mapScreen.overlay.append(messenger);
+        instructionsBackground.append(instructions);
+    }
+
     private void spawnTargets(JSONArray ships) {
         for (Object ship : ships) {
             targetsLeft += 1;
@@ -192,9 +201,6 @@ public class BaseGame implements LogicInterface {
         reloadLogic.setInputManager(this.inputs);
     }
     
-    /**
-     * Ruuduntärisytysmetodi. Hakee tärisytyskertoimen tykin animaatioista, sekä aktivoi itse tärinän jos aktiivisten solvereiden määrä on laskenut.
-     */
     private int lastSolversActive = 0;
     private void shakeScreen() {
         int solversActive = mortarLogic.activeSolvers.size();
@@ -216,10 +222,6 @@ public class BaseGame implements LogicInterface {
         }        
     }
     
-    /**
-     * Nopeuttaa/hidastaa asioita ruudunpäivitysnopeuden sekä nopeutus/hidastusnappien perusteella.
-     * @return 
-     */
     private float getSpeedModifier() {
         float framerateCoeff = (float) (16f / deltatimeMillis); //1 when 60fps
         float speedModifier = framerateCoeff;
@@ -231,10 +233,6 @@ public class BaseGame implements LogicInterface {
         return speedModifier;
     }
     
-    /**
-     * Tykin liikutuskontrollit vaakasuunnassa, aina voimassa.
-     * @param speedModifier 
-     */
     private void traverse(float speedModifier) {
         if (reloadLogic.isMovementBlocked() && level.mapScreen.isMinimized()) {
             return;
@@ -248,10 +246,6 @@ public class BaseGame implements LogicInterface {
         level.mapScreen.setTraversal(-level.mortar.getTraversal());
     }
     
-    /**
-     * Pelin kontrollit päänäkymän ollessa aktiivisena. Nostaa/siirtää tykkiä jos tulitusanimaatio ei ole voimassa.
-     * @param speedModifier ruudunpäivitysnopeudesta ja nopeutusnapeista riippuva kerroin
-     */
     private void gameControls(float speedModifier) {
         if (!gunMovementActive || level.mortar.animator.isPlaying("mortar/firing") || reloadLogic.isMovementBlocked()) {
             return;
@@ -265,10 +259,6 @@ public class BaseGame implements LogicInterface {
         traverse(speedModifier);
     }
     
-    /**
-     * Pelin kontrollit karttanäkymän ollessa aktiivinen.
-     * @param speedModifier 
-     */
     private void mapControls(float speedModifier) {
         traverse(speedModifier);
         if (inputs.keyDownOnce("reload")) {
@@ -279,10 +269,6 @@ public class BaseGame implements LogicInterface {
         }
     }
     
-    /**
-     * Pelin jaetut kontrollit, eli kontrollit jotka ovat voimassa näkymästä riippumatta.
-     * @param speedModifier 
-     */
     private void sharedControls(float speedModifier) {
         if (inputs.keyDownOnce("fire")) {
             fire();
@@ -293,13 +279,12 @@ public class BaseGame implements LogicInterface {
         if (inputs.keyDownOnce("quit")) {
             lost = true;
         }
+        if (inputs.keyDownOnce("help")) {
+            toggleInstructions();
+        }
         rotateMap(speedModifier);
     }
     
-    /**
-     * Kontrollit mini- ja pääkartan pyörittämiseen.
-     * @param speedModifier 
-     */
     private void rotateMap(float speedModifier) {
         if (!level.mapView.isVisible()) {
             return;
@@ -356,9 +341,6 @@ public class BaseGame implements LogicInterface {
         mapControls(speedModifier);
     }
     
-    /**
-     * Päivittää maaliobjektien sijainnin ja jakaa sen karttanäkymälle.
-     */
     private void updateTargets() {
         for (TargetLogic target : targets) {
             target.update(deltatimeMillis);
@@ -369,9 +351,6 @@ public class BaseGame implements LogicInterface {
         }
     }
     
-    /**
-     * Tarkistaa onko tykkilogiikalla osumia valmiina. Jos on, vastaanottaa ne ja lähettää ne eteenpäin tarkastettaviksi. Osuman vastaanottaminen poistaa osuman tykkilogiikasta.
-     */
     private void getHits() {
         if (mortarLogic.hasHits()) {
             ArrayList<Statistic> hits = new ArrayList<>();
@@ -381,12 +360,7 @@ public class BaseGame implements LogicInterface {
             checkHits(hits);
         }
     }
-    /**
-     * Vertailee jokaista vastaanotettua osumaa jokaiselle maalille.
-     * Maksimivahinko tarkastetaan projektiilin painon perusteella, minimissään se on 150.
-     * For-for, mutta käytännössä O(n) koska osumia kerrallaan 1-2. Jatkototeutuksessa olisi hyvä korvata esim. sweep&prune algoritmilla.
-     * @param hits 
-     */
+    
     private void checkHits(ArrayList<Statistic> hits) {
         for (Statistic hit : hits) {
             double maxDamage = hit.getPower() * 150f;
@@ -467,16 +441,6 @@ public class BaseGame implements LogicInterface {
         messenger.setContent(message);
     }
     
-    /**
-     * Osuman tarkastelu yksittäiselle maalille. 
-     * Tarkastaa etäisyyden osumasta maaliin, ja tarjoilee mallille vahinkoa jos osuma on maksimietäisyyttä pienempi.
-     * Vahingon määrä laskee etäisyyden neliönä, maksimietäisyydessä sen ollessa 0.
-     * Tarkastus pysäytetään jos maali ei ole aktiivinen.
-     * @param target
-     * @param hitPosition
-     * @param maxDamage
-     * @param maxDistance 
-     */
     private void damageTarget(TargetLogic target, Statistic hit, double maxDamage, double maxDistance) {
         if (target.getHealth() < 0f) {
             return;
@@ -547,9 +511,6 @@ public class BaseGame implements LogicInterface {
         hasNext = true;
     }
     
-    /**
-     * Keskeneräinen metodi, lopullisessa versiossa tarjoilee käyttäjälle käyttöliittymän seuraavaan kenttään siirtymiseen tai pelin lopettamiseen.
-     */
     private void endLevel() {
         if (endLogic.hasResolution()) {
             if (endLogic.isActive()) {
@@ -580,9 +541,6 @@ public class BaseGame implements LogicInterface {
         animateScore();
     }
     
-    /**
-     * Päivittää solverien muutokset karttanäkymälle.
-     */
     private boolean historyDebouncer;    
     private void linkMapscreenToSolvers() {
         if (mortarLogic.hasActiveSolvers()) {
@@ -597,9 +555,6 @@ public class BaseGame implements LogicInterface {
         }        
     }
     
-    /**
-     * Käyttöliittymästä riippuva päivityslogiikan osa.
-     */
     private void updateGUI() {
         if (!guiInitialized) {
             return;
@@ -624,9 +579,6 @@ public class BaseGame implements LogicInterface {
     }
     
     private boolean notifiedOfEnding = false;
-    /**
-     * Logiikan sisäinen pääpäivitysmetodi. Kutsutaan julkisista update-metodeista.
-     */
     private void updateLogic() {
         if (hasNext) {
             hasNext = false;

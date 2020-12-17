@@ -75,6 +75,15 @@ public class Magazine {
         }
         return 0;
     }
+
+    public String warHeadStatus() {
+        return " Raskaita " + warheads[2] + "\n Puoliraskaita " + warheads[1] + "\n Kevyitä " + warheads[0];
+    }
+    
+    public String chargeStatus() {
+        return " Panoksia jäljellä " + cartouches;
+    }
+    
     public String toString() {
         return "Magazine status: " + warheads[0] + " light, " + warheads[1] + " medium, " + warheads[2] + " heavy warheads, " + cartouches + " charges left.";
     }

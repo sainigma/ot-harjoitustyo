@@ -35,7 +35,7 @@ public class BackgroundCoast extends GameObject {
     @Override
     public void setRotation(float r) {
         float factor = (r % 360) / 360;
-        background.setTexOffset(factor + 0.465f, 0);
+        background.setTexOffset(factor + 0.65f, 0);
     }
     @Override
     public void update() {

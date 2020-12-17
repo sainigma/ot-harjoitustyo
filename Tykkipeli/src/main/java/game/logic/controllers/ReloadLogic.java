@@ -56,6 +56,14 @@ public class ReloadLogic {
         messenger.setContent(message);
     }
     
+    private void displayGrenadeStatus() {
+        setMessage("Valitse kranaatti\n" + magazine.warHeadStatus());
+    }
+    
+    private void displayChargeStatus() {
+        setMessage("Valitse latauspanos\n" + magazine.chargeStatus());
+    }
+    
     public void setMagazine(int light, int medium, int heavy, int charges) {
         this.magazine = new Magazine(light, medium, heavy, charges);
     }
@@ -131,7 +139,7 @@ public class ReloadLogic {
             }
             reloadUpdate = false;
             reloadScreen.setCharges(3 - reloadIndex);
-            setMessage("Valitse latauspanos");       
+            displayChargeStatus();       
         }
         reloadSelector(cartouches.length);
         
@@ -142,12 +150,12 @@ public class ReloadLogic {
             reload();
         }
         if (inputs.keyDownOnce("previous")) {
-            setMessage("Valitse kranaatti");
             prevCartouche = reloadIndex;
             magazine.addWarhead(prevWarhead);
             reloadScreen.setCharges(0);
             currentProjectile = null;
             allowRoll = true;
+            displayGrenadeStatus();
         }
     }
     
@@ -184,8 +192,10 @@ public class ReloadLogic {
         return magazine.isEmpty();
     }
     public void startReload() {
-        if (currentProjectile != null) {
+        if (currentProjectile != null && reloadFinished) {
             setMessage("Tykki on jo ladattu!");
+            return;
+        } else if (!reloadFinished) {
             return;
         }
         if (magazine.isEmpty()) {
@@ -198,7 +208,7 @@ public class ReloadLogic {
 
         firstSelected = false;
         allowRoll = true;
-        setMessage("Valitse kranaatti");
+        displayGrenadeStatus();
         reloadUpdate = false;
         blockMovement = true;
         reloadFinished = false;
@@ -224,6 +234,7 @@ public class ReloadLogic {
     public void reset() {
         blockMovement = false;
         currentProjectile = null;
+        reloadFinished = true;
         reloadScreen.exit();
     }
     
