@@ -19,7 +19,7 @@ import game.utils.Vector3d;
  * @author suominka
  */
 
-public abstract class GameObject implements DrawCallInterface{
+public abstract class GameObject implements DrawCallInterface {
     public ArrayList<DrawCallInterface> children = new ArrayList<>();
     private Sprite sprite;
     
@@ -297,7 +297,7 @@ public abstract class GameObject implements DrawCallInterface{
     /**
      * Sisäinen piirtometodi. Kutsuu rekursiivisesti päivityksen lapsille ja n-lapsille, päivittää lopuksi oman spriten muunnoksen ja kutsuu piirron.
      */
-    private void _draw() {
+    private void drawCall() {
         if (!visible) {
             for (DrawCallInterface child : children) {
                 child.update();
@@ -326,7 +326,7 @@ public abstract class GameObject implements DrawCallInterface{
         } else if (active) {
             update();
             propagate();
-            _draw();                
+            drawCall();                
         }
     }
     /**

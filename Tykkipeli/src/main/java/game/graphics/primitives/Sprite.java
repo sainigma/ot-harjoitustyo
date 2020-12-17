@@ -27,15 +27,15 @@ public class Sprite extends ImmediateDrawer {
     public Sprite(TextureLoader loader, String path, Vector3d origin, float scale) {
         super();
         setScale(scale);
-        _load(loader, path, origin);
+        load(loader, path, origin);
     }
 
     public Sprite(TextureLoader loader, String path) {
         super();
-        _load(loader, path, new Vector3d(0));
+        load(loader, path, new Vector3d(0));
     }
     
-    private void _load(TextureLoader loader, String path, Vector3d origin) {
+    private void load(TextureLoader loader, String path, Vector3d origin) {
         texture = loader.loadTexture("./assets/textures/" + path);
         if (width == -1) {
             width = texture.getImageWidth();
@@ -56,7 +56,7 @@ public class Sprite extends ImmediateDrawer {
     }
     
     @Override
-    public void _draw() {
+    public void drawPrimitive() {
         int i = 0;
         float xOffset = (float) origin.x;
         float yOffset = (float) origin.y;

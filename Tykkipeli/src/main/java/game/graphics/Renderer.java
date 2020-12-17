@@ -9,12 +9,10 @@ import game.components.GameObject;
 import game.graphics.primitives.Sprite;
 import game.logic.LogicInterface;
 import game.utils.InputManager;
-import game.utils.Vector3d;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.GLFW_DECORATED;
-import static org.lwjgl.glfw.GLFW.GLFW_FOCUS_ON_SHOW;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
@@ -47,7 +45,6 @@ import static org.lwjgl.opengl.GL11.glAlphaFunc;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
@@ -64,10 +61,10 @@ public class Renderer {
     ArrayList<GameObject> objects;
     LogicInterface logic = null;
     InputManager inputs;
-    float[] clearColor = new float[]{0,0,0,1}; 
+    float[] clearColor = new float[]{0, 0, 0, 1}; 
     private TextureLoader texLoader;
     private long window;
-    private int resoX,resoY;
+    private int resoX, resoY;
     private boolean alive = true;
     private boolean loading = true;
     private boolean windowed = true;
@@ -76,7 +73,7 @@ public class Renderer {
     String windowname;
     Sprite loadingScreen;
     
-    public Renderer(){
+    public Renderer() {
         resoX = 1280;
         resoY = 720;
         windowname = "Tykkipeli";
@@ -90,7 +87,7 @@ public class Renderer {
         this.fullscreen = fullscreen;
     }
     
-    public void setLogic(LogicInterface logic){
+    public void setLogic(LogicInterface logic) {
         if (logic == null) {
             return;
         }
@@ -106,40 +103,40 @@ public class Renderer {
         
     }
     
-    public void appendToRenderQueue(GameObject object){
+    public void appendToRenderQueue(GameObject object) {
         objects.add(object);
     }
     
-    public void removeFromRenderQueue(GameObject object){
+    public void removeFromRenderQueue(GameObject object) {
         objects.remove(object);
     }
     
-    public void setBackground(float r, float g, float b){
-        clearColor = new float[]{r,g,b,1};
+    public void setBackground(float r, float g, float b) {
+        clearColor = new float[]{r, g, b, 1};
         if (initialized) {
-            glClearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
+            glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
         }
     }
     
-    public void run(){
+    public void run() {
         init();
         initObjects();
         loop();
         kill();
     }
     
-    private void initObjects(){
-        for(GameObject object : objects){
+    private void initObjects() {
+        for (GameObject object : objects) {
             object.setTextureLoader(texLoader);
         }
     }
     
-    private void updateObjects(){        
+    private void updateObjects() {        
         if (logic != null) {
             logic.update();
         }
         if (!loading) {
-            for(GameObject object : objects){
+            for (GameObject object : objects) {
                 object.draw();
             }
             if (inputs != null) {
@@ -150,9 +147,9 @@ public class Renderer {
         }
     }
     
-    private void init(){
+    private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
-        if(!glfwInit()){
+        if (!glfwInit()) {
             throw new IllegalStateException("oof");
         }
         
@@ -162,24 +159,24 @@ public class Renderer {
             GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
             resoX = mode.width();
             resoY = mode.height();
-            window = glfwCreateWindow(resoX,resoY,windowname,NULL,NULL);
+            window = glfwCreateWindow(resoX, resoY, windowname, NULL, NULL);
         } else if (fullscreen) {
-            window = glfwCreateWindow(resoX,resoY,windowname,glfwGetPrimaryMonitor(),NULL);
+            window = glfwCreateWindow(resoX, resoY, windowname, glfwGetPrimaryMonitor(), NULL);
         } else {
-            window = glfwCreateWindow(resoX,resoY,windowname,NULL,NULL);
+            window = glfwCreateWindow(resoX, resoY, windowname, NULL, NULL);
         }
         
-        if(window == NULL){
+        if (window == NULL) {
             throw new RuntimeException("tuplaoof");
         }
-        try( MemoryStack stack = stackPush() ){
+        try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1);
             IntBuffer pHeight = stack.mallocInt(1);
             glfwGetWindowSize(window, pWidth, pHeight);
         }
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1);
-        glfwShowWindow(window);        
+        glfwShowWindow(window);
         
         GL.createCapabilities();
         glEnable(GL_TEXTURE_2D);
@@ -190,7 +187,7 @@ public class Renderer {
         glAlphaFunc(GL_GREATER, 0.5f);
         glMatrixMode(GL_PROJECTION);
         glOrtho(0, 1280, 720, 0, -2000, 2000);
-        glClearColor(clearColor[0],clearColor[1],clearColor[2],clearColor[3]);
+        glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
         
         texLoader = new TextureLoader();
         inputs = new InputManager(window);
@@ -204,16 +201,16 @@ public class Renderer {
         loading = state;
     }
     
-    private void loop(){
+    private void loop() {
         glMatrixMode(GL11.GL_MODELVIEW);
         glLoadIdentity();
-        while( !glfwWindowShouldClose(window) && alive ){
+        while (!glfwWindowShouldClose(window) && alive) {
             draw();
         }
     }
     
     private void draw() {
-        while( !glfwWindowShouldClose(window) && alive ){
+        while (!glfwWindowShouldClose(window) && alive) {
             glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);    
             
             updateObjects();                
@@ -223,7 +220,7 @@ public class Renderer {
         }
     }
     
-    private void kill(){
+    private void kill() {
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);   
         glfwTerminate();

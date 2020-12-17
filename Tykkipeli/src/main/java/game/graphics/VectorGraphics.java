@@ -74,7 +74,7 @@ abstract public class VectorGraphics extends ImmediateDrawer {
         }
     }
     @Override
-    public void _draw() {
+    public void drawPrimitive() {
         if (vertices == null) {
             return;
         }

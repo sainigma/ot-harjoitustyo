@@ -71,7 +71,7 @@ public class ScoreManager {
         return scores;
     }
     
-    class levelScoreComparator implements Comparator <JSONArray> {
+    class LevelScoreComparator implements Comparator<JSONArray> {
         public int compare(JSONArray a, JSONArray b) {
             return b.getInt(1) - a.getInt(1);
         }
@@ -83,9 +83,13 @@ public class ScoreManager {
         for (Object item : levelScores) {
             list.add((JSONArray) item);
         }
-        Collections.sort(list, new levelScoreComparator());
+        Collections.sort(list, new LevelScoreComparator());
+        int i = 0;
         for (Object item : list) {
-            sortedArr.put((JSONArray) item);
+            if (i < 16) {
+                sortedArr.put((JSONArray) item);
+            }
+            i++;
         }
         return sortedArr;
     }

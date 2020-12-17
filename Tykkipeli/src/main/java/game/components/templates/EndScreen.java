@@ -62,13 +62,18 @@ public class EndScreen extends GameObject {
         animatePosition(animator.animate(deltatimeMillis));
     }
     
-    public void init() {
+    private void spawnObjects() {
         background = new GameObject("endCard", "endView/placeholder.png", new Vector3d()) { };
-        background.setDepth(40);
         messenger = new Text();
         choises = new Text();
         title = new Text();
         nameEntry = new Text();
+    }
+    
+    public void init() {
+        spawnObjects();
+
+        background.setDepth(40);
         title.translate(576, 280);
         nameEntry.translate(576 + 48, 280 + 32);
         nameEntry.setVisible(false);

@@ -28,7 +28,7 @@ public class EndLogic {
     private String next = "";
     
     private String name = "";
-    private int letterSelected = (int)'A';
+    private int letterSelected = (int) 'A';
     
     private int scoreIndex = -1;
     private int scoreTarget;
@@ -151,7 +151,7 @@ public class EndLogic {
     }
     
     private void setNext() {
-        switch(endScreen.getChoise()) {
+        switch (endScreen.getChoise()) {
             case 0:
                 if (winState) {
                     next = "next";
@@ -176,7 +176,7 @@ public class EndLogic {
             return;
         }
         if (scoreIndex >= 0) {
-           displayScores[scoreIndex] = scores[scoreIndex];            
+            displayScores[scoreIndex] = scores[scoreIndex];            
         }
         scoreIndex++;
         if (scoreIndex < scores.length) {

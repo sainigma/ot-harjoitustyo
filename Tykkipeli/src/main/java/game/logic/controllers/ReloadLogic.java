@@ -101,6 +101,13 @@ public class ReloadLogic {
         }                    
     }
     
+    private void activateSelector() {
+        if (!firstSelected && (inputs.keyDownOnce("left") || inputs.keyDownOnce("right"))) {
+            firstSelected = true;
+            reloadScreen.setWarhead(reloadIndex);
+        }
+    }
+    
     private void chooseProjectile() {
         if (reloadUpdate) {
             while (!magazine.warheadAvailable(reloadIndex)) {
@@ -110,12 +117,18 @@ public class ReloadLogic {
             reloadUpdate = false;
             reloadScreen.setWarhead(reloadIndex);
         }
-        if (!firstSelected && (inputs.keyDownOnce("left") || inputs.keyDownOnce("right"))) {
-            firstSelected = true;
-            reloadScreen.setWarhead(reloadIndex);
-        }
+        activateSelector();
         reloadSelector(warheads.length);
         if (inputs.keyDownOnce("ok") && firstSelected) {
+            confirm(false);
+        }
+        if (inputs.keyDownOnce("previous")) {
+            cancel(true);
+        }
+    }
+    
+    private void confirm(boolean finishReload) {
+        if (!finishReload) {
             currentProjectile = new Projectile(magazine.getWarhead(reloadIndex), 0);
             if (!currentProjectile.initOk()) {
                 currentProjectile = null;
@@ -124,16 +137,30 @@ public class ReloadLogic {
             reloadIndex = prevCartouche;
             allowRoll = false;
             reloadUpdate = true;
+        } else {
+            currentProjectile.addCartouches(magazine.getCartouche(cartouches[reloadIndex]));
+            reloadScreen.exit();
+            prevCartouche = reloadIndex;
+            reload();
         }
-        if (inputs.keyDownOnce("previous")) {
+    }
+    
+    private void cancel(boolean cancelReload) {
+        if (cancelReload) {
             setMessage("");
             reset();
+        } else {
+            prevCartouche = reloadIndex;
+            magazine.addWarhead(prevWarhead);
+            reloadScreen.setCharges(0);
+            currentProjectile = null;
+            allowRoll = true;
+            displayGrenadeStatus();            
         }
     }
     
     private void chooseCartouches() {
         if (reloadUpdate) {
-            System.out.println(magazine.cartouchesLeft());
             while (cartouches[reloadIndex] > magazine.cartouchesLeft() && reloadIndex < 3) {
                 reloadIndex++;
             }
@@ -144,18 +171,10 @@ public class ReloadLogic {
         reloadSelector(cartouches.length);
         
         if (inputs.keyDownOnce("ok")) {
-            currentProjectile.addCartouches(magazine.getCartouche(cartouches[reloadIndex]));
-            reloadScreen.exit();
-            prevCartouche = reloadIndex;
-            reload();
+            confirm(true);
         }
         if (inputs.keyDownOnce("previous")) {
-            prevCartouche = reloadIndex;
-            magazine.addWarhead(prevWarhead);
-            reloadScreen.setCharges(0);
-            currentProjectile = null;
-            allowRoll = true;
-            displayGrenadeStatus();
+            cancel(false);
         }
     }
     
@@ -191,31 +210,36 @@ public class ReloadLogic {
     public boolean isEmpty() {
         return magazine.isEmpty();
     }
-    public void startReload() {
+    private boolean clearForReload() {
         if (currentProjectile != null && reloadFinished) {
             setMessage("Tykki on jo ladattu!");
-            return;
+            return false;
         } else if (!reloadFinished) {
-            return;
+            return false;
         }
         if (magazine.isEmpty()) {
-                blockMovement = false;
-                return;
-            }
-        reloadScreen.enter();
-        reloadScreen.setCharges(0);
-        reloadScreen.setWarhead(3);
+            blockMovement = false;
+            return false;
+        }
+        return true;
+    }
+    public void startReload() {
+        if (clearForReload()) {
+            reloadScreen.enter();
+            reloadScreen.setCharges(0);
+            reloadScreen.setWarhead(3);
 
-        firstSelected = false;
-        allowRoll = true;
-        displayGrenadeStatus();
-        reloadUpdate = false;
-        blockMovement = true;
-        reloadFinished = false;
-        mortar.setElevationTarget(0f);
-        mortar.setInclinometer(false);
+            firstSelected = false;
+            allowRoll = true;
+            displayGrenadeStatus();
+            reloadUpdate = false;
+            blockMovement = true;
+            reloadFinished = false;
+            mortar.setElevationTarget(0f);
+            mortar.setInclinometer(false);
 
-        reloadIndex = prevWarhead;
+            reloadIndex = prevWarhead;   
+        }
     }
     
     public void reloadControls() {

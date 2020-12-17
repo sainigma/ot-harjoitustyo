@@ -28,8 +28,8 @@ public abstract class ImmediateDrawer {
     }
     
     private void translate(Vector3d position) {
-        float inverseScale = (float)Math.pow(scale, -1);
-        GL11.glTranslated(position.x*inverseScale, position.y*inverseScale, position.z*inverseScale);
+        float inverseScale = (float) Math.pow(scale, -1);
+        GL11.glTranslated(position.x * inverseScale, position.y * inverseScale, position.z * inverseScale);
     }
 
     private void rotate(Vector3d rotation) {
@@ -45,14 +45,14 @@ public abstract class ImmediateDrawer {
         rotate(localRotation);
     }
     
-    public void _draw() {
+    public void drawPrimitive() {
     }
     
     public void draw() {
         GL11.glPushMatrix();
         GL11.glScalef(scale, scale, scale);
         transform();
-        _draw();
+        drawPrimitive();
         GL11.glPopMatrix();
     }
     
@@ -68,7 +68,7 @@ public abstract class ImmediateDrawer {
         this.globalPosition.set(position);
     }
     
-    public void setTransforms(Vector3d localPosition, Vector3d localRotation, Vector3d globalPosition, Vector3d globalRotation){
+    public void setTransforms(Vector3d localPosition, Vector3d localRotation, Vector3d globalPosition, Vector3d globalRotation) {
         this.localPosition.set(localPosition);
         this.localRotation.set(localRotation);
         this.globalPosition.set(globalPosition);

@@ -17,6 +17,7 @@ import game.utils.PID;
 import game.utils.ScoreManager;
 import game.utils.Services;
 import game.utils.Timing;
+import game.utils.StringTools;
 import game.utils.Vector3d;
 import java.util.ArrayList;
 import org.json.JSONArray;
@@ -67,6 +68,7 @@ public class BaseGame implements LogicInterface {
     private Text instructions;
     private PID scorePID = new PID(0.05f, 0, 0.5f, 1f);
     
+    private StringTools stringTools = new StringTools();
     private Text messenger;
     
     /**
@@ -100,16 +102,23 @@ public class BaseGame implements LogicInterface {
     
     private void loadLevel(String name) {
         timing = new Timing();
+        targets = new ArrayList<>();
         currentLevel = name;
         score = 0;
         targetsLeft = 0;
-        targets = new ArrayList<>();
-        spawnLevel();
         instructionsBackground = new GameObject("instructionsBackground", "background/instructionBackground.png", new Vector3d(), 1f) { };
+        
+        spawnLevel();
         spawnMessengers();
         spawnObjects();
+        
         setWind();
-        JSONObject levelData = new JSONLoader("assets/levels/").read(name);
+        loadLevelData();
+        level.mortar.setTraversal((float) (Math.random() * 90f));
+    }
+    
+    private void loadLevelData() {
+        JSONObject levelData = new JSONLoader("assets/levels/").read(currentLevel);
         JSONObject magazine = levelData.getJSONObject("magazine");
         nextLevel = levelData.has("next") ? levelData.getString("next") : "close";
         
@@ -120,7 +129,6 @@ public class BaseGame implements LogicInterface {
                 magazine.getInt("charges")
         );
         spawnTargets(levelData.getJSONArray("ships"));
-        level.mortar.setTraversal((float) (Math.random()*90f));
     }
     
     private void setWind() {
@@ -133,7 +141,7 @@ public class BaseGame implements LogicInterface {
         JSONObject wind = obj.getJSONObject("wind");
         double speed = wind.getDouble("speed");
         double direction = wind.getDouble("direction");
-        windDisplay.setContent("Tuuli  " + (int) speed + " mps suuntaan " + (int) direction +"°");
+        windDisplay.setContent("Tuuli  " + (int) speed + " mps suuntaan " + (int) direction + "°");
         mortarLogic.setWind(speed, direction);
     }
     
@@ -384,11 +392,7 @@ public class BaseGame implements LogicInterface {
     
     private void setScoreDisplay(int score) {
         String message = "Pisteet ";
-        String scoreString = Integer.toString(score);
-        for (int i = scoreString.length(); i < 9; i++) {
-            message += "0";
-        }
-        message += scoreString;
+        message += stringTools.padZeros(score, 9);
         scoreDisplay.setContent(message);
     }
     
@@ -397,19 +401,15 @@ public class BaseGame implements LogicInterface {
         String targetType = target.getName();
         float elevation = 0;
         float baseModifier = destroyed ? 1 : 0.5f;
-        switch (targetType) {
-            case "ironclad":
-                baseModifier *= 2f;
-                break;
-            case "lineship":
-                baseModifier *= 1.7f;
-                break;
-            case "windjammer":
-                baseModifier *= 1.5f;
-                break;
-            default:
-                break;
+        
+        if (targetType.equals("ironclad")) {
+            baseModifier *= 2f;
+        } else if (targetType.equals("lineship")) {
+            baseModifier *= 1.7f;
+        } else if (targetType.equals("windjammer")) {
+            baseModifier *= 1.5f;
         }
+        
         baseModifier *= (elevation + 40) / 105f;
         baseModifier *= 123f / mass;
         score += (int) (baseModifier * 1000f);
@@ -429,7 +429,7 @@ public class BaseGame implements LogicInterface {
             control = 100f;
         }
         tempScore += control;
-        setScoreDisplay((int)tempScore);
+        setScoreDisplay((int) tempScore);
         if (scoreTarget - tempScore < 1f) {
             scorePID.deactivate();
             scoreTarget = -1f;
@@ -441,29 +441,35 @@ public class BaseGame implements LogicInterface {
         messenger.setContent(message);
     }
     
-    private void damageTarget(TargetLogic target, Statistic hit, double maxDamage, double maxDistance) {
-        if (target.getHealth() < 0f) {
-            return;
-        }
-        Vector3d hitPosition = hit.getLastPosition();
-        Vector3d targetPos = target.getPosition();
-        double distance = new Vector3d(hitPosition.x - targetPos.x, hitPosition.z - targetPos.y, 0f).magnitude();
-        double damageFactor = distance / maxDistance;
-        if (damageFactor < 1f) {
-            double damage = maxDamage * (1 - Math.pow(damageFactor, 2));
-            target.reduceHealth((float) damage);
-            String message = "Osuma! " + (int) damage + " pistettä vahinkoa";
-            if (target.isSinking()) {
-                targetsLeft -= 1;
-                addScore(hit, target, true);
-                message += "\n" + target.getName() + " uppoaa";
-                if (targetsLeft > 0) {
-                    message += "\nkohteita jäljellä " + Integer.toString(targetsLeft);
-                }
-            } else {
-                addScore(hit, target, false);
+    private void hitMessage(int damage, String name, boolean sinks) {
+        String message = "Osuma! " + damage + " pistettä vahinkoa";
+        if (sinks) {
+            message += "\n" + name + " uppoaa";
+            if (targetsLeft > 0) {
+                message += "\nkohteita jäljellä " + Integer.toString(targetsLeft);
             }
-            setMessage(message);
+        }
+        setMessage(message);
+    }
+    
+    private void damageTarget(TargetLogic target, Statistic hit, double maxDamage, double maxDistance) {
+        if (target.getHealth() > 0f) {
+            Vector3d hitPosition = hit.getLastPosition(), targetPos = target.getPosition();
+            double distance = new Vector3d(hitPosition.x - targetPos.x, hitPosition.z - targetPos.y, 0f).magnitude();
+            double damageFactor = distance / maxDistance;
+            if (damageFactor < 1f) {
+                boolean sinks = false;
+                double damage = maxDamage * (1 - Math.pow(damageFactor, 2));
+                target.reduceHealth((float) damage);
+                if (target.isSinking()) {
+                    sinks = true;
+                    targetsLeft -= 1;
+                    addScore(hit, target, true);
+                } else {
+                    addScore(hit, target, false);
+                }
+                hitMessage((int) damage, target.getName(), sinks);
+            }
         }
     }
     /**
@@ -476,22 +482,12 @@ public class BaseGame implements LogicInterface {
     
     private LogicInterface spawnLogic(String name) {
         LogicInterface newLogic = null;
-        switch(name) {
-            case "next":
-                if (nextLevel.equals("close")) {
-                    newLogic = spawnLogic("close");
-                } else {
-                    newLogic = new BaseGame(nextLevel);
-                }
-                break;
-            case "replay":
-                newLogic = new BaseGame(currentLevel);
-                break;
-            case "close":
-                newLogic = new HighScores();
-                break;
-            default:
-                throw new IllegalArgumentException("Level identifier not found");
+        if (name.equals("close") || nextLevel.equals("close")) {
+            newLogic = new HighScores();
+        } else if (name.equals("replay")) {
+            newLogic = new BaseGame(currentLevel);
+        } else if (name.equals("next")) {
+            newLogic = new BaseGame(nextLevel);
         }
         return newLogic;
     }
@@ -511,6 +507,24 @@ public class BaseGame implements LogicInterface {
         hasNext = true;
     }
     
+    private void initEndLevelLogic() {
+        guiInitialized = false;
+        endLogic.setWinState(!lost);
+        if (nextLevel.equals("close")) {
+            endLogic.finalStageReached();
+        }
+        level.gameView.setVisible(true);
+        level.mapView.setMinimized(true);
+        Magazine magazine = reloadLogic.getMagazine();
+        int warheadScore = magazine.getWarheadsLeft(0) * 25 + magazine.getWarheadsLeft(1) * 200 + magazine.getWarheadsLeft(2) * 400;
+        int chargeScore = magazine.getChargesLeft() * 20;
+        endLogic.setScores(score, warheadScore, chargeScore);
+        scoreManager.setScore(score + warheadScore + chargeScore, currentLevel);
+        scoreDisplay.setVisible(false);
+        windDisplay.setVisible(false);
+        messenger.translate(0, -32);
+    }
+    
     private void endLevel() {
         if (endLogic.hasResolution()) {
             if (endLogic.isActive()) {
@@ -520,21 +534,7 @@ public class BaseGame implements LogicInterface {
             return;
         }
         if (!endLogic.isActive()) {
-            guiInitialized = false;
-            endLogic.setWinState(!lost);
-            if (nextLevel.equals("close")) {
-                endLogic.finalStageReached();
-            }
-            level.gameView.setVisible(true);
-            level.mapView.setMinimized(true);
-            Magazine magazine = reloadLogic.getMagazine();
-            int warheadScore = magazine.getWarheadsLeft(0) * 25 + magazine.getWarheadsLeft(1) * 200 + magazine.getWarheadsLeft(2) * 400;
-            int chargeScore = magazine.getChargesLeft() * 20;
-            endLogic.setScores(score, warheadScore, chargeScore);
-            scoreManager.setScore(score + warheadScore + chargeScore, currentLevel);
-            scoreDisplay.setVisible(false);
-            windDisplay.setVisible(false);
-            messenger.translate(0, -32);
+            initEndLevelLogic();
         }
         endLogic.update(deltatimeMillis);
         shakeScreen();        
@@ -576,15 +576,6 @@ public class BaseGame implements LogicInterface {
         } else if (lost) {
             endLevel();
         }
-    }
-    
-    private boolean notifiedOfEnding = false;
-    private void updateLogic() {
-        if (hasNext) {
-            hasNext = false;
-            spawnNext();
-            return;
-        }
         if (reloadLogic.isEmpty()) {
             if (!notifiedOfEnding) {
                 notifiedOfEnding = true;
@@ -593,6 +584,15 @@ public class BaseGame implements LogicInterface {
             if (!mortarLogic.hasActiveSolvers() && targetsLeft > 0) {
                 lost = true;
             }
+        }
+    }
+    
+    private boolean notifiedOfEnding = false;
+    private void updateLogic() {
+        if (hasNext) {
+            hasNext = false;
+            spawnNext();
+            return;
         }
         
         if (guiInitialized && inputs == null) {

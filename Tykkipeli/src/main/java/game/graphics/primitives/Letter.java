@@ -25,14 +25,14 @@ public class Letter extends ImmediateDrawer {
     Vector3d origin;
     
     public Letter(TextureLoader loader, String fontName) {
-        _load(loader, fontName);
+        load(loader, fontName);
     }
     
-    private void _load(TextureLoader loader, String fontName) {
+    private void load(TextureLoader loader, String fontName) {
         texture = loader.loadTexture("./assets/textures/fonts/" + fontName + ".png");
         width = texture.getImageWidth();
         height = texture.getImageHeight();
-        letterWidth = (int)(width / 16f);
+        letterWidth = (int) (width / 16f);
         float [][] v = {{0, 0}, {0, letterWidth}, {letterWidth, letterWidth}, {letterWidth, 0}};
         float [][] u = {{0, 0}, {0, 1 / 16f}, {1f / 16f, 1 / 16f}, {1f / 16f, 0}};
         vertices = v;
@@ -42,7 +42,7 @@ public class Letter extends ImmediateDrawer {
     }
     
     @Override
-    public void _draw() {
+    public void drawPrimitive() {
         int i = 0;
         float xOffset = (float) origin.x;
         float yOffset = (float) origin.y;
@@ -59,8 +59,8 @@ public class Letter extends ImmediateDrawer {
     }
     
     public void setIndex(int i) {
-        texOffset[0] = - (1 / 16f) * (i % 16);
-        texOffset[1] = - (1 / 16f) * (i / 16);
+        texOffset[0] = -(1 / 16f) * (i % 16);
+        texOffset[1] = -(1 / 16f) * (i / 16);
     }
 
     public void reset() {

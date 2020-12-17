@@ -14,7 +14,7 @@ public class Timing {
     private long lastTime;
     private double timer;
     
-    public Timing () {
+    public Timing() {
         lastTime = System.nanoTime() / 1000000;
         timer = 0;
     }

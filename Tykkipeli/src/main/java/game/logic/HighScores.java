@@ -12,6 +12,7 @@ import game.components.templates.ScreenShaker;
 import game.graphics.Renderer;
 import game.utils.InputManager;
 import game.utils.ScoreManager;
+import game.utils.StringTools;
 import game.utils.Timing;
 import game.utils.Vector3d;
 import java.io.File;
@@ -36,6 +37,8 @@ public class HighScores implements LogicInterface {
     JSONObject globalScores;
     ArrayList<String> levelList;
  
+    private StringTools stringTools = new StringTools();
+    
     private PIDAnimator animator = new PIDAnimator(0.015f, 0f, 0.4f, 100f);
     private Vector3d scoreRootStartPosition;
     private Vector3d scoreRootTargetPosition = new Vector3d();
@@ -70,22 +73,18 @@ public class HighScores implements LogicInterface {
         Collections.sort(levelList, String.CASE_INSENSITIVE_ORDER);
     }
     
+
+    
     private void setScoreList(String title, String level, Text scoreList, JSONObject scores) {
         String content = title;
         if (scores == null || !scores.has(level) || scores.getJSONArray(level).length() == 0) {
             content += "\n ei pisteitä";
         } else {
-            System.out.println(scores);
             for (Object singleScore : scores.getJSONArray(level)) {
                 JSONArray singleScoreArr = (JSONArray) singleScore;
                 try {
                     String name = singleScoreArr.getString(0);
-                    String points = Integer.toString(singleScoreArr.getInt(1));
-                    String zeros = "";
-                    for (int i = points.length(); i < 9; i++) {
-                        zeros += "0";
-                    }
-                    content += "\n" + name + "   " + zeros + points;                    
+                    content += "\n" + stringTools.padZeros(singleScoreArr.getInt(1), 9);
                 } catch (Exception e) {
                     throw new ClassCastException("Malformed score!");
                 }

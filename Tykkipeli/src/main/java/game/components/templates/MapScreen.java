@@ -231,21 +231,26 @@ public class MapScreen extends GameObject {
         }
     }
     
+    private Plotter getActivePlotter(int i) {
+        Plotter p;
+        if (plotters.size() < i) {
+            p = new Plotter();
+            plotters.add(p);
+            p.setColor(77f / 255f, 64f / 255f, 69f / 255f);
+        } else {
+            p = plotters.get(i - 1);
+        }
+        return p;
+    }
+    
     public void setByHistory(HashMap<Ballistics, Statistic> history) {
         int i = 0;
         for (Ballistics solver : history.keySet()) {
             Statistic stat = history.get(solver);
             if (stat.isActive()) {
-                i += 1;
-                if (projectiles.size() < i) {
-                    spawnProjectile();
-                }
-                if (plotters.size() < i) {
-                    Plotter p = new Plotter();
-                    plotters.add(p);
-                    p.setColor(77f / 255f, 64f / 255f, 69f / 255f);
-                }
-                Plotter plotter = plotters.get(i - 1);
+                i++;
+                spawnProjectile(i);
+                Plotter plotter = getActivePlotter(i);
                 plotter.setPlot(stat.getPositions());
                 setProjectile(projectiles.get(i - 1), stat.getLastPosition(), stat.getPower());
             } else if (!historicalPlots.containsKey(solver)) {
@@ -255,9 +260,7 @@ public class MapScreen extends GameObject {
                 historicalPlots.put(solver, plotter);
             }
         }
-        if (projectiles.size() > i) {
-            freeProjectiles(i);
-        }
+        freeProjectiles(i);
     }
     
     private void iconLoader() {
@@ -287,8 +290,10 @@ public class MapScreen extends GameObject {
         targets.put(target, icon);
     }
     
-    private void spawnProjectile() {
-        projectiles.add(new ProjectileGroup());
+    private void spawnProjectile(int size) {
+        if (projectiles.size() < size) {
+            projectiles.add(new ProjectileGroup());
+        }
     }
     
     private void spawnHitmarker(Vector3d position, float power) {

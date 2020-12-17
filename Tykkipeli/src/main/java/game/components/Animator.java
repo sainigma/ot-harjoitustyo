@@ -86,7 +86,7 @@ public class Animator {
      * @param animation
      * @param deltatime 
      */
-    private void _animate(Animation animation, double deltatime) {
+    private void update(Animation animation, double deltatime) {
         
         for (String name : drivers.keySet()) {
             Frame currentFrame = animation.getDriverFrame(name);
@@ -108,7 +108,7 @@ public class Animator {
                 if (!animation.isPlaying()) {
                     activeClips.remove(animation);
                 } else {
-                    _animate(animation, deltatime);
+                    update(animation, deltatime);
                 }
                 animation.advance();
             }

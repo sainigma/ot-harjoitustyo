@@ -15,13 +15,13 @@ import java.util.HashMap;
  *
  * @author suominka
  */
-public class Text implements DrawCallInterface{
-    private HashMap <Character, Integer> letterMap;
+public class Text implements DrawCallInterface {
+    private HashMap<Character, Integer> letterMap;
     
     private ArrayList<Letter> letters;
     private TextureLoader texLoader;
     
-    public Vector3d localPosition = new Vector3d(0,0,10);
+    public Vector3d localPosition = new Vector3d(0, 0, 10);
     public Vector3d localRotation = new Vector3d();
     public Vector3d globalPosition = new Vector3d();
     public Vector3d globalRotation = new Vector3d();
@@ -41,35 +41,46 @@ public class Text implements DrawCallInterface{
         this.content = content;
         hasText = true;
     }
+
+    private void setLetter(Letter letter, char character, int spaces, int lineChanges) {
+        letter.reset();
+        letter.setIndex(getLetterIndex(character));
+        letter.setPosition(spaces, lineChanges);        
+    }
     
-    public void setLetters() {
-        if (texLoader == null) {
-            return;
-        }
-        hasText = false;
-        int i = 0;
-        int spaces = 0;
-        float lineChanges = 0;
-        for (char c : content.toCharArray()) {
-            if (c == '\n') {
-                lineChanges += 2f;
-                spaces = 0;
-            } else {
-                if (i + 1 > letters.size()) {
-                    spawnLetter();
-                }
-                Letter letter = letters.get(i);
-                letter.reset();
-                letter.setIndex(getLetterIndex(c));
-                letter.setPosition(spaces, lineChanges);
-                spaces++;
-                i++;
-            }
-        }
+    private void freeLetters(int startIndex) {
+        int i = startIndex;
         while (i < letters.size()) {
             letters.get(i).setIndex(15);
             i++;
         }
+    }
+    
+    private void spawnLetter(int currentIndex) {
+        if (currentIndex + 1 > letters.size()) {
+            letters.add(new Letter(texLoader, "default"));
+        }
+
+    }
+    
+    private void setLetters() {
+        if (texLoader == null) {
+            return;
+        }
+        hasText = false;
+        int i = 0, spaces = 0, lineChanges = 0;
+        for (char c : content.toCharArray()) {
+            if (c == '\n') {
+                lineChanges += 2;
+                spaces = 0;
+            } else {
+                spawnLetter(i);
+                setLetter(letters.get(i), c, spaces, lineChanges);
+                spaces++;
+                i++;
+            }
+        }
+        freeLetters(i);
     }
     
     private int getLetterIndex(char c) {
@@ -88,10 +99,6 @@ public class Text implements DrawCallInterface{
         return 15;
     }
     
-    private void spawnLetter() {
-        letters.add(new Letter(texLoader, "default"));
-    }
-    
     @Override
     public void update() {
         return;
@@ -104,7 +111,7 @@ public class Text implements DrawCallInterface{
 
     @Override
     public void translate(float x, float y) {
-        translate(x,y, (float) localPosition.z);
+        translate(x, y, (float) localPosition.z);
     }
 
     @Override

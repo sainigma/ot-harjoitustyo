@@ -84,7 +84,7 @@ public class MainMenu implements LogicInterface {
                 menuIndex = 0;
                 text.setContent(menuItems[0]);
             } else {
-                switch(menuIndex) {
+                switch (menuIndex) {
                     case 0:
                         next("baseGame");
                         break;
@@ -92,8 +92,8 @@ public class MainMenu implements LogicInterface {
                         next("highscores");
                         break;
                     case 2:
-                       next("close");
-                       break;
+                        next("close");
+                        break;
                 }
             }
         }

@@ -62,65 +62,38 @@ public class TextureLoader {
     private ColorModel glAlphaColorModel;
     private ColorModel glColorModel;
     
-    public TextureLoader(){
+    public TextureLoader() {
         textures = new HashMap<String, Texture>();
-        glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8,8,8,8}, true, false, ComponentColorModel.TRANSLUCENT, DataBuffer.TYPE_BYTE);
-        glColorModel =      new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8,8,8,0}, false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
+        glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8, 8, 8, 8}, true, false, ComponentColorModel.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+        glColorModel =      new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8, 8, 8, 0}, false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
     }
     
-    public Texture loadTexture(String path){
+    public Texture loadTexture(String path) {
         Texture texture = textures.get(path);
-        if( texture != null ){
+        if (texture != null) {
             return texture;
         }
         
-        texture = _loadTexture(path, GL_TEXTURE_2D, GL_RGBA, GL_LINEAR, GL_NEAREST);
+        texture = loadTextureCall(path, GL_TEXTURE_2D, GL_RGBA, GL_LINEAR, GL_NEAREST);
         textures.put(path, texture);
         return texture;
     }
     
-    private int createTextureID(){
+    private int createTextureID() {
         glGenTextures(textureIDBuffer);
         return textureIDBuffer.get(0);
     }
     
-    private int toNearestPowerOf2(int a){
+    private int toNearestPowerOf2(int a) {
         int b = 2;
-        while(b < a){
-            b*=2;
+        while (b < a) {
+            b *= 2;
         }
         return b;
     }
     
-    private ByteBuffer convertImage(BufferedImage img, Texture tex){
+    private ByteBuffer createImageBuffer(byte[] data) {
         ByteBuffer imgBuffer;
-        WritableRaster raster;
-        BufferedImage texImage;
-        
-        int texW = toNearestPowerOf2(img.getWidth());
-        int texH = toNearestPowerOf2(img.getHeight());
-        tex.setTextureHeight(texH);
-        tex.setTextureWidth(texW);
-        
-        int channels = 3;
-        ColorModel colormodel;
-        if( img.getColorModel().hasAlpha() ){
-            channels = 4;
-            colormodel = glAlphaColorModel;
-        }else{
-            colormodel = glColorModel;
-        }
-
-        raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, texW, texH, channels, null);
-        texImage = new BufferedImage(colormodel, raster, false, new Hashtable());
-        
-        Graphics g = texImage.getGraphics();
-        g.setColor(new Color(0f,0f,0f,0f));
-        g.fillRect(0, 0, texW, texH);
-        g.drawImage(img, 0, 0, null);
-        
-        byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData();
-        
         imgBuffer = ByteBuffer.allocateDirect(data.length);
         imgBuffer.order(ByteOrder.nativeOrder());
         imgBuffer.put(data, 0, data.length);
@@ -128,37 +101,63 @@ public class TextureLoader {
         return imgBuffer;
     }
     
-    private Texture _loadTexture(String path, int target, int pixelFormat, int minFilter, int magFilter){
+    private ByteBuffer convertImage(BufferedImage img, Texture tex) {
+        int texW = toNearestPowerOf2(img.getWidth());
+        int texH = toNearestPowerOf2(img.getHeight());
+        tex.setTextureHeight(texH);
+        tex.setTextureWidth(texW);
+        
+        int channels = 3;
+        ColorModel colormodel = glColorModel;
+        if (img.getColorModel().hasAlpha()) {
+            channels = 4;
+            colormodel = glAlphaColorModel;
+        }
+
+        WritableRaster raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE, texW, texH, channels, null);
+        BufferedImage texImage = new BufferedImage(colormodel, raster, false, new Hashtable());
+        
+        Graphics g = texImage.getGraphics();
+        g.setColor(new Color(0f, 0f, 0f, 0f));
+        g.fillRect(0, 0, texW, texH);
+        g.drawImage(img, 0, 0, null);
+        
+        byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData();
+        return createImageBuffer(data);
+    }
+    
+    private Texture loadTextureCall(String path, int target, int pixelFormat, int minFilter, int magFilter) {
         int srcPixelFormat = pixelFormat;
         int id = createTextureID();
         Texture texture = new Texture(target, id);
-        glBindTexture(target,id);
+        glBindTexture(target, id);
         BufferedImage bufferedImg = loadImage(path);
         
         texture.setWidth(bufferedImg.getWidth());
         texture.setHeight(bufferedImg.getHeight());
-        if( !bufferedImg.getColorModel().hasAlpha() ){
+        if (!bufferedImg.getColorModel().hasAlpha()) {
             srcPixelFormat = GL_RGB;
         }
-        ByteBuffer textureBuffer = convertImage(bufferedImg,texture);
+        ByteBuffer textureBuffer = convertImage(bufferedImg, texture);
         glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter);
         glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter);
         glTexImage2D(target, 0, pixelFormat, toNearestPowerOf2(bufferedImg.getWidth()), toNearestPowerOf2(bufferedImg.getHeight()), 0, srcPixelFormat, GL_UNSIGNED_BYTE, textureBuffer);
         return texture;
     }
     
-    private BufferedImage loadImage(String path){ //toimii
-        try{
+    private BufferedImage loadImage(String path) {
+        try {
             File f = new File(path);
             BufferedImage source = ImageIO.read(f);
             int width = source.getWidth();
             int height = source.getHeight();
-            BufferedImage bufferedImg = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+            BufferedImage bufferedImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             Graphics g = bufferedImg.getGraphics();
             g.drawImage(source, 0, 0, null);
             g.dispose();
             return bufferedImg;
-        }catch(Exception e){
+        } catch (Exception e) {
+            System.out.println("Image load failed");
         }
         return null;
     }
