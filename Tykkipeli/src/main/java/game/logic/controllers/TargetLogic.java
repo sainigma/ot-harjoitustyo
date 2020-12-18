@@ -27,7 +27,7 @@ import org.json.JSONObject;
  * @author Kari Suominen
  */
 public class TargetLogic {
-    ArrayList<Vector3d> waypoints;
+    private ArrayList<Vector3d> waypoints;
     
     private String name;
     private float health;

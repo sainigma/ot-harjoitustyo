@@ -23,24 +23,36 @@ import game.utils.Vector3d;
 import org.lwjgl.opengl.GL11;
 
 /**
- *
+ * Implementaatio ImmediateDrawerista kuvien piirtämiseen.
  * @author Kari Suominen
  */
 public class Sprite extends ImmediateDrawer {
-    Texture texture;
-    int width = -1, height = -1;
-    float[] texOffset = {0, 0};
-    float[][] vertexOffset = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
-    Vector3d origin;
+    private Texture texture;
+    private int width = -1, height = -1;
+    private float[] texOffset = {0, 0};
+    private float[][] vertexOffset = {{0, 0}, {0, 0}, {0, 0}, {0, 0}};
+    private Vector3d origin;
     private float[][] vertices;
     private float[][] uvmap;
     
+    /**
+     * Täydellinen rakentaja spritelle, asettaa spritelle keskipisteen ja skaalan ja alustaa sen, lataa tekstuurin muistiin/muistista.
+     * @param loader Tekstuurinlataaja
+     * @param path Suhteellinen tiedostopolku assets/textures/ kansion juuresta
+     * @param origin Siirtymä kuvan vasemmasta yläreunasta haluttuun keskipisteeseen
+     * @param scale Skaala, 1 = 1:1 pikselisuhde
+     */
     public Sprite(TextureLoader loader, String path, Vector3d origin, float scale) {
         super();
         setScale(scale);
         load(loader, path, origin);
     }
-
+    
+    /**
+     * Yksinkertaistettu rakentaja spritelle, kuvan keskipiste on vasemmassa yläreunassa ja spritellä on 1:1 pikselisuhde.
+     * @param loader Tekstuurinlataaja
+     * @param path Suhteellinen tiedostopolku assets/textures/ kansion juuresta 
+     */
     public Sprite(TextureLoader loader, String path) {
         super();
         load(loader, path, new Vector3d(0));
@@ -59,6 +71,10 @@ public class Sprite extends ImmediateDrawer {
         this.origin = origin;
     }
     
+    /**
+     * Asettaa spritelle rajauksen.
+     * @param arr 
+     */
     public void setCrop(int[] arr) {
         if (arr[0] > 0 && arr[1] > 0) {
             width = arr[0];
@@ -66,6 +82,9 @@ public class Sprite extends ImmediateDrawer {
         }
     }
     
+    /**
+     * Implementaatio piirrosta, liittää tekstuurin abstraktin luokan määrittämään piirtokontekstiin ja piirtää pintalapun joka täytetään tekstuurilla.
+     */
     @Override
     public void drawPrimitive() {
         int i = 0;
@@ -83,11 +102,18 @@ public class Sprite extends ImmediateDrawer {
         }
         GL11.glEnd();
     }
-
+    /**
+     * Tekstuurin siirtymä verteksien määrittämän pintalapun sisällä.
+     * @param v 
+     */
     public void setTexOffset(float[] v) {
         texOffset[0] = v[0];
         texOffset[1] = v[1];
     }
+    /**
+     * Asettaa pintalapun muodon, offsettien ollessa 0 pintalappu on 1:1 neliö. Toimii hyvin neliöillä, suorakulmioilla ja suunnikkailla. Ongelmallinen puolisuunnikkaiden kanssa, aiheuttaa tarkemman näkymäprojektion puuttuessa PSX -tyylisiä affinityongelmia.
+     * @param offset 
+     */
     public void setVertexOffset(float[][] offset) {
         vertexOffset = offset;
     }

@@ -29,16 +29,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
+ * Pelin pisteiden tallentamisesta ja lataamisesta vastaava luokka. Tallentaa pisteet sekä lokaalisti että lähettää ne pelin backendiin. Backendiin lähetetty data enkryptoidaan X.509 muotoisella julkisella avaimella.
  * @author Kari Suominen
  */
 public class ScoreManager {
-    Services services = new Services();
-    String basePath = "tykkipeli/";
-    String key = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJAT56gluyCXd78b3+35xl/nJSE3ryxRAR3a0ECsHSsd+UNKSkRY/qvXiLlNrhxIut45KqFBXQIhjfrcbRnSawcCAwEAAQ==";
+    private Services services = new Services();
+    private String basePath = "tykkipeli/";
+    private String key = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJAT56gluyCXd78b3+35xl/nJSE3ryxRAR3a0ECsHSsd+UNKSkRY/qvXiLlNrhxIut45KqFBXQIhjfrcbRnSawcCAwEAAQ==";
     private int statusCode = 0;
     
-    class Score {
+    private class Score {
         String name;
         String level;
         int score;
@@ -52,22 +52,29 @@ public class ScoreManager {
             this.name = name.toUpperCase().substring(0, 3);
         }
     }
-    Score score;
-    public ScoreManager() {
-    }
+    private Score score;
     
     private String getName() {
         return System.getProperty("user.name");
     }
-    
+    /**
+     * Luo uuden pisteobjektin, asettaa sille pisteiden määrän ja kentän.
+     * @param points
+     * @param level 
+     */
     public void setScore(int points, String level) {
         score = new Score(level, points);
     }
-    
+    /**
+     * Asettaa nimen pisteobjektille.
+     * @param name 
+     */
     public void setName(String name) {
         score.setName(name);
     }
-    
+    /**
+     * Pyytää pisteobjektin tallennusta paikallisesti sekä pelin backendiin.
+     */
     public void saveScore() {
         if (score == null) {
             return;
@@ -82,7 +89,7 @@ public class ScoreManager {
         return scores;
     }
     
-    class LevelScoreComparator implements Comparator<JSONArray> {
+    private class LevelScoreComparator implements Comparator<JSONArray> {
         public int compare(JSONArray a, JSONArray b) {
             return b.getInt(1) - a.getInt(1);
         }
@@ -137,19 +144,36 @@ public class ScoreManager {
         }
     }
     
+    /**
+     * Palauttaa kaikki paikalliset pistetilastot JSON-objektina.
+     * @return 
+     */
     public JSONObject getLocalScores() {
         JSONLoader loader = new JSONLoader("");
         return loader.read("scores");
     }
     
+    /**
+     * Palauttaa kaikki globaalit pistetilastot JSON-objektina.
+     * @return 
+     */
     public JSONObject getGlobalScores() {
         return services.getJSONObject(basePath);
     }
     
+    /**
+     * Metodi enkryptioavaimen luomisen testaamiseen.
+     * @return enkryptioavain
+     */
     public PublicKey getKeyTest() {
         return getKey();
     }
     
+    /**
+     * Metodi tekstin enkryption testaamiseen.
+     * @param body enkryptattava teksti
+     * @return enkryptattu teksti
+     */
     public String encryptTest(String body) {
         return encrypt(body);
     }
@@ -178,6 +202,10 @@ public class ScoreManager {
         statusCode = services.post(basePath + score.level, body);
     }
     
+    /**
+     * Metodi testaamiseen, palauttaa viimesimmästä backend-tapahtumasta tulleen statuskoodin.
+     * @return 
+     */
     public int getStatusCode() {
         return statusCode;
     }

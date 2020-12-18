@@ -21,12 +21,17 @@ import game.utils.Vector3d;
 import java.util.ArrayList;
 
 /**
- *
+ * Jatkoimplementaatio VectorGraphicsista ympyröiden piirtämiseen.
  * @author Kari Suominen
  */
 public class Circle extends VectorGraphics {
     private float step;
     
+    /**
+     * Rakentaja luokalle, luo verteksilistan säteen ja halutun tarkkuuden perusteella.
+     * @param radius Ympyrän säde
+     * @param vertices Ympyrän pisteiden määrä
+     */
     public Circle(float radius, int vertices) {
         setColor(0f, 0f, 0f);
         step = (float) (Math.PI / vertices);

@@ -17,7 +17,7 @@
 package game.utils;
 
 /**
- *
+ * Takaisinkytkevä PID-säädin ajastettuun ohjailuun.
  * @author Kari Suominen
  */
 public class PID {
@@ -27,7 +27,13 @@ public class PID {
     private float timeMultiplier;
     private boolean active = false;
     
-    //use timeMultiplier 0.001 for true pid
+    /**
+     * Rakentaja säätimelle. Todelliselle säätimelle valitse 0.001f aika-askel (pelin logiikka millisekunneissa), yleiselle 1f (vakaampi)
+     * @param p suhdekerroin
+     * @param i integrointikerroin
+     * @param d derivointikerroin
+     * @param timeMultiplier aika-askel
+     */
     public PID(float p, float i, float d, float timeMultiplier) {
         pFactor = p;
         iFactor = i;
@@ -46,6 +52,12 @@ public class PID {
         control = pFactor * error + iFactor * errorSum + dFactor * errorSlope;
         errorPrev = error;
     }
+    /**
+     * Palauttaa säätimen ohjausarvon virheen korjaamiseen.
+     * @param error nykyinen virhe
+     * @param dt aika sekunneissa
+     * @return ohjausarvo
+     */
     public double getControl(float error, double dt) {
         if (!active) {
             return 0f;
@@ -53,15 +65,25 @@ public class PID {
         update(error, dt);
         return control;
     }
+    /**
+     * Nollaa säätimen kumuloituneet virheet ja laittaa sen päälle.
+     */
     public void activate() {
         active = true;
         errorPrev = 0;
         errorSum = 0;
         control = 0;
     }
+    /**
+     * Kytkee säätimen pois päältä.
+     */
     public void deactivate() {
         active = false;
     }
+    /**
+     * Palauttaa säätimen aktiivisuustilan.
+     * @return 
+     */
     public boolean isActive() {
         return active;
     }

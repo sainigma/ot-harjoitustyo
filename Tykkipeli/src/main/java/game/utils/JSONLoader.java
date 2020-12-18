@@ -23,15 +23,24 @@ import java.nio.file.Paths;
 import org.json.JSONObject;
 
 /**
- *
+ * Tiedostonlukija JSON -tiedostoille.
  * @author Kari Suominen
  */
 public class JSONLoader {
     private String path;
     
+    /**
+     * Rakentaja, asettaa pohjapolun.
+     * @param path 
+     */
     public JSONLoader(String path) {
         this.path = path;
     }
+    /**
+     * Lukee ja palauttaa .json tiedoston JSONObject muodossa.
+     * @param file suhteellinen polku ilman pohjapolkua ja tiedostomuotoa
+     * @return 
+     */
     public JSONObject read(String file) {
         try {
             String raw = new String(Files.readAllBytes(Paths.get(path + file + ".json")), StandardCharsets.UTF_8);
@@ -42,6 +51,11 @@ public class JSONLoader {
             return null;
         }
     }
+    /**
+     * Vastaanottaa JSONObjectin ja tallentaa sen .json tiedostona.
+     * @param object
+     * @param file suhteellinen polku ilman pohjapolkua ja tiedostomuotoa
+     */
     public void save(JSONObject object, String file) {
         if (object == null) {
             return;

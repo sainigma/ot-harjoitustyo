@@ -21,20 +21,29 @@ import game.utils.Vector3d;
 import java.util.ArrayList;
 
 /**
- *
+ * Jatkoimplementaatio VectorGraphicsista vektorien piirtämiseen.
  * @author Kari Suominen
  */
 public class Lines extends VectorGraphics {
     private boolean initialized = false;
     
+    /**
+     * Rakentaja.
+     */
     public Lines() {
         setColor(0f, 0f, 0f);
     }
-    
+    /**
+     * Onko valmis piirrettäväksi
+     * @return 
+     */
     public boolean isInitialized() {
         return initialized;
     }
-    
+    /**
+     * Asettaa piirrettävän verteksilistan.
+     * @param positions 
+     */
     public void setPlot(ArrayList<Vector3d> positions) {
         setVertices(positions);
         initialized = true;

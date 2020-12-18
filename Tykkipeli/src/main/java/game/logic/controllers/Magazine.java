@@ -17,27 +17,43 @@
 package game.logic.controllers;
 
 /**
- *
+ * Varastoluokka kranaattien ja panosten määrän hallintaan.
  * @author Kari Suominen
  */
 public class Magazine {
-    float lightMass = 123;
-    float mediumMass = 130;
-    float heavyMass = 150;
+    private float lightMass = 123;
+    private float mediumMass = 130;
+    private float heavyMass = 150;
     
     private int[] warheads;
     private float[] warheadWeights = {123f, 130f, 150f};
     private int cartouches;
     
+    /**
+     * Rakentaja, vastaanottaa alkuarvot kranaattien ja panosten määrälle.
+     * @param light
+     * @param medium
+     * @param heavy
+     * @param cartouches
+     */
     public Magazine(int light, int medium, int heavy, int cartouches) {
         warheads = new int[] {light, medium, heavy};
         this.cartouches = cartouches;
     }
     
+    /**
+     * Palauttaa otetun kranaatin varastoon.
+     * @param index
+     */
     public void addWarhead(int index) {
         warheads[index] += 1;
     }
     
+    /**
+     * Palauttaa indeksin määräämän kranaatin määrän.
+     * @param index
+     * @return
+     */
     public int getWarheadsLeft(int index) {
         if (index < 0 || index >= warheads.length) {
             return -1;
@@ -45,10 +61,19 @@ public class Magazine {
         return warheads[index];
     }
     
+    /**
+     * Palauttaa panosten määrän.
+     * @return
+     */
     public int getChargesLeft() {
         return cartouches;
     }
     
+    /**
+     * Poistaa indeksin määräämän kranaatin varastosta ja palauttaa sen massan.
+     * @param index
+     * @return
+     */
     public float getWarhead(int index) {
         if (index < 0 || index >= warheads.length) {
             return -1;
@@ -59,6 +84,11 @@ public class Magazine {
         }
         return -1;
     }
+
+    /**
+     * Onko varasto tyhjä, palauttaa toden jos joko panokset tai kranaatit on loppu.
+     * @return
+     */
     public boolean isEmpty() {
         if (cartouches <= 0) {
             return true;
@@ -69,12 +99,29 @@ public class Magazine {
         }
         return totalWarheads <= 0;
     }
+
+    /**
+     * Palauttaa panosten määrän.
+     * @return
+     */
     public int cartouchesLeft() {
         return cartouches;
     }
+
+    /**
+     * Palauttaa toden jos indeksin määräämiä kranaatteja on vielä jäljellä.
+     * @param index
+     * @return
+     */
     public boolean warheadAvailable(int index) {
         return warheads[index] > 0;
     }
+
+    /**
+     * Poistaa panoksia varastosta pyydetyn verran, palauttaa sen perusteella joko saman tai suurimman mahdollisen määrän.
+     * @param amount
+     * @return
+     */
     public int getCartouche(int amount) {
         if (cartouches - amount >= 0) {
             cartouches -= amount;
@@ -87,14 +134,26 @@ public class Magazine {
         return 0;
     }
 
+    /**
+     * Palauttaa merkkijonon makasiinin kranaattien määrästä.
+     * @return
+     */
     public String warHeadStatus() {
         return " Raskaita " + warheads[2] + "\n Puoliraskaita " + warheads[1] + "\n Kevyitä " + warheads[0];
     }
-    
+    /**
+     * Palauttaa merkkijonon makasiinin panosten määrästä.
+     * @return 
+     */
     public String chargeStatus() {
         return " Panoksia jäljellä " + cartouches;
     }
     
+    /**
+     * Palauttaa merkkijonon makasiinin tilasta, testikäyttöön.
+     * @return
+     */
+    @Override
     public String toString() {
         return "Magazine status: " + warheads[0] + " light, " + warheads[1] + " medium, " + warheads[2] + " heavy warheads, " + cartouches + " charges left.";
     }

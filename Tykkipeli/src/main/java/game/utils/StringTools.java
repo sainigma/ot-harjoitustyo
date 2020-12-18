@@ -17,15 +17,27 @@
 package game.utils;
 
 /**
- *
+ * Merkkijonojen työkalut.
  * @author Kari Suominen
  */
 public class StringTools {
-
+    
+    /**
+     * Muuttaa kokonaisluvun tietyn pituiseksi merkkijonoksi, tyhjät kohdat korvataan nollille.
+     * @param points
+     * @param maxLength
+     * @return 
+     */
     public String padZeros(int points, int maxLength) {
         return padZeros(Integer.toString(points), maxLength);
     }
-
+    
+    /**
+     * Muuttaa merkkijonon tietyn pituiseksi, tyhjät kohdat korvataan nollilla.
+     * @param points
+     * @param maxLength
+     * @return 
+     */
     public String padZeros(String points, int maxLength) {
         String zeros = "";
         for (int i = points.length(); i < maxLength; i++) {

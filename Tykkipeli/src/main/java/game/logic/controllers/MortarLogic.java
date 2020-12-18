@@ -27,23 +27,31 @@ import java.util.Stack;
  * Tykin ampumisen liittyvä logiikka, päivittää myös aktiivisten projektiilien solvereita.
  * @author Kari Suominen
  */
-public class MortarLogic {    
+public class MortarLogic {
+    /**
+     * Tilastot kaikille ajossa syntyneille ratkaisijoille.
+     */
     public HashMap<Ballistics, Statistic> history;
+
+    /**
+     * Vielä päivittyvät ratkaisijat.
+     */
     public HashSet<Ballistics> activeSolvers;
+    
     private Stack<Ballistics> hits;
     private Projectile currentProjectile;
-    double elevation;
-    double traversal;
+    private double elevation, traversal;
     
-    double aboveSeaLevel = 15f;
-    double chamberHeight = 2.2f;
+    private double aboveSeaLevel = 15f;
+    private double chamberHeight = 2.2f;
     
-    boolean useWind = false;
-    double windSpeed = 0f;
-    double windDirection = 0f;
+    private boolean useWind = false;
+    private double windSpeed = 0f;
+    private double windDirection = 0f;
     
-    public Vector3d latest = new Vector3d();
-    
+    /**
+     * Tykkilogiikan rakentaja, alustaa hajautustaulut ja pinot ja nollaa arvot.
+     */
     public MortarLogic() {
         elevation = 0;
         traversal = 0;
@@ -75,7 +83,11 @@ public class MortarLogic {
         this.elevation = elevation;
         this.traversal = traversal;
     }
-    
+    /**
+     * Vastaanottaa tuulen suunnan ja nopeuden, käyttää sitä seuraavassa ratkaisijassa.
+     * @param windSpeed metreinä sekunnissa
+     * @param direction suunta josta tuuli puhaltaa asteina
+     */
     public void setWind(double windSpeed, double direction) {
         this.windSpeed = windSpeed;
         this.windDirection = direction;
@@ -84,9 +96,9 @@ public class MortarLogic {
     
     private void startSolver() {
         Ballistics solver = new Ballistics();
-        float mass = currentProjectile.weight;
+        float mass = currentProjectile.getWeight();
         solver.setMass(mass);
-        int cartouches = currentProjectile.cartouches;
+        int cartouches = currentProjectile.getCartouches();
         Vector3d direction = new Vector3d();
         direction.setByAzimuthAltitude(traversal, elevation);
         Vector3d velocity = direction.clone().scale(currentProjectile.getInitialVelocity());
@@ -120,6 +132,7 @@ public class MortarLogic {
                 System.out.println(solverStats);
             } else {
                 solver.solveToTime(dtMillis / 1000f);
+                Vector3d latest = new Vector3d();
                 latest.set(solver.getPosition());
                 solverStats.updatePosition(latest);
             }

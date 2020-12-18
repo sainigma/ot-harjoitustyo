@@ -23,18 +23,23 @@ import game.utils.Vector3d;
 import org.lwjgl.opengl.GL11;
 
 /**
- *
+ * Implementaatio ImmediateDrawerista kirjainten piirtoon, atlas-tyyppinen spritenpiirtäjä.
  * @author Kari Suominen
  */
 public class Letter extends ImmediateDrawer {
-    Texture texture;
-    int width = -1, height = -1;
-    int letterWidth;
+    private Texture texture;
+    private int width = -1, height = -1;
+    private int letterWidth;
     private float[][] vertices;
     private float[][] uvmap;
     private float[] texOffset = {0, 0};
-    Vector3d origin;
+    private Vector3d origin;
     
+    /**
+     * Rakentaja, vastaanottaa fontin nimen ja alustaa sille tekstuurin.
+     * @param loader Tekstuurilataaja
+     * @param fontName Fontin nimi ilman polkua tai tiedostopäätettä
+     */
     public Letter(TextureLoader loader, String fontName) {
         load(loader, fontName);
     }
@@ -52,6 +57,9 @@ public class Letter extends ImmediateDrawer {
         //origin = new Vector3d(width / 2, height, 100);
     }
     
+    /**
+     * Implementaatio piirrosta, liittää tekstuurin abstraktin luokan määrittämään piirtokontekstiin ja piirtää pintalapun joka täytetään tekstuurilla.
+     */
     @Override
     public void drawPrimitive() {
         int i = 0;
@@ -68,16 +76,27 @@ public class Letter extends ImmediateDrawer {
         }
         GL11.glEnd();
     }
-    
+    /**
+     * Määrittää mikä kohta tekstuurista piirretään, tekstuuri jaetaan 16x16=256 osaan.
+     * @param i 
+     */
     public void setIndex(int i) {
         texOffset[0] = -(1 / 16f) * (i % 16);
         texOffset[1] = -(1 / 16f) * (i / 16);
     }
-
+    
+    /**
+     * Nollaa kirjaimen sijainnin.
+     */
     public void reset() {
         setPosition2D(0, 0);
     }
     
+    /**
+     * Asettaa merkin sijainnin välilyöntien ja rivinvaihtojen perusteella.
+     * @param spaces välilyönnit
+     * @param lineChanges rivinvaihdot
+     */
     public void setPosition(int spaces, float lineChanges) {
         move2D(spaces * 16f, lineChanges * 16f);
     }

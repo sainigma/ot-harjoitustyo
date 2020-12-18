@@ -30,5 +30,5 @@
 | 15.12 | 8 | Pelin lopetuslogiikan työstämistä, lopetusruudun työstöä. Projektin refaktorointia. Pistetallentimen alustusta. Reittien tekoa serverikommunikointiin, salauskirjastoihin tutustumista, backendin tekoa. Tuuli vaikuttaa projektiiliin, nopeus ja suuruus haetaan ilmatieteenlaitoksen rajapinnasta (backendin kautta, koska rajapinta sylkee paljon dataa)
 | 16.12 | 6 | Pistetallentimen viimeistelyä. Highscorenäkymän tekemistä, pisteet haetaan näkymään sekä paikallisesta arkistosta sekä netistä. Refaktorointia. Pelin lopetusruudun hienosäätöä, nimensyöttö. Projektin viimeistelyä toimintojen puolesta.
 | 17.12 | 4 | Koodin siistimistä ja hienosäätöä.
-| 18.12 | 5 | Javadocin kirjoitusta, skriptojen tekoa nopeampaan testailuun ja kääntämiseen.
-| yht | 149 | |
+| 18.12 | 7 | Javadocin kirjoitusta, skriptojen tekoa nopeampaan testailuun ja kääntämiseen.
+| yht | 151 | |

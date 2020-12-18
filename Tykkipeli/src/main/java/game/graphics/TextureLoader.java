@@ -30,10 +30,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- *
- * @author Kari Suominen
- */
 package game.graphics;
 
 import java.awt.Color;
@@ -56,18 +52,32 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Tiedostonlataaja tekstuureille, lukee kuvan näytönohjaimen muistiin ja tallentaa sen ohjelman muistiin Texture-muotoisena osoittimena. Jokainen uniikki kuva tallennetaan näytönohjaimen muistiin vain kerran. Käyttää pohjana LWJGL:n SpaceInvadersin esimerkin <a href="http://wiki.lwjgl.org/wiki/Examples:SpaceInvaders_TextureLoader.html">TextureLoader</a> -luokkaa.
+ * @author Kari Suominen
+ * @author Kevin Glass
+ * @author Brian Matzon
+ */
 public class TextureLoader {
     private HashMap<String, Texture> textures;
     private IntBuffer textureIDBuffer = BufferUtils.createIntBuffer(1);
     private ColorModel glAlphaColorModel;
     private ColorModel glColorModel;
     
+    /**
+     * Rakentaja, alustaa tekstuuritaulun ja värimallit läpinäkyvälle ja solidille tekstuurille.
+     */
     public TextureLoader() {
         textures = new HashMap<String, Texture>();
         glAlphaColorModel = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8, 8, 8, 8}, true, false, ComponentColorModel.TRANSLUCENT, DataBuffer.TYPE_BYTE);
         glColorModel =      new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] {8, 8, 8, 0}, false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
     }
     
+    /**
+     * Metodi tekstuurin lataukseen, palauttaa olemassaolevan tekstuurin jos kuva on jo alustettu, muutoin alustaa ja palauttaa tekstuurin.
+     * @param path suhteellinen tiedostopolku sovelluksen juuresta tekstuuriin
+     * @return 
+     */
     public Texture loadTexture(String path) {
         Texture texture = textures.get(path);
         if (texture != null) {

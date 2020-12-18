@@ -26,13 +26,19 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
+ * Työkalut json-objektien vastaanottamiseen ja lähettämiseen pelin backendin REST-rajapintaan.
  * @author Kari Suominen
  */
 public class Services {
     private String basepath = "http://192.168.0.100/api/";
     private int timeoutMillis = 1000;
     
+    /**
+     * Lähettää merkkijonoksi muutetun json-objektin POST pyyntönä.
+     * @param path suhteellinen polku rajapintaan
+     * @param body lähetettävä objekti
+     * @return 
+     */
     public int post(String path, String body) {
         HttpClient client = HttpClient.newHttpClient();
         URI serverURI = URI.create(basepath + path);
@@ -51,7 +57,7 @@ public class Services {
         }
     }
     
-    public HttpResponse<String> get(String path) {
+    private HttpResponse<String> get(String path) {
         HttpClient client = HttpClient.newHttpClient();
         URI serverURI = URI.create(basepath + path);
         HttpRequest req = HttpRequest.newBuilder()
@@ -69,12 +75,22 @@ public class Services {
         return null;
     }
     
+    /**
+     * Hakee listamuotoisen JSON-objektin rajapinnasta.
+     * @param path suhteellinen osoite rajapintaan
+     * @return 
+     */
     public JSONArray getJSONArray(String path) {
         HttpResponse<String> res = get(path);
         JSONArray array = new JSONArray(res.body());
         return array;
     }
     
+    /**
+     * Hakee geneerisen JSON-objektin rajapinnasta.
+     * @param path suhteellinen osoite rajapintaan
+     * @return 
+     */
     public JSONObject getJSONObject(String path) {
         HttpResponse<String> res = get(path);
         if (res != null) {

@@ -71,7 +71,7 @@ public abstract class ImmediateDrawer {
     }
     
     /**
-     * Päämetodi piirtämiseen. Luo uuden muunnosmatriisin piirtojonoon, asettaa sille skaalan ja muunnoksen, kutsuu implementaatiolta piirron ja poistaa matriisin piirtojonosta. 
+     * Päämetodi piirtämiseen, immediate graphics mode tyyppinen piirto. Luo uuden muunnosmatriisin piirtojonoon, asettaa sille skaalan ja muunnoksen, kutsuu implementaatiolta piirron ja poistaa matriisin piirtojonosta. 
      */
     public void draw() {
         GL11.glPushMatrix();

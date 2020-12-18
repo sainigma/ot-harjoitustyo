@@ -17,16 +17,22 @@
 package game.logic.controllers;
 
 /**
- *
+ * Projektiilin luokka, käytetään simulaation alustamiseen ja vahingon laskemiseen.
  * @author Kari Suominen
  */
 
 public class Projectile {
-    float weight = -1;
-    float frontalArea;
-    float dragCoeff = 1;
-    int cartouches;
-    boolean initOk;
+    private float weight = -1;
+    private float frontalArea;
+    private float dragCoeff = 1;
+    private int cartouches;
+    private boolean initOk;
+
+    /**
+     * Rakentaja, alustaa projektiilin.
+     * @param weight Paino kiloina
+     * @param cartouches Panosten määrä, 1-3
+     */
     public Projectile(float weight, int cartouches) {
         if (weight <= 0) {
             return;
@@ -35,15 +41,42 @@ public class Projectile {
         frontalArea = (float) (0.229f * 0.229f * Math.PI / 4f);
         this.cartouches = cartouches;
     }
+
+    /**
+     * Lisää panoksia projektiiliin.
+     * @param amount
+     */
     public void addCartouches(int amount) {
         cartouches += amount;
     }
+    /**
+     * Palauttaa panosten määrän.
+     * @return 
+     */
     public int getCartouches() {
         return cartouches;
     }
+    
+    /**
+     * Palauttaa projektiilin painon.
+     * @return kiloja.
+     */
+    public float getWeight() {
+        return weight;
+    }
+
+    /**
+     * Palauttaa projektiilin panosten määrästä ja painosta riippuvan lähtönopeuden.
+     * @return metrejä sekunnissa
+     */
     public double getInitialVelocity() {
         return 335 * (123f / weight) * cartouches / 3f;
     }
+
+    /**
+     * Palauttaa toden jos projektiililla on massa.
+     * @return
+     */
     public boolean initOk() {
         return weight > 0;
     }

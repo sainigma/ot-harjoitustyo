@@ -34,11 +34,11 @@ package game.graphics;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- *
- * @author Kari Suominen
+ * Tekstuuriobjektin luokka. Jokainen moottorin käyttämä yksittäinen kuva sidotaan yhteen tekstuuriin jota voi kutsua piirrettäväksi id:n perusteella. Käyttää pohjana LWJGL:n SpaceInvadersin esimerkin <a href="http://wiki.lwjgl.org/wiki/Examples:SpaceInvaders_Texture.html">Texture</a> -luokkaa.
+ * @author Kari Suominen, 
+ * @author Kevin Glass
+ * @author Brian Matzon
  */
-
-
 
 public class Texture { 
     private int target; 
@@ -50,49 +50,95 @@ public class Texture {
     private float widthRatio;
     private float heightRatio;
  
+    /**
+     * Rakentaja tekstuurille.
+     * @param target Piirtotyyppi, yleensä GL_TEXTURE_2D
+     * @param textureID Tekstuurin id
+     */
     public Texture(int target, int textureID) {
         this.target = target;
         this.textureID = textureID;
     }
+    /**
+     * Liittää tekstuurin käynnissä olevaan piirtokontekstiin, kutsutaan jokaiselle spritelle jokaisen piirron yhteydessä.
+     */
     public void bind() {
         glBindTexture(target, textureID);
     }
-    public void setHeight(int height) {
-        this.height = height;
-        setHeight();
-    }
+    /**
+     * Asettaa kuvan leveyden pikseleissä.
+     * @param width 
+     */
     public void setWidth(int width) {
         this.width = width;
         setWidth();
     }
-    public int getImageHeight() {
-        return height;
-    }
-    public int getImageWidth() {
-        return width;
-    }
-    public float getHeight() {
-        return heightRatio;
-    }
-    public float getWidth() {
-        return widthRatio;
-    }
-    public void setTextureHeight(int texHeight) {
-        this.texHeight = texHeight;
+    /**
+     * Asettaa kuvan korkeuden pikseleissä.
+     * @param height 
+     */
+    public void setHeight(int height) {
+        this.height = height;
         setHeight();
     }
+    /**
+     * Asettaa tekstuurin leveyden pikseleissä, yleensä kahden potenssi.
+     * @param texWidth 
+     */
     public void setTextureWidth(int texWidth) {
         this.texWidth = texWidth;
         setWidth();
     }
+    /**
+     * Asettaa tekstuurin korkeuden pikseleissä, yleensä kahden potenssi.
+     * @param texHeight 
+     */
+    public void setTextureHeight(int texHeight) {
+        this.texHeight = texHeight;
+        setHeight();
+    }
+    /**
+     * Asettaa tekstuurin suhteellisen leveyden, kahden potenssin kokoisilla tekstuureilla asettaa kooksi 1.
+     */
+    private void setWidth() {
+        if (texWidth != 0) {
+            widthRatio = ((float) width) / texWidth;
+        }
+    }
+    /**
+     * Asettaa tekstuurin suhteellisen korkeuden, kahden potenssin kokoisilla tekstuureilla asettaa kooksi 1.
+     */
     private void setHeight() {
         if (texHeight != 0) {
             heightRatio = ((float) height) / texHeight;
         }
     }
-    private void setWidth() {
-        if (texWidth != 0) {
-            widthRatio = ((float) width) / texWidth;
-        }
+    /**
+     * Palauttaa tekstuurin leveyden pikseleissä.
+     * @return 
+     */
+    public int getImageWidth() {
+        return width;
+    }
+    /**
+     * Palauttaa tekstuurin korkeuden pikseleissä.
+     * @return 
+     */
+    public int getImageHeight() {
+        return height;
+    }
+    /**
+     * Palauttaa tekstuurin suhteellisen leveyden.
+     * @return välillä 0-1f
+     */
+    public float getWidth() {
+        return widthRatio;
+    }
+    /**
+     * Palauttaa tekstuurin suhteellisen korkeuden.
+     * @return välillä 0-1f
+     */
+    public float getHeight() {
+        return heightRatio;
     }
 }

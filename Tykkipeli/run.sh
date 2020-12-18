@@ -32,9 +32,13 @@ function build {
 }
 
 case "$1" in
- "checkstyle") mvn jxr:jxr checkstyle:checkstyle; $BROWSER file:///$PWD/target/site/checkstyle.html &;;
- "test") mvn test jacoco:report; $BROWSER file:///$PWD/target/site/jacoco/index.html &;;
- "javadoc") mvn javadoc:javadoc; $BROWSER file:///$PWD/target/site/apidocs/index.html &;;
+ "checkstyle") mvn jxr:jxr checkstyle:checkstyle; URL=file:///$PWD/target/site/checkstyle.html;;
+ "test") mvn test jacoco:report; URL=file:///$PWD/target/site/jacoco/index.html;;
+ "javadoc") mvn javadoc:javadoc; URL=file:///$PWD/target/site/apidocs/index.html;;
  "build") build $2;;
  *) echo "invalid arguments";;
 esac
+
+if [ "$1" != "build" ]; then
+ $2 $URL &
+fi

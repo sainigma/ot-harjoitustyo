@@ -23,16 +23,20 @@ import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 /**
- *
+ * Rajapinta käyttäjän syötteiden lukemiseen. Lukee syötteitä ruudunpiirron yhteydessä GLFW:n määrittämällä tavalla, tallentaa syötteiden tilan ihmisystävälliseen hajautustauluun.
  * @author Kari Suominen
  */
 public class InputManager {
-    long window;
-    HashMap<Integer, String[]> keyMap;
-    HashMap<String, Boolean> states;
-    HashMap<String, Boolean> debounced;
+    private long window;
+    private HashMap<Integer, String[]> keyMap;
+    private HashMap<String, Boolean> states;
+    private HashMap<String, Boolean> debounced;
     
-    Set<String> keyList;
+    private Set<String> keyList;
+    /**
+     * Rakentaja näppäimistönkuuntelijalle.
+     * @param window GLFW osoitin aktiiviselle ikkunalle
+     */
     public InputManager(long window) {
         this.window = window;
         keyMap = new HashMap<>();
@@ -60,14 +64,12 @@ public class InputManager {
                     return;
                 }
                 for (String k : keys) {
-                    //System.out.println(k + " " + newState);
                     states.put(k, newState);
                 }
             }
         });
     }
     private void setKeys() {
-        //korvaa tiedostonlukijalla
         keyMap.put(GLFW_KEY_UP, new String[]{"up", "elevate"});
         keyMap.put(GLFW_KEY_DOWN, new String[]{"down", "depress"});
         keyMap.put(GLFW_KEY_LEFT, new String[]{"left", "traverse left"});
@@ -92,8 +94,6 @@ public class InputManager {
         keyMap.put(GLFW_KEY_M, new String[]{"toggle map"});
         keyMap.put(GLFW_KEY_Q, new String[]{"rotate map left"});
         keyMap.put(GLFW_KEY_E, new String[]{"rotate map right"});
-        
-        
     }
     
     private void collectKeys() {
@@ -104,14 +104,22 @@ public class InputManager {
             }
         }
     }
-    
+    /**
+     * Palauttaa toiminnan määräämän napin tilan. Jatkuviin toimintoihin, esim liikkumiseen.
+     * @param action toiminta, avain hajautustaululle
+     * @return 
+     */
     public boolean keyDown(String action) {
         if (!states.containsKey(action)) {
             return false;
         }
         return states.get(action);
     }
-    
+    /**
+     * Palauttaa toiminnan määräämän napin tilan, jos se on muuttunut. Kertatoimintoihin, esim menuissa navigointiin.
+     * @param action toiminta, avain hajautustaululle.
+     * @return 
+     */
     public boolean keyDownOnce(String action) {
         if (!states.containsKey(action)) {
             return false;
@@ -130,7 +138,9 @@ public class InputManager {
         
         return state && debounced.get(action);
     }
-    
+    /**
+     * Päivitysmetodi, kutsuu rakentajassa määrätyn glfwSetKeyCallbackin invoke -metodin joka päivittää yksittäisen napin tilan hajautustauluun.
+     */
     public void update() {
         glfwPollEvents();
     }

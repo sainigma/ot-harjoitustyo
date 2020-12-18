@@ -65,14 +65,14 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
- *
+ * Pääluokka piirtämiseen ja pelisilmukan päivitykseen.
  * @author Kari Suominen
  */
 public class Renderer {
-    ArrayList<GameObject> objects;
-    LogicInterface logic = null;
-    InputManager inputs;
-    float[] clearColor = new float[]{0, 0, 0, 1}; 
+    private ArrayList<GameObject> objects;
+    private LogicInterface logic = null;
+    private InputManager inputs;
+    private float[] clearColor = new float[]{0, 0, 0, 1}; 
     private TextureLoader texLoader;
     private long window;
     private int resoX, resoY;
@@ -81,9 +81,12 @@ public class Renderer {
     private boolean windowed = true;
     private boolean fullscreen = false;
     private boolean initialized = false;
-    String windowname;
-    Sprite loadingScreen;
+    private String windowname;
+    private Sprite loadingScreen;
     
+    /**
+     * Rakentaja.
+     */
     public Renderer() {
         resoX = 1280;
         resoY = 720;
@@ -91,6 +94,13 @@ public class Renderer {
         objects = new ArrayList<>();
     }
     
+    /**
+     * Asettaa ikkunan resoluution, ikkunallisuuden sekä kokoruudullisuuden, kahden jälkimmäisen ollessa päällä sovellus on borderless windowed tilassa.
+     * @param width Vaakasuuntainen resoluutio
+     * @param height Pystysuuntainen resoluutio
+     * @param windowed ikkunallisuus
+     * @param fullscreen kokoruudullisuus
+     */
     public void setDisplay(int width, int height, boolean windowed, boolean fullscreen) {
         resoX = width;
         resoY = height;
@@ -98,6 +108,10 @@ public class Renderer {
         this.fullscreen = fullscreen;
     }
     
+    /**
+     * Sitoo LogicInterfacen toteuttavan luokan päivityssilmukkaan.
+     * @param logic 
+     */
     public void setLogic(LogicInterface logic) {
         if (logic == null) {
             return;
@@ -110,30 +124,43 @@ public class Renderer {
         }
     }
     
-    public void passKeyConfig() {
-        
-    }
-    
+    /**
+     * Lisää GameObjectin ja sen lapset piirtojonoon.
+     * @param object 
+     */
     public void appendToRenderQueue(GameObject object) {
         objects.add(object);
     }
     
+    /**
+     * Poistaa GameObjectin ja sen lapset piirtojonosta.
+     * @param object 
+     */
     public void removeFromRenderQueue(GameObject object) {
         objects.remove(object);
     }
-    
-    public void setBackground(float r, float g, float b) {
-        clearColor = new float[]{r, g, b, 1};
-        if (initialized) {
-            glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
-        }
-    }
-    
+
+    /**
+     * Käynnistää ja hoitaa luokan elämänsyklin, kutsutaan kun luokan alustus on valmis.
+     */
     public void run() {
         init();
         initObjects();
         loop();
         kill();
+    }
+    
+    /**
+     * Asettaa näytönpuhdistusvärin, väriulottuvuuksien arvot välillä 0-1f.
+     * @param r punaisuus
+     * @param g vihreys
+     * @param b sinisyys
+     */
+    public void setBackground(float r, float g, float b) {
+        clearColor = new float[]{r, g, b, 1};
+        if (initialized) {
+            glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+        }
     }
     
     private void initObjects() {
@@ -208,6 +235,10 @@ public class Renderer {
         initialized = true;
     }
     
+    /**
+     * Kytkee latausruudun päälle ja pois.
+     * @param state 
+     */
     public void setLoading(boolean state) {
         loading = state;
     }
@@ -237,6 +268,10 @@ public class Renderer {
         glfwTerminate();
         glfwSetErrorCallback(null).free();
     }
+    
+    /**
+     * Aloittaa piirtosilmukan sammutuksen.
+     */
     public void close() {
         alive = false;
     }
