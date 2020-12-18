@@ -2,4 +2,4 @@
  * ASD. asdadsf.
  */
 
-package game.logic;
+package game.utils;

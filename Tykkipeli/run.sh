@@ -1,4 +1,5 @@
 #1/bin/bash
+BROWSER="firefox"
 
 function buildNative {
  mvn clean
@@ -31,9 +32,9 @@ function build {
 }
 
 case "$1" in
- "test") mvn test;;
- "checkstyle") mvn jxr:jxr checkstyle:checkstyle;;
- "jacoco") mvn test jacoco:report;;
+ "checkstyle") mvn jxr:jxr checkstyle:checkstyle; $BROWSER file:///$PWD/target/site/checkstyle.html &;;
+ "test") mvn test jacoco:report; $BROWSER file:///$PWD/target/site/jacoco/index.html &;;
+ "javadoc") mvn javadoc:javadoc; $BROWSER file:///$PWD/target/site/apidocs/index.html &;;
  "build") build $2;;
  *) echo "invalid arguments";;
 esac

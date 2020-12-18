@@ -1,5 +1,5 @@
-package game.components;
-
 /**
- * Peliobjektit.
+ * Peliobjektit KESKEN. testististi
  */
+
+package game.components;

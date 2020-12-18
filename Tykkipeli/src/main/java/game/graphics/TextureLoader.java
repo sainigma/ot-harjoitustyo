@@ -32,7 +32,7 @@
 
 /**
  *
- * @author suominka
+ * @author Kari Suominen
  */
 package game.graphics;
 
