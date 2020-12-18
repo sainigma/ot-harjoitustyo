@@ -135,10 +135,6 @@ public class ScoreManager {
         return services.getJSONObject(basePath);
     }
     
-    public JSONArray getScores(String level) {
-        return fetchScore(level);
-    }
-    
     public PublicKey getKeyTest() {
         return getKey();
     }
@@ -169,10 +165,6 @@ public class ScoreManager {
         message = encrypt(message);
         String body = "{\"raw\":\"" + message + "\"}";
         statusCode = services.post(basePath + score.level, body);
-    }
-    
-    private JSONArray fetchScore(String level) {
-        return services.getJSONArray(basePath + level);
     }
     
     public int getStatusCode() {

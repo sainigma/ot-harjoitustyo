@@ -1,6 +1,7 @@
 *.png~
 *.kra*
 Tykkipeli/target
+Tykkipeli/builds
 /Tykkipeli/nbproject/
 /laskarit/viikko2/Maksukortti/nbproject/
 /laskarit/viikko2/Maksukortti/target/
