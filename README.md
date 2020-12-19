@@ -6,13 +6,15 @@ Peli on jo lähes valmis, pelimoottori on valmis ja pelilogiikka kattaa pääpel
 
 ## Dokumentaatio
 
+[Käyttöohje](/dokumentaatio/kayttoohje.md)
+
 [Vaatimuusmäärittely](/dokumentaatio/vaatimusmaarittely.md)
 
-[Tuntikirjanpito](/dokumentaatio/tuntikirjanpito.md)
+[Testaus](/dokumenaatio/testaus.md)
 
 [Arkkitehtuurikuvaus](/dokumentaatio/arkkitehtuuri.md)
 
-[Käyttöohje](/dokumentaatio/kayttoohje.md)
+[Tuntikirjanpito](/dokumentaatio/tuntikirjanpito.md)
 
 # Releaset
 
