@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * Animaattori jolla voi animoida sekä ohjausarvoja että peliobjekteja.
+ * Animaattori jolla voi animoida ohjausarvoja ja peliobjekteja. Rajapinta Animation -luokalle.
  * @author Kari Suominen
  */
 public class Animator {
@@ -65,9 +65,19 @@ public class Animator {
             animation.play();
         }
     }
+    
+    /**
+     * Palauttaa toden jos jokin animaatio on päällä.
+     * @return
+     */
     public boolean isPlaying() {
         return activeClips.size() > 0;
     }
+    /**
+     * Palauttaa toden jos haettu animaatio on päällä.
+     * @param name Animaation nimi
+     * @return 
+     */
     public boolean isPlaying(String name) {
         if (!animations.containsKey(name)) {
             return false;
@@ -75,28 +85,24 @@ public class Animator {
         Animation animation = animations.get(name);
         return animation.isPlaying();
     }
-    
+    /**
+     * Asettaa GameObject instanssin siirtymillä animoiduksi.
+     * @param name Avain GameObject implementaation animate-metodille
+     * @param object Peliobjekti
+     */
     public void bindBone(String name, GameObject object) {
         bones.put(name, object);
     }
     
     /**
-     * Asettaa GameObject instanssin ajettavaksi.
+     * Asettaa GameObject instanssin ohjausarvoilla animoiduksi.
      * @param name Avain GameObject implementaation drive-metodille
      * @param object Peliobjekti
      */
     public void bindDriver(String name, GameObject object) {
         drivers.put(name, object);
     }
-    
-    /**
-     * Hakee animaatiolle nykyisen ruudun piirtoon kuluneen ajan perusteella.
-     * Ruudun arvo luovutetaan avaimen osoittaman GameObject instanssin drive -funktiolle
-     * 
-     * Tästä metodista puuttuu vielä animointi GameObjectia suoraan pyörittämällä.
-     * @param animation
-     * @param deltatime 
-     */
+  
     private void update(Animation animation, double deltatime) {
         
         for (String name : drivers.keySet()) {

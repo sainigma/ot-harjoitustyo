@@ -18,30 +18,32 @@ package game.components.templates;
 
 import game.components.GameObject;
 import game.components.animation.PIDAnimator;
-import game.utils.PID;
 import game.utils.Vector3d;
 
 /**
- *
+ * Käyttöliittymä tykin lataukselle.
  * @author Kari Suominen
  */
 public class ReloadScreen extends GameObject {
     
-    int offsetX = 970;
+    private int offsetX = 970;
+    private PIDAnimator animator = new PIDAnimator(0.1f, 0f, 0.2f, 100f);
     
-    PIDAnimator animator = new PIDAnimator(0.1f, 0f, 0.2f, 100f);
+    private GameObject charges[] = {null, null, null};
+    private GameObject warheads[] = {null, null, null};
+    private GameObject background;
+    private float viewportScale = 720f / 1080f;
     
-    GameObject charges[] = {null, null, null};
-    GameObject warheads[] = {null, null, null};
-    GameObject background;
-    float viewportScale = 720f / 1080f;
-    
+    /**
+     * Rakentaja, alustaa peliobjektin ja sen lapset.
+     * @param name
+     */
     public ReloadScreen(String name) {
         super(name);
         init();
     }
     
-    public void init() {
+    private void init() {
         background = new GameObject("reloadBackground", "reloadView/ammusvalintaTausta.png", new Vector3d()) { };
         background.setDepth(20);
         
@@ -53,11 +55,16 @@ public class ReloadScreen extends GameObject {
         animatePosition(0f);
     }
 
+    /**
+     * Aktivoi sisääntuloanimaation.
+     */
     public void enter() {
         animator.enter();
         animatePosition(0);
     }
-    
+    /**
+     * Aktivoi ulostuloanimaation.
+     */
     public void exit() {
         animator.exit();
         animatePosition(1f);
@@ -99,6 +106,10 @@ public class ReloadScreen extends GameObject {
         }
     }
     
+    /**
+     * Asettaa käyttöliittymässä näkyvien panosten määrän.
+     * @param chargesSelected
+     */
     public void setCharges(int chargesSelected) {
         int i = 1;
         for (GameObject charge : charges) {
@@ -111,6 +122,10 @@ public class ReloadScreen extends GameObject {
         }
     }
     
+    /**
+     * Asettaa nyt näkyvän kranaatin.
+     * @param indexSelected
+     */
     public void setWarhead(int indexSelected) {
         int i = 0;
         for (GameObject warhead : warheads) {
@@ -123,6 +138,10 @@ public class ReloadScreen extends GameObject {
         }
     }
     
+    /**
+     * Päivitysmetodi, päivittää animaattorin joka liikuttaa käyttöliittymää pystysuunnassa.
+     */
+    @Override
     public void update() {
         animate(getDeltatime());
     }

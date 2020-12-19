@@ -22,14 +22,13 @@ import game.utils.PID;
 import game.utils.Vector3d;
 
 /**
- * 
+ * Peliobjekti tykille.
  * @author Kari Suominen
  */
 public class Mortar extends GameObject {
     private double dt;
     
     private float viewportScale;
-    long start = System.currentTimeMillis();
     
     private float elevationMaxSpeed = 10f;
     private float traversalMaxSpeed = 100f;
@@ -39,6 +38,9 @@ public class Mortar extends GameObject {
     private PID elevationControl = new PID(1f, 0f, 2f, 1f);
     private PID traversalControl = new PID(5f, 0f, 5f, 1f);
     
+    /**
+     * Peliobjektin animaattori, yksittäisten animaatioiden hallitsemiseen.
+     */
     public Animator animator;
     
     private float traversal = 0;
@@ -63,6 +65,10 @@ public class Mortar extends GameObject {
     private GameObject mountGrooves;
     private GameObject inclinometer;
     
+    /**
+     * Rakentaja luokalle, alustaa objektit sekä asettaa tekstuureille ominaisen skaalauskertoimen (tekstuurit 1080p tarkkuudella, pelinäkymä 720p).
+     * @param name
+     */
     public Mortar(String name) {
         super(name);
         this.viewportScale = 720f / 1080f;
@@ -178,34 +184,57 @@ public class Mortar extends GameObject {
                 traversalCoeff
         ));
     }
+
+    /**
+     * Palauttaa animaation tilasta ja tykin korotuskulmasta riippuvan tärinäkertoimen.
+     * @return
+     */
     public float[] getShake() {
         float ret[] = {getElevationFactor(), shakeCoeff};
         return ret;
     }
+
+    /**
+     * Vastaanottaa kertoimen joka vaikuttaa tärinän määrään, asetetaan ohjauslogiikasta panosten määrän perusteella.
+     * @param modifier
+     */
     public void setPowerModifier(float modifier) {
         powerModifier = modifier;
     }
     
+    /**
+     * Rajapinta animaattorille, vastaanottaa avaimen ja ohjausarvon jolla avaimen määrittämää objektia animoidaan.
+     * @param target avain
+     * @param value ohjausarvo
+     */
+    @Override
     public void drive(String target, double value) {
         if (target.equals("cradle")) {
             setCradle((float) value);
         }
     }
     
-    public float getElevationFactor() {
+    private float getElevationFactor() {
         return (float) Math.cos(Math.PI * (getElevation() + 10) / 180) * powerModifier;
     }
     
-    public void setCradle(float t) {
+    private void setCradle(float t) {
         cradle.setPosition(new Vector3d().lerp(cradleLimits[0], cradleLimits[1], t * getElevationFactor()));
         shakeCoeff = t;
     }
     
+    /**
+     * Palauttaa tykin korotuskulman.
+     * @return asteissa
+     */
     public float getElevation() {
         return -(float) gun.localRotation.z;
-        //return -gun.rotation;
     }
     
+    /**
+     * Asettaa ohjausarvon tykin korotuskulman muuttamiseen, PID-säätimellä animoitu.
+     * @param r asteissa
+     */
     public void setElevationTarget(float r) {
         if (r >= gunLimits[0] && r <= gunLimits[1]) {
             elevationTarget = r;
@@ -219,6 +248,11 @@ public class Mortar extends GameObject {
         }
 
     }
+
+    /**
+     * Asettaa ohjausarvon tykin suunnan muuttamiseen, PID-säätimellä animoitu.
+     * @param r asteissa
+     */
     public void setTraverseTarget(float r) {
         traverseTarget = r;
         if (!traversalControl.isActive()) {
@@ -226,24 +260,38 @@ public class Mortar extends GameObject {
         }
     }
 
-    public void addTraversal(float r) {
+    private void addTraversal(float r) {
         setTraversal(traversal + r);
     }
+    /**
+     * Asettaa tykin suunnan suoraan.
+     * @param r asteissa
+     */
     public void setTraversal(float r) {
         traversal = r;
         traverseTarget = traversal;
         mountGrooves.setTexOffset(getTraversal() / 60, 0);
     }
-    public float getLocalTraversal() {
+
+    private float getLocalTraversal() {
         return traversal;
     }
+
+    /**
+     * Palauttaa tykin suunan.
+     * @return asteissa
+     */
     public float getTraversal() {
         return traversal % 360;
     }
 
-    public void addElevation(float r) {
+    private void addElevation(float r) {
         setElevation(-elevationWheelRot + r);
     }
+    /**
+     * Asettaa tykin koron halutun tykin kulman mukaan. Vert. sisäinen metodi setElevation, joka asettaa tykin kulman vaihteiston läpi kerrottuna
+     * @param r 
+     */
     public void setTrueElevation(float r) {
         float gunRot = -r;
         float gearRot = -gunRot / (12f / 142f);
@@ -262,26 +310,47 @@ public class Mortar extends GameObject {
             gun.setRotation(gunRot);            
         }
     }
+
+    /**
+     * Päivitysmetodi, päivittää ajastimen, animoi liikkeen ja päivittää animaattorin.
+     */
+    @Override
     public void update() {
         dt = this.getDeltatime();
         elevate();
         traverse();
         animator.animate(dt);
     }
+
+    /**
+     * Pakotettu päivitys testejä varten, vastanaottaa päivitykseen kuluneen ajan.
+     * @param deltatime
+     */
     public void forcedUpdate(double deltatime) {
         dt = deltatime;
         elevate();
         traverse();
     }
 
+    /**
+     * Summaa tykin korotussäätimen ohjausarvoa.
+     * @param f muutos asteissa
+     */
     public void addToElevationTarget(float f) {
         setElevationTarget(elevationTarget + f);
     }
-
+    /**
+     * Summaa tykin siirtosäätimen ohjausarvoa.
+     * @param f muutos asteissa
+     */
     public void addToTraverseTarget(float f) {
         setTraverseTarget(traverseTarget + f);
     }
     
+    /**
+     * Asettaa inklinometrin näkyvyyden.
+     * @param state
+     */
     public void setInclinometer(boolean state) {
         inclinometer.setVisible(state);
     }

@@ -16,11 +16,10 @@
  */
 package game.components.animation;
 
-import game.components.animation.Frame;
 import java.util.ArrayList;
 
 /**
- *
+ * Yksittäinen animaatioklippi, ruutujen lista ja metodit niiden hakemiseen ja asettamiseen.
  * @author Kari Suominen
  */
 public class Clip {
@@ -29,6 +28,9 @@ public class Clip {
     private boolean linearInterpolation = true;
     private ArrayList<Frame> frames;
 
+    /**
+     * Rakentaja, alustaa ruudut.
+     */
     public Clip() {
         frames = new ArrayList<>();
     }
@@ -46,6 +48,10 @@ public class Clip {
         return new Frame(0, lerp);
     }
     
+    /**
+     * Asettaa lasketaanko ruutujen välille lineaari-interpoloituja ruutuja.
+     * @param state
+     */
     public void setLinearInterpolation(boolean state) {
         linearInterpolation = state;
     }
@@ -57,6 +63,9 @@ public class Clip {
         return frames.get(frames.size() - 1);
     }
 
+    /**
+     * Palauttaa nykyisen ruudun nollaan.
+     */
     public void reset() {
         current = 0;
         next = 1;
@@ -74,6 +83,11 @@ public class Clip {
         }
     }
     
+    /**
+     * Palauttaa joko viimeisimmän tai viimeisimmän ja seuraavan ruudun välissä olevan ruudun.
+     * @param frame
+     * @return
+     */
     public Frame getFrame(int frame) {
         advance(frame);
         if (linearInterpolation) {
@@ -81,6 +95,11 @@ public class Clip {
         }
         return getFrameConstant();
     }
+
+    /**
+     * Lisää ruudun animaatioklippiin.
+     * @param frame
+     */
     public void addFrame(Frame frame) {
         frames.add(frame);
     }

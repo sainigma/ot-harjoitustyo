@@ -107,7 +107,7 @@ public class MortarLogic {
             solver.setWind(windSpeed, windDirection);
         }
         activeSolvers.add(solver);
-        history.put(solver, new Statistic(elevation, traversal, mass, cartouches, solver));
+        history.put(solver, new Statistic(elevation, traversal, mass, cartouches));
     }
     
     /**
@@ -129,7 +129,6 @@ public class MortarLogic {
                 hits.push(solver);
                 solverStats.disable();
                 iterator.remove();
-                System.out.println(solverStats);
             } else {
                 solver.solveToTime(dtMillis / 1000f);
                 Vector3d latest = new Vector3d();

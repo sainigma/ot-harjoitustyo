@@ -20,21 +20,86 @@ import game.graphics.TextureLoader;
 import game.utils.Vector3d;
 
 /**
- *
+ * Interface objekteille joita renderöijä kutsuu jokaisella piirrolla, voi sisältää logiikkaa, piirtokutsuja tai kumpaakin.
  * @author Kari Suominen
  */
 public interface DrawCallInterface {
+
+    /**
+     * Logiikan päivityskutsu.
+     */
     public void update();
+
+    /**
+     * Lataa objektin muistiin.
+     */
     public void load();
+
+    /**
+     * Kutsuu objektin ja sen lasten piirron.
+     */
     public void draw();
+
+    /**
+     * Asettaa paikallisen sijainnin.
+     * @param position
+     */
     public void setPosition(Vector3d position);
+
+    /**
+     * Asettaa paikallisen kiertymän.
+     * @param rotation
+     */
     public void setRotation(Vector3d rotation);
+
+    /**
+     * Asettaa perityn sijainnin.
+     * @param position
+     */
     public void setGlobalPosition(Vector3d position);
+
+    /**
+     * Asettaa perityn kiertymän.
+     * @param rotation
+     */
     public void setGlobalRotation(Vector3d rotation);
+
+    /**
+     * Asettaa päivittyneisyyden tilan, käytetään ominaisuuksien propagointiin lapsiobjekteille.
+     * @param state
+     */
     public void setUpdated(boolean state);
+
+    /**
+     * Asettaa objektin näkyvyyden.
+     * @param state
+     */
     public void setVisible(boolean state);
+
+    /**
+     * Asettaa objektin pienennyksen, eroaa näkyvyydestä sillä että pienennetyllä objektilla voi olla lapsia jotka piirretään vain kun objekti on pienennetty/maksimoitu.
+     * @param minimized
+     */
     public void setMinimized(boolean minimized);
+
+    /**
+     * Siirtää objektia paikallisesti (summaa) kaksiulotteisesti.
+     * @param x
+     * @param y
+     */
     public void translate(float x, float y);
+
+    /**
+     * Siirtää objektia paikallisesti (summaa) kolmiulotteisesti.
+     * @param x
+     * @param y
+     * @param z
+     */
     public void translate(float x, float y, float z);
+
+    /**
+     * Asettaa objektille tekstuurinlataajan.
+     * @param loader
+     */
     public void setTextureLoader(TextureLoader loader);
 }

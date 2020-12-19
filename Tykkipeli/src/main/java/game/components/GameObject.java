@@ -26,18 +26,21 @@ import game.utils.Vector3d;
  * Sisältää vain implementoitujen luokkien jakamat metodit, eli
  * objektin alustuksen, ominaisuuksien propagoinnin sekä kappaleen piirron.
  * 
- * 
  * @author Kari Suominen
  */
 
 public abstract class GameObject implements DrawCallInterface {
+
+    /**
+     * Peliobjektin lapsiobjektit.
+     */
     public ArrayList<DrawCallInterface> children = new ArrayList<>();
     private Sprite sprite;
     
     private boolean initialized = false;
     private boolean visible = true;
     private boolean active = true;
-    public boolean hasUpdated = true;
+    private boolean hasUpdated = true;
     
     private String path;
     private String name;
@@ -48,9 +51,25 @@ public abstract class GameObject implements DrawCallInterface {
     private TextureLoader texLoader = null;
     
     private Vector3d origin = new Vector3d(0);
+
+    /**
+     * Paikallinen sijainti.
+     */
     public Vector3d localPosition = new Vector3d(0);
+
+    /**
+     * Paikallinen kiertymä.
+     */
     public Vector3d localRotation = new Vector3d(0);
+
+    /**
+     * Peritty sijainti.
+     */
     public Vector3d globalPosition = new Vector3d(0);
+
+    /**
+     * Peritty kiertymä.
+     */
     public Vector3d globalRotation = new Vector3d(0);
     
     /**
@@ -93,6 +112,11 @@ public abstract class GameObject implements DrawCallInterface {
     }
     private void init() {
     }
+
+    /**
+     * Palauttaa toden jos objekti on aktivoitu.
+     * @return
+     */
     public boolean isActive() {
         return active;
     }
@@ -110,12 +134,24 @@ public abstract class GameObject implements DrawCallInterface {
     public void setVisible(boolean newState) {
         visible = newState;
     }
+    /**
+     * Palauttaa toden jos objekti on näkyvä.
+     * @return 
+     */
     public boolean isVisible() {
         return visible;
     }
+
+    /**
+     * Kytkee näkyvyyden päälle/pois.
+     */
     public void toggleVisible() {
         visible = !visible;
     }
+
+    /**
+     * Kytkee kappaleen aktiivisuuden päälle/pois.
+     */
     public void toggle() {
         active = !active;
     }
@@ -167,25 +203,41 @@ public abstract class GameObject implements DrawCallInterface {
             sprite.setCrop(crop);
         }
     }
+
+    /**
+     * Asettaa päivittyneisyyden tilan, käytetään ominaisuuksien propagointiin lapsiobjekteille.
+     * @param newState
+     */
     public void setHasUpdated(boolean newState) {
         hasUpdated = newState;
     }
-    
+    /**
+     * Asettaa paikallisen sijainnin.
+     * @param position
+     */
     public void setPosition(Vector3d position) {
         localPosition.x = position.x;
         localPosition.y = position.y;
         localPosition.z = position.z;
         hasUpdated = true;
     }
+    /**
+     * Asettaa paikallisen kiertymän z-akselille, kaksiulotteiseen manipulointiin.
+     * @param r asteissa
+     */
     public void setRotation(float r) {
         localRotation.z = r;
         hasUpdated = true;
     }
+    /**
+     * Asettaa paikallisen kiertymän.
+     * @param rotation 
+     */
     public void setRotation(Vector3d rotation) {
         localRotation.set(rotation);
     }
     /**
-     * Koska peli on enimmäkseen 2D, z-koordinaattia käytetään piirtojärjestyksen määrittelyyn.
+     * Siirtää kappaletta z-akselissa. 2D tilassa z-koordinaattia käytetään piirtojärjestyksen määrittelyyn.
      * @param z Suuri arvo tarkoittaa lähellä kameraa, pieni arvo kaukana kamerasta.
      */
     public void setDepth(float z) {
@@ -244,6 +296,10 @@ public abstract class GameObject implements DrawCallInterface {
         children.add(child);
     }
 
+    /**
+     *
+     * @return
+     */
     public TextureLoader getTextureLoader() {
         return texLoader;
     }
@@ -363,22 +419,46 @@ public abstract class GameObject implements DrawCallInterface {
     public Vector3d getTransform() {
         return new Vector3d(localPosition.x, localPosition.y, localRotation.z);
     }
+
+    /**
+     * Palauttaa perityn sijainnin.
+     * @return
+     */
     public Vector3d getGlobalPosition() {
         return globalPosition;
     }
+
+    /**
+     * Palauttaa paikallisen sijainnin.
+     * @return
+     */
     public Vector3d getPosition() {
         return localPosition;
     }
+
+    /**
+     * Palauttaa paikallisen kiertymän.
+     * @return
+     */
     public Vector3d getRotation() {
         return localRotation;
     }
+
+    /**
+     * Interfacemetodi, tyhjä.
+     */
     public void toggleMinimized() {
     }
-    
+    /**
+     * Interfacemetodi, tyhjä.
+     */    
     public boolean isMinimized() {
         return false;
     }
-    
+    /**
+     * Palauttaa toden jos objekti on ladattu muistiin.
+     * @return 
+     */
     public boolean isInitialized() {
         return initialized;
     }
@@ -389,16 +469,28 @@ public abstract class GameObject implements DrawCallInterface {
     public void setMinimized(boolean minimized) {
     }
 
+    /**
+     * Asettaa perityn sijainnin suoraan.
+     * @param position
+     */
     @Override
     public void setGlobalPosition(Vector3d position) {
         globalPosition = position;
     }
 
+    /**
+     * Asettaa perityn kiertymän suoraan.
+     * @param rotation
+     */
     @Override
     public void setGlobalRotation(Vector3d rotation) {
         globalRotation = rotation;
     }
 
+    /**
+     * Asettaa päivittyneisyyden tilan, käytetään ominaisuuksien propagointiin lapsiobjekteihin.
+     * @param state
+     */
     @Override
     public void setUpdated(boolean state) {
         hasUpdated = state;

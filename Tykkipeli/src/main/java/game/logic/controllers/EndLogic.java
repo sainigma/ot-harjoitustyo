@@ -21,14 +21,14 @@ import game.components.templates.EndScreen;
 import game.utils.InputManager;
 
 /**
- *
+ * Logiikka ja käyttöliittymäohjaaja pelin lopetukselle, kontrollit seuraavaan logiikkaan siirtymiselle ja käyttäjän nimimerkin vastaanotolle.
  * @author Kari Suominen
  */
 public class EndLogic {
     private boolean active = false;
 
-    EndScreen endScreen;
-    InputManager inputs;
+    private EndScreen endScreen;
+    private InputManager inputs;
     
     private boolean winState;
     
@@ -48,20 +48,31 @@ public class EndLogic {
     
     private boolean scoresFinished = false;
     
-    PIDAnimator scoreAnimator = new PIDAnimator(0.05f, 0, 0.5f, 1f);
-    
+    private PIDAnimator scoreAnimator = new PIDAnimator(0.05f, 0, 0.5f, 1f);
+    /**
+     * Rakentaja, alustaa lopetusruudun käyttöliittymän.
+     * @param endScreen 
+     */
     public EndLogic(EndScreen endScreen) {
         this.endScreen = endScreen;
     }
-    
+    /**
+     * Asettaa logiikalle näppäinkuuntelijan.
+     * @param inputs 
+     */
     public void setInputManager(InputManager inputs) {
         this.inputs = inputs;
     }
-    
+    /**
+     * Palauttaa logiikan päälläolotilan.
+     * @return 
+     */
     public boolean isActive() {
         return active;
     }
-    
+    /**
+     * Aktivoi logiikan ja sen käyttöliittymän.
+     */
     public void activate() {
         if (active) {
             return;
@@ -69,15 +80,25 @@ public class EndLogic {
         active = true;
         endScreen.enter();
     }
-    
+    /**
+     * Sammuttaa logiikan.
+     */
     public void deactivate() {
         active = false;
     }
-    
+    /**
+     * Palauttaa käyttäjän nimimerkin.
+     * @return 
+     */
     public String getName() {
         return name;
     }
-    
+    /**
+     * Asettaa lopulliset pisteet kentälle.
+     * @param shipScore
+     * @param warheadScore
+     * @param chargeScore 
+     */
     public void setScores(int shipScore, int warheadScore, int chargeScore) {
         scores[0] = shipScore + 10000;
         scores[1] = warheadScore;
@@ -85,12 +106,17 @@ public class EndLogic {
         scores[3] = scores[0] + scores[1] + scores[2];
         scores[4] = 1000;
     }
-    
+    /**
+     * Asettaa pelin voittotilan, vaikuttaa logiikan etenemiseen ja vaihtoehtoihin.
+     * @param winState 
+     */
     public void setWinState(boolean winState) {
         this.winState = winState;
         endScreen.setWinState(winState);
     }
-    
+    /**
+     * Kutsuttuna lähettää graafiselle käyttöliittymälle tiedon että kyseinen kenttä on viimeinen.
+     */
     public void finalStageReached() {
         endScreen.finalStageReached();
     }
@@ -177,7 +203,10 @@ public class EndLogic {
         endScreen.disableChoises();
         resolution = true;
     }
-    
+    /**
+     * Palauttaa seuraavan määränpään.
+     * @return 
+     */
     public String getNext() {
         return next;
     }
@@ -213,10 +242,17 @@ public class EndLogic {
         displayScores[scoreIndex] = score;
         endScreen.setScore(displayScores);
     }
-    
+    /**
+     * Palauttaa toden jos käyttäjä on määrittänyt seuraavan määränpään käyttöliittymässä.
+     * @return 
+     */
     public boolean hasResolution() {
         return resolution;
     }
+    /**
+     * Päivitysmetodi, käyttää päälogiikan ajastusta tahdistukseen.
+     * @param deltatimeMillis 
+     */
     public void update(double deltatimeMillis) {
         activate();
         animateScores(deltatimeMillis);

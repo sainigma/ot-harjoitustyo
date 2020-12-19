@@ -54,7 +54,6 @@ public class Letter extends ImmediateDrawer {
         vertices = v;
         uvmap = u;
         origin = new Vector3d();
-        //origin = new Vector3d(width / 2, height, 100);
     }
     
     /**

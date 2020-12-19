@@ -19,43 +19,51 @@ package game.components.templates;
 import game.components.GameObject;
 import game.components.Text;
 import game.components.animation.PIDAnimator;
-import game.utils.PID;
 import game.utils.Vector3d;
 
 /**
- *
+ * Käyttöliittymä lopetusruudulle. <a href="./../../logic/controllers/EndLogic.html">EndLogic</a> luokan ohjaama.
  * @author Kari Suominen
  */
 public class EndScreen extends GameObject {
     
-    GameObject background;
-    Text messenger;
-    Text choises;
-    Text title;
-    Text nameEntry;
-    int choise = 0;
-    boolean winState = true;
-    String [] winChoises = {"SEURAAVA KENTTÄ   lopeta", "seuraava kenttä   LOPETA"};
-    String [] loseChoises = {"YRITÄ UUDESTAAN   lopeta", "yritä uudestaan   LOPETA"};
+    private GameObject background;
+    private Text messenger;
+    private Text choises;
+    private Text title;
+    private Text nameEntry;
+    private int choise = 0;
+    private boolean winState = true;
+    private String [] winChoises = {"SEURAAVA KENTTÄ   lopeta", "seuraava kenttä   LOPETA"};
+    private String [] loseChoises = {"YRITÄ UUDESTAAN   lopeta", "yritä uudestaan   LOPETA"};
     
-    PIDAnimator animator = new PIDAnimator(0.1f, 0f, 0.2f, 100f);
+    private PIDAnimator animator = new PIDAnimator(0.1f, 0f, 0.2f, 100f);
     
     public EndScreen(String name) {
         super(name);
         init();
     }
     
+    /**
+     * Aktivoi sisääntuloanimaation.
+     */
     public void enter() {
         setVisible(true);
         animator.enter();
         animatePosition(0);
     }
     
+    /**
+     * Aktivoi ulostuloanimaation.
+     */
     public void exit() {
         animator.exit();
         animatePosition(1f);
     }
     
+    /**
+     * Kutsutaan jos nykyinen kenttä on viimeinen, uudelleenasettaa käyttöliittymän vaihtoehdot.
+     */
     public void finalStageReached() {
         winChoises = new String [] {"                  LOPETA", "                  LOPETA"};
     }
@@ -66,6 +74,10 @@ public class EndScreen extends GameObject {
         setPosition(new Vector3d().lerp(hidden, visible, t));
     }
     
+    /**
+     * Päivitysmetodi ruudun animaattorille, liikuttaa käyttöliittymää pystysuunnassa.
+     * @param deltatimeMillis
+     */
     public void animate(double deltatimeMillis) {
         if (!animator.animating()) {
             return;
@@ -81,6 +93,9 @@ public class EndScreen extends GameObject {
         nameEntry = new Text();
     }
     
+    /**
+     * Alustaa käyttöliittymän käyttämän objektit sekä asettaa niiden sijainnit.
+     */
     public void init() {
         spawnObjects();
 
@@ -100,6 +115,10 @@ public class EndScreen extends GameObject {
         background.setDepth(1000);
     }
     
+    /**
+     * Kutsutaan kun käyttöliittymän pistelista halutaan päivittää, animoitu EndLogic luokassa.
+     * @param scores eri asioita saadut pisteet eriteltynä
+     */
     public void setScore(int[] scores) {
         String titles[] = {"\nlaivat    ", "\nammukset  ", "\npanokset  ", "\nyhteensä  "};
         String message = "PISTEET";
@@ -119,28 +138,35 @@ public class EndScreen extends GameObject {
         }
         messenger.setContent(message);
     }
-    
+    /**
+     * Tekee käyttäjän vaihtoehdoista näkyviä.
+     */
     public void enableChoises() {
         choise = 0;
         choises.setVisible(true);
         setChoise();
     }
-    
+    /**
+     * Piilottaa käyttäjän vaihtoehdot.
+     */
     public void disableChoises() {
         choises.setVisible(false);
     }
-    
+    /**
+     * Valitsee seuraavan vaihtoehdon.
+     */
     public void choiseIncrement() {
         choise++;
         setChoise();
     }
-    
+    /**
+     * Valitsee edellisen vaihtoehdon.
+     */
     public void choiseDecrement() {
         choise--;
         setChoise();
     }
-    
-    public void setChoise() {
+    private void setChoise() {
         if (choise > 1) {
             choise = 0;
         } else if (choise < 0) {
@@ -152,7 +178,10 @@ public class EndScreen extends GameObject {
             choises.setContent(loseChoises[choise]);
         }
     }
-    
+    /**
+     * Asettaa nimisyötteen käyttöliittymän näkyvyyden.
+     * @param state 
+     */
     public void setNameEntryVisibility(boolean state) {
         title.setVisible(state);
         nameEntry.setVisible(state);
@@ -164,15 +193,24 @@ public class EndScreen extends GameObject {
             messenger.setVisible(true);
         }
     }
-    
+    /**
+     * Asettaa nimisyötteen arvon.
+     * @param content 
+     */
     public void setNameEntry(String content) {
         nameEntry.setContent(content);
     }
-    
+    /**
+     * Piilottaa otsikon, voittostatuksen joka näkyy käyttöliittymän käynnistyessä.
+     */
     public void hideTitle() {
         title.setVisible(false);
     }
     
+    /**
+     * Asettaa voittotilan luokalle, vaikuttaa viesteihin joita käyttöliittymä näyttää.
+     * @param winState
+     */
     public void setWinState(boolean winState) {
         this.winState = winState;
         System.out.println("asd");
@@ -183,10 +221,18 @@ public class EndScreen extends GameObject {
         }
     }
     
+    /**
+     * Palauttaa nykyisen valinnan.
+     * @return
+     */
     public int getChoise() {
         return choise;
     }
     
+    /**
+     * Päivitysmetodi, päivittää animointimetodia.
+     */
+    @Override
     public void update() {
         animate(getDeltatime());
     }

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- *
+ * Tekstiä piirtävä luokka.
  * @author Kari Suominen
  */
 public class Text implements DrawCallInterface {
@@ -32,22 +32,29 @@ public class Text implements DrawCallInterface {
     private ArrayList<Letter> letters;
     private TextureLoader texLoader;
     
-    public Vector3d localPosition = new Vector3d(0, 0, 10);
-    public Vector3d localRotation = new Vector3d();
-    public Vector3d globalPosition = new Vector3d();
-    public Vector3d globalRotation = new Vector3d();
+    private Vector3d localPosition = new Vector3d(0, 0, 10);
+    private Vector3d localRotation = new Vector3d();
+    private Vector3d globalPosition = new Vector3d();
+    private Vector3d globalRotation = new Vector3d();
     
-    public boolean hasUpdated;
+    private boolean hasUpdated;
     private boolean visible = true;
     private boolean hasText = false;
     private String content;
     
+    /**
+     * Alustaa objektin sekä täyttää kirjaintauluun ascii-epäyhteensopivat merkit (skandinaaviset merkit).
+     */
     public Text() {
         letterMap = new HashMap<>();
         letters = new ArrayList<>();
         fillLetterMap();
     }
     
+    /**
+     * Asettaa objektin tekstin sisällön ja tekee päivityspyynnön joka kutsutaan seuraavalla ruudunpäivityksellä.
+     * @param content
+     */
     public void setContent(String content) {
         this.content = content;
         hasText = true;
@@ -110,31 +117,55 @@ public class Text implements DrawCallInterface {
         return 15;
     }
     
+    /**
+     * Interfacemetodi joka ei tee mitään.
+     */
     @Override
     public void update() {
         return;
     }
 
+    /**
+     * Asettaa objektin näkyvyyden.
+     * @param state
+     */
     @Override
     public void setVisible(boolean state) {
         visible = state;
     }
 
+    /**
+     * Siirtää objektia paikallisesti kaksiulotteisesti (lisäävästi).
+     * @param x
+     * @param y
+     */
     @Override
     public void translate(float x, float y) {
         translate(x, y, (float) localPosition.z);
     }
 
+    /**
+     * Siirtää objektia paikallisesti kolmiulotteisesti (lisäävästi).
+     * @param x
+     * @param y
+     * @param z
+     */
     @Override
     public void translate(float x, float y, float z) {
         localPosition = localPosition.add(new Vector3d(x, y, z));
     }
 
+    /**
+     * Interfacemetodi, tyhjä.
+     */
     @Override
     public void load() {
         return;
     }
 
+    /**
+     * Piirtometodi, kutsuu Letter-objektien piirrot ja päivittää ne tekstin tai sijainninmuutosten perusteella.
+     */
     @Override
     public void draw() {
         if (hasText) {
@@ -149,36 +180,64 @@ public class Text implements DrawCallInterface {
         }
     }
 
+    /**
+     * Asettaa paikallisen sijainnin suoraan.
+     * @param position
+     */
     @Override
     public void setPosition(Vector3d position) {
         localPosition = position;
     }
     
+    /**
+     * Asettaa paikallisen kiertymän suoraan.
+     * @param rotation
+     */
     @Override
     public void setRotation(Vector3d rotation) {
         localRotation = rotation;
     }
     
+    /**
+     * Asettaa perityn sijainnin suoraan.
+     * @param position
+     */
     @Override
     public void setGlobalPosition(Vector3d position) {
         globalPosition = position;
     }
 
+    /**
+     * Asettaa perityn kiertymän suoraan.
+     * @param rotation
+     */
     @Override
     public void setGlobalRotation(Vector3d rotation) {
         globalRotation = rotation;
     }
 
+    /**
+     * Asettaa päivittyneisyyden tilan.
+     * @param state
+     */
     @Override
     public void setUpdated(boolean state) {
         hasUpdated = state;
     }
 
+    /**
+     * Vastaanottaa tekstuurinlataajan.
+     * @param loader
+     */
     @Override
     public void setTextureLoader(TextureLoader loader) {
         texLoader = loader;
     }
     
+    /**
+     * Uudelleenohjaa pienennyksen näkyvyyden asettamiseen.
+     * @param state
+     */
     @Override
     public void setMinimized(boolean state) {
         setVisible(state);

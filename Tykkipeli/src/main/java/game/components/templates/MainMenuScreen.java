@@ -21,29 +21,41 @@ import game.components.animation.PIDAnimator;
 import game.utils.Vector3d;
 
 /**
- *
+ * Käyttöliittymä päävalikolle. <a href="./../../logic/MainMenu.html">MainMenu</a> luokan ohjaama.
  * @author Kari Suominen
  */
 public class MainMenuScreen extends GameObject {
     private GameObject backgroundStatic;
     private GameObject backgroundFar;
     private GameObject backgroundNear;
-    public GameObject title;
+    private GameObject title;
+    
+    /**
+     * Käyttöliittymän juuriobjekti, julkinen että objektiin voi liittää lapsia suoraan.
+     */
     public GameObject menuEmpty;
     
-    PIDAnimator animator = new PIDAnimator(0.015f, 0f, 0.4f, 100f);
+    private PIDAnimator animator = new PIDAnimator(0.015f, 0f, 0.4f, 100f);
     
+    /**
+     * Palauttaa toden jos kaikki peliobjektin jäsenet on alustettu ja ladattu muistiin.
+     * @return
+     */
     @Override
     public boolean isInitialized() {
         return (backgroundStatic.isInitialized() && backgroundFar.isInitialized() && backgroundNear.isInitialized() && title.isInitialized());
     }
     
+    /**
+     * Rakentaja, alustaa peliobjektin ja sen lapset.
+     * @param name
+     */
     public MainMenuScreen(String name) {
         super(name);
         init();
     }
     
-    public void init() {
+    private void init() {
         backgroundStatic = new GameObject("taustatausta", "menu/taustatausta.png", new Vector3d()) { };
         backgroundFar = new GameObject("takatausta", "menu/takatausta.png", new Vector3d()) { };
         backgroundNear = new GameObject("etutausta", "menu/etutausta.png", new Vector3d()) { };
@@ -62,17 +74,26 @@ public class MainMenuScreen extends GameObject {
         append(menuEmpty);
     }
     
+    /**
+     * Aktivoi sisääntuloanimaation.
+     */
     public void enter() {
         setVisible(true);
         animator.enter();
         animatePosition(0);
     }
-    
+    /**
+     * Aktivoi ulostuloanimaation.
+     */
     public void exit() {
         animator.exit();
         animatePosition(1);
     }
     
+    /**
+     * Palauttaa animaattorin nykyisen vaiheen.
+     * @return Välillä 0-1, jossa 1 on sisääntulon loppuvaihe
+     */
     public float getAnimatedPosition() {
         return animator.getAnimatedPosition();
     }
@@ -103,6 +124,10 @@ public class MainMenuScreen extends GameObject {
         animatePosition(animator.animate(deltatimeMillis));
     }
     
+    /**
+     * Päivitysmetodi, päivittää animaattorin.
+     */
+    @Override
     public void update() {
         animate(getDeltatime());
     }

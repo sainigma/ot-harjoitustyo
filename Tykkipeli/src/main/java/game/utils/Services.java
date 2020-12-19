@@ -30,7 +30,7 @@ import org.json.JSONObject;
  * @author Kari Suominen
  */
 public class Services {
-    private String basepath = "http://192.168.0.100/api/";
+    private String basepath = "https://1030321.xyz/api/";
     private int timeoutMillis = 1000;
     
     /**

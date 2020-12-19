@@ -20,16 +20,17 @@ import game.components.GameObject;
 import game.utils.Vector3d;
 
 /**
- *  RIKKI
+ * Implementaatio peliobjektista pelin taustan luomiseen.
  * @author Kari Suominen
  */
 public class BackgroundCoast extends GameObject {
-    private float viewportScale;
     private float rotation = 0;
-    GameObject background;
-    public BackgroundCoast(String name, float viewportScale) {
-        super(name);
-        this.viewportScale = viewportScale;
+    private GameObject background;
+    /**
+     * Rakentaja
+     */
+    public BackgroundCoast() {
+        super("backgroundCoast");
         init();
     }
     private void init() {
@@ -43,12 +44,13 @@ public class BackgroundCoast extends GameObject {
         );
         setRotation(0);
     }
+    /**
+     * Asettaa toistuvan taustatekstuurin siirtymän kiertymän perusteella, 360 asteen kiertymä saa aikaan täydellisen vaakasuuntaisen siirtymän. 
+     * @param r kiertymä asteissa
+     */
     @Override
     public void setRotation(float r) {
         float factor = (r % 360) / 360;
         background.setTexOffset(factor + 0.65f, 0);
-    }
-    @Override
-    public void update() {
     }
 }

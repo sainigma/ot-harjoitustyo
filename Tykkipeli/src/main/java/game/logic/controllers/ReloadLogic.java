@@ -22,7 +22,7 @@ import game.components.templates.Mortar;
 import game.components.templates.ReloadScreen;
 
 /**
- *
+ * Logiikka ja käyttöliittymäohjaaja tykin lataamiselle lopetukselle, käyttöliittymäsekvenssin seurauksena tykin logiikka vastaanottaa ammuksen.
  * @author Kari Suominen
  */
 public class ReloadLogic {
@@ -43,19 +43,28 @@ public class ReloadLogic {
     
     private Text messenger;
     
-    Projectile currentProjectile;
-    InputManager inputs = null;
-    MortarLogic mortarLogic;
-    ReloadScreen reloadScreen;
-    Mortar mortar;
+    private Projectile currentProjectile;
+    private InputManager inputs = null;
+    private MortarLogic mortarLogic;
+    private ReloadScreen reloadScreen;
+    private Mortar mortar;
     
+    /**
+     * Rakentaja, vastaanottaa ampumisen logiikan, tykkipeliobjektin ja latausruudun käyttöliittymän.
+     * @param mortarLogic
+     * @param mortar
+     * @param reloadScreen
+     */
     public ReloadLogic(MortarLogic mortarLogic, Mortar mortar, ReloadScreen reloadScreen) {
         this.mortarLogic = mortarLogic;
         this.reloadScreen = reloadScreen;
         this.mortar = mortar;
         this.magazine = new Magazine(12, 6, 3, 54);
     }
-    
+    /**
+     * Vastaanottaa tekstiobjektin johon lähettää viestejä.
+     * @param messenger 
+     */
     public void setMessenger(Text messenger) {
         this.messenger = messenger;
     }
@@ -74,11 +83,20 @@ public class ReloadLogic {
     private void displayChargeStatus() {
         setMessage("Valitse latauspanos\n" + magazine.chargeStatus());
     }
-    
+    /**
+     * Läpikulkumetodi makasiinin ammustilanteen asettamiseen.
+     * @param light
+     * @param medium
+     * @param heavy
+     * @param charges 
+     */
     public void setMagazine(int light, int medium, int heavy, int charges) {
         this.magazine = new Magazine(light, medium, heavy, charges);
     }
-    
+    /**
+     * Palauttaa ammusvaraston.
+     * @return 
+     */
     public Magazine getMagazine() {
         return magazine;
     }
@@ -198,26 +216,44 @@ public class ReloadLogic {
             mortar.setInclinometer(true);
         }
     }
-    
+    /**
+     * Palauttaa toden jos lataussekvenssi on päättynyt.
+     * @return 
+     */
     public boolean isReloadFinished() {
         return reloadFinished;
     }
-    
+    /**
+     * Nollaa aktiivisen projektiilin.
+     */
     public void resetProjectile() {
         currentProjectile = null;
     }
-    
+    /**
+     * Palauttaa aktiivisen projektiilin.
+     * @return 
+     */
     public Projectile getProjectile() {
         return currentProjectile;
     }
-    
+    /**
+     * Asettaa näppäimistökuuntelijan luokalle.
+     * @param inputs 
+     */
     public void setInputManager(InputManager inputs) {
         this.inputs = inputs;
     }
-    
+    /**
+     * Palauttaa toden jos logiikan halutaan estävän syötteet muissa logiikoissa.
+     * @return 
+     */
     public boolean isMovementBlocked() {
         return blockMovement;
     }
+    /**
+     * Palauttaa toden jos makasiini on tyhjä ammuksista tai panoksista.
+     * @return 
+     */
     public boolean isEmpty() {
         return magazine.isEmpty();
     }
@@ -234,6 +270,9 @@ public class ReloadLogic {
         }
         return true;
     }
+    /**
+     * Initioi lataussekvenssin ja aktivoi latauksen käyttöliittymän.
+     */
     public void startReload() {
         if (clearForReload()) {
             reloadScreen.enter();
@@ -252,7 +291,9 @@ public class ReloadLogic {
             reloadIndex = prevWarhead;   
         }
     }
-    
+    /**
+     * Pääpäivitysmetodi luokalle, aktivoi luokkaa näppäimistökuuntelijan tilan perusteella.
+     */
     public void reloadControls() {
         if (inputs.keyDownOnce("reload")) {
             startReload();
@@ -265,14 +306,20 @@ public class ReloadLogic {
             chooseCartouches();
         }
     }
-    
+    /**
+     * Nollaa lataussekvenssin ja sammuttaa käyttöliittymän.
+     */
     public void reset() {
         blockMovement = false;
         currentProjectile = null;
         reloadFinished = true;
         reloadScreen.exit();
     }
-    
+    /**
+     * Asettaa logiikalle projektiilin makasiinista.
+     * @param warhead
+     * @param cartouches 
+     */
     public void setProjectile(int warhead, int cartouches) {
         float weight = magazine.getWarhead(warhead);
         cartouches = magazine.getCartouche(cartouches);

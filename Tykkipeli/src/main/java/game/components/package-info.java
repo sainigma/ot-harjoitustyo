@@ -1,5 +1,5 @@
 /**
- * Peliobjektit KESKEN. testististi
+ * Objektit käyttöliittymien luomiseen, peliobjekit.
  */
 
 package game.components;

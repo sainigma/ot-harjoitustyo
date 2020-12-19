@@ -1,6 +1,5 @@
 package game;
 
-import game.logic.BaseGame;
 import game.graphics.Renderer;
 import game.logic.LogicInterface;
 import game.logic.MainMenu;
@@ -26,7 +25,7 @@ import org.json.JSONObject;
  */
 
 /**
- *
+ * Alustaa ohjelman, eli lataa asetukset, spawnaa renderöijän sekä ensimmäisen pelilogiikan sekä käynnistää pääpelisilmukan.
  * @author Kari Suominen
  */
 
@@ -46,6 +45,9 @@ public class Main {
         setDisplaySettings(generalConfig.getJSONObject("display"));
     }
     
+    /**
+     * Alustaa pelin.
+     */
     public void init() {
         renderer = new Renderer();
         loadSettings();
@@ -57,10 +59,17 @@ public class Main {
         run();
     }
     
+    /**
+     * Käynnistää pelin, eli käynnistää piirtosilmukan.
+     */
     public void run() {
         renderer.run();
     }
     
+    /**
+     * Käynnistää sovelluksen.
+     * @param args
+     */
     public static void main(String args[]) {
         System.out.println("Init");
         new Main().init();

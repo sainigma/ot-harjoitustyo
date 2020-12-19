@@ -17,19 +17,41 @@
 package game.components.animation;
 
 /**
- *
+ * Yksittäinen animaation askel.
  * @author Kari Suominen
  */
 public class Frame {
+
+    /**
+     * Askeleen tunnus, kuvaa yhtä ruudunpäivitystä.
+     */
     public int frame = 0;
+
+    /**
+     * Askeleen kaksiulotteinen sijainti.
+     */
     public float position[] = {0, 0};
+
+    /**
+     * Askeleen ohjausarvo.
+     */
     public double value = 0;
 
+    /**
+     * Rakentaja ohjausarvoanimaation ruudulle.
+     * @param frame askel, tietty ruudunpäivitys
+     * @param value ohjausarvo
+     */
     public Frame(int frame, double value) {
         this.frame = frame;
         this.value = value;
     }
 
+    /**
+     * Rakentaja siirtymäanimaation ruudulle.
+     * @param frame askel, tietty ruudunpäivitys
+     * @param position absoluuttinen sijainti
+     */
     public Frame(int frame, float position[]) {
         this.frame = frame;
         this.position[0] = position[0];

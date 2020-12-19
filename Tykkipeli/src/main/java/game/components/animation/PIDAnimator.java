@@ -19,26 +19,38 @@ package game.components.animation;
 import game.utils.PID;
 
 /**
- *
+ * PID-säätimeen perustuva yksinkertainen animaattori. Siirtyy dynaamisesti 0 ja 1 välillä.
  * @author Kari Suominen
  */
 public class PIDAnimator {
-    boolean animating = false;
-    float animatedPosition;
-    float animatedTarget;
-    PID animator;
+    private boolean animating = false;
+    private float animatedPosition;
+    private float animatedTarget;
+    private PID animator;
     
+    /**
+     * Rakentaja, alustaa PID-säätimen.
+     * @param p Suhdekerroin
+     * @param i Integrointikerroin
+     * @param d Derivointikerroin
+     * @param t Aikakerroin
+     */
     public PIDAnimator(float p, float i, float d, float t) {
         animator = new PID(p, i, d, t);
     }
     
+    /**
+     * Alustaa ja aktivoi animaattorin siirtymän ohjausarvosta 0 -> 1.
+     */
     public void enter() {
         animating = true;
         animatedPosition = 0f;
         animatedTarget = 1f;
         animator.activate();
     }
-    
+    /**
+     * Alustaa ja aktivoi animaattorin siirtymän ohjausarvosta 1 -> 0.
+     */
     public void exit() {
         animating = true;
         animatedPosition = 1f;
@@ -46,6 +58,11 @@ public class PIDAnimator {
         animator.activate();
     }
     
+    /**
+     * Päivittää säätimen ja palauttaa nykyisen ohjausarvon.
+     * @param deltatimeMillis
+     * @return
+     */
     public float animate(double deltatimeMillis) {
         if (!animating) {
             return -1;
@@ -60,10 +77,18 @@ public class PIDAnimator {
         return animatedPosition;
     }
     
+    /**
+     * Palauttaa toden jos ohjausarvo on vielä 0 ja 1 välillä.
+     * @return
+     */
     public boolean animating() {
         return animating;
     }
 
+    /**
+     * Palauttaa nykyisen ohjausarvon.
+     * @return
+     */
     public float getAnimatedPosition() {
         return animatedPosition;
     }

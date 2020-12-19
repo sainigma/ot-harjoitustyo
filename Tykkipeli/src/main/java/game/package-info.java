@@ -1,0 +1,5 @@
+/**
+ * Ohjelman alustaja.
+ */
+
+package game;

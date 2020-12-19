@@ -20,13 +20,23 @@ import game.graphics.Renderer;
 import game.utils.InputManager;
 
 /**
- *
+ * Interface ohjauslogiikalle, toimii wrapperina sekä määrittää ohjauslogiikan pakolliset metodit.
  * @author Kari Suominen
  */
 public interface LogicInterface {
+
+    /**
+     * Pelissä on vain yksi näppäimistökuuntelija, logiikka toteuttaa käyttöliittymän ohjauksen sillä. Kuuntelija jaetaan eteenpäin seuraavaa logiikkaa spawnatessa.
+     * @param inputs
+     */
     public void setInputManager(InputManager inputs);
+    /**
+     * Pelissä on vain yksi renderöijä, viittaus renderöijään tarvitaan että logiikka voi lisätä ja poistaa objekteja renderöijän piirtojonosta. Renderöijä jaetaan eteenpäin seuraavaa logiikkaa spawnatessa, renderöijälle myös asetetaan viittaus aktiiviseen logiikkaan.
+     * @param renderer 
+     */
     public void setRenderer(Renderer renderer);
+    /**
+     * Päivitysmetodi interfacelle, kutsutaan jokaisella ruudunpiirrolla renderöijästä.
+     */
     public void update();
-    public void update(double dtMillis);
-    public void setParent(LogicInterface parent);
 }

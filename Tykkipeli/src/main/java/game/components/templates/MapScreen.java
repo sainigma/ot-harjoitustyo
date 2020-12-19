@@ -17,7 +17,6 @@
 package game.components.templates;
 
 import game.components.GameObject;
-import game.components.Text;
 import game.graphics.primitives.Circle;
 import game.graphics.primitives.Lines;
 import game.logic.controllers.Statistic;
@@ -27,32 +26,40 @@ import game.utils.Vector3d;
 import java.util.ArrayList;
 import java.util.HashMap;
 /**
- *
+ * Alinäkymä kartan ja minikartan piirtoon.
  * @author Kari Suominen
  */
 public class MapScreen extends GameObject {
     private boolean minimized = true;
     private float mapTexScale = 520f / 10000f;
-    Vector3d mapRotation = new Vector3d(0, 0, 0);
+    private Vector3d mapRotation = new Vector3d(0, 0, 0);
     
+    /**
+     * Juuriobjekti joka näkyy kaikkien näkymien päällä.
+     */
     public GameObject overlay;
-    public GameObject map;
-    public GameObject minimap;
-    GameObject projectileFront;
-    GameObject projectileShadow;
-    String [] targetNames = {"windjammer", "frigate", "ironclad", "lineship"};
-    HashMap<String, GameObject> targetIcons;
-    HashMap<TargetLogic, TargetIcon> targets;
     
-    ArrayList<Plotter> plotters;
-    HashMap<Ballistics, Plotter> historicalPlots;
-    ArrayList<ProjectileGroup> projectiles;
+    private GameObject map;
+    private GameObject minimap;
+    private GameObject projectileFront;
+    private GameObject projectileShadow;
+    private String [] targetNames = {"windjammer", "frigate", "ironclad", "lineship"};
+    private HashMap<String, GameObject> targetIcons;
+    private HashMap<TargetLogic, TargetIcon> targets;
     
-    GameObject cursor;
-    GameObject minicursor;
+    private ArrayList<Plotter> plotters;
+    private HashMap<Ballistics, Plotter> historicalPlots;
+    private ArrayList<ProjectileGroup> projectiles;
+    
+    private GameObject cursor;
+    private GameObject minicursor;
     
     private double traversal;
     
+    /**
+     * Rakentaja, alustaa luokan ja sen lapset.
+     * @param name
+     */
     public MapScreen(String name) {
         super(name);
         this.traversal = 0f;
@@ -63,7 +70,7 @@ public class MapScreen extends GameObject {
         init();
     }
     
-    class Plotter {
+    private class Plotter {
         Lines plotter;
         public Plotter() {
             plotter = new Lines();
@@ -86,7 +93,7 @@ public class MapScreen extends GameObject {
         }
     }
     
-    class RangePlotter {
+    private class RangePlotter {
         Circle plotter;
         Vector3d mapPosition;
         Vector3d localPosition;
@@ -109,7 +116,7 @@ public class MapScreen extends GameObject {
         }
     }
     
-    class ProjectileGroup {
+    private class ProjectileGroup {
         
         GameObject front;
         GameObject shadow;
@@ -168,7 +175,7 @@ public class MapScreen extends GameObject {
         }
     }
     
-    class TargetIcon {
+    private class TargetIcon {
         private float range;
         GameObject icon;
         RangePlotter rangePlotter;
@@ -211,6 +218,10 @@ public class MapScreen extends GameObject {
         }
     }
     
+    /**
+     * Vastaanottaa tykin suunnan, vaikuttaa karttakursorin suuntaan.
+     * @param rotation
+     */
     public void setTraversal(double rotation) {
         double offset = -45f;
         traversal = rotation;
@@ -218,6 +229,10 @@ public class MapScreen extends GameObject {
         minicursor.setRotation((float) (rotation + offset));
     }
     
+    /**
+     * Vastaanottaa kartan kiertymän, pyörittää karttoja ja niiden lapsia.
+     * @param rotation
+     */
     public void rotateMap(double rotation) {
         map.rotate((float) rotation);
         minimap.rotate((float) rotation);
@@ -228,6 +243,10 @@ public class MapScreen extends GameObject {
         projectile.setPosition(position);
     }
     
+    /**
+     * Vapauttaa ylimääräiset projektit piirtojonosta.
+     * @param i nykyinen projektiilien määrä
+     */
     public void freeProjectiles(int i) {
         if (projectiles.size() <= i) {
             return;
@@ -254,6 +273,10 @@ public class MapScreen extends GameObject {
         return p;
     }
     
+    /**
+     * Vastaanottaa historiahajautustaulun, päivittää aktiivisten projektiilien sijainnit ja lisää paikalliseen historiaan lisäämättömät deaktivoidut projektiilit.
+     * @param history
+     */
     public void setByHistory(HashMap<Ballistics, Statistic> history) {
         int i = 0;
         for (Ballistics solver : history.keySet()) {
@@ -296,6 +319,10 @@ public class MapScreen extends GameObject {
         minicursor = new GameObject("mapcursor", "mapview/suuntamini.png", new Vector3d(0)) { };
     }
     
+    /**
+     * Alustaa maali-ikonin.
+     * @param target
+     */
     public void spawnTarget(TargetLogic target) {
         TargetIcon icon = new TargetIcon(target.getName(), target.getPosition(), target.getRotation(), target.getRange());
         targets.put(target, icon);
@@ -340,6 +367,10 @@ public class MapScreen extends GameObject {
 
     }
     
+    /**
+     * Minimoi näkymän, minimoituna näkyy minikartta ja overlay, maksimoituna kartta ja overlay.
+     * @param minimized
+     */
     @Override
     public void setMinimized(boolean minimized) {
         this.minimized = minimized;
@@ -352,11 +383,19 @@ public class MapScreen extends GameObject {
         }
     }
     
+    /**
+     * Palauttaa toden jos näkymä on pienennetty.
+     * @return
+     */
     @Override
     public boolean isMinimized() {
         return minimized;
     }
     
+    /**
+     * Päivittää maali-ikonin sijainnin ja kiertymän.
+     * @param logic
+     */
     public void updateTarget(TargetLogic logic) {
         TargetIcon target = targets.get(logic);
         target.setPosition(logic.getPosition());
@@ -387,13 +426,15 @@ public class MapScreen extends GameObject {
         }
     }
     
+    /**
+     * Päivitysmetodi, kutsuu lentoratojen sekä maaliobjektien vastatykistöetäisyyksien piirrot.
+     */
     @Override
     public void update() {
         if (!minimized) {
             plotPlotters();
             plotHistoricalPlots();
             plotRanges();
-            //setVisible(false);
         }
     }
 }

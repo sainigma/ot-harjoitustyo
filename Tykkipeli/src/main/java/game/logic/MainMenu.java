@@ -23,22 +23,21 @@ import game.utils.InputManager;
 import game.utils.Timing;
 
 /**
- *
+ * Ohjauslogiikka pelin päävalikolle.
  * @author Kari Suominen
  */
 public class MainMenu implements LogicInterface {
-    Renderer renderer = null;
-    InputManager inputs = null;
+    private Renderer renderer = null;
+    private InputManager inputs = null;
     private Timing timing;
     
-    private LogicInterface parent;
     private boolean nextReadyToSpawn = false;
     private String nextLogicName = "";
     
     private boolean initialized = false;
-    double deltatimeMillis = 0;
-    MainMenuScreen menuScreen;
-    Text text;
+    private double deltatimeMillis = 0;
+    private MainMenuScreen menuScreen;
+    private Text text;
     
     private int menuIndex = -1;
     private String menuItems[] = {
@@ -47,6 +46,9 @@ public class MainMenu implements LogicInterface {
         "uusi peli\nhighscroret\n LOPETA"
     };
     
+    /**
+     * Rakentaja, alustaa käyttöliittymän ja ajastimen.
+     */
     public MainMenu() {
         timing = new Timing();
         menuScreen = new MainMenuScreen("mainmenu");
@@ -57,11 +59,19 @@ public class MainMenu implements LogicInterface {
         text.setContent("Paina ENTER aloittaaksesi");
     }
     
+    /**
+     * Asettaa näppäimistökuuntelijan.
+     * @param inputs 
+     */
     @Override
     public void setInputManager(InputManager inputs) {
         this.inputs = inputs;
     }
 
+    /**
+     * Asettaa renderöijän, lisää käyttöliittymän piirtojonoon.
+     * @param renderer
+     */
     @Override
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
@@ -140,17 +150,14 @@ public class MainMenu implements LogicInterface {
         }
     }
    
+    /**
+     * Logiikan päivitysmetodi, päivittää ajastimen, logiikan ja käyttöliittymän.
+     */
     @Override
     public void update() {
         deltatimeMillis = timing.getDeltatimeMillis();
         updateLogic();
         updateGUI();
-    }
-
-    @Override
-    public void update(double dtMillis) {
-        deltatimeMillis = dtMillis;
-        updateLogic();
     }
     
     private LogicInterface spawnLogic(String name) {
@@ -182,9 +189,5 @@ public class MainMenu implements LogicInterface {
         renderer.setLoading(true);
         renderer.removeFromRenderQueue(menuScreen);
         nextReadyToSpawn = true;
-    }
-    
-    public void setParent(LogicInterface parent) {
-        this.parent = parent;
     }
 }

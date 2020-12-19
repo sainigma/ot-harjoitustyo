@@ -16,12 +16,11 @@
  */
 package game.logic.controllers;
 
-import game.simulations.cases.Ballistics;
 import game.utils.Vector3d;
 import java.util.ArrayList;
 
 /**
- *
+ * Historia yksittäiselle projektiilille, tallentaa lähtöparametrit sekä lentoradan.
  * @author Kari Suominen
  */
 public class Statistic {
@@ -30,21 +29,29 @@ public class Statistic {
     private double traversal;
     private double mass;
     private int cartouches;
-    private Ballistics solver;
     private Vector3d lastPosition;
     private ArrayList<Vector3d> positions;
     private boolean active;
     
-    public Statistic(double elevation, double traversal, double mass, int cartouches, Ballistics solver) {
+    /**
+     * Rakentaja, alustaa lähtöparametrit.
+     * @param elevation tykin korotus asteissa
+     * @param traversal tykin suunta asteissa
+     * @param mass projektiilin massa kiloina
+     * @param cartouches projektiilin panosten määrä
+     */
+    public Statistic(double elevation, double traversal, double mass, int cartouches) {
         this.elevation = elevation;
         this.traversal = traversal;
         this.mass = mass;
         this.cartouches = cartouches;
-        this.solver = solver;
         positions = new ArrayList<>();
         active = true;
     }
-
+    /**
+     * Lisää sijainnin sijaintihistoriaan.
+     * @param position 
+     */
     public void updatePosition(Vector3d position) {
         if (lastPosition == null) {
             lastPosition = position.clone();
@@ -53,38 +60,61 @@ public class Statistic {
             lastPosition = position.clone();
         }
     }
-    
+    /**
+     * Palauttaa viimeksi lisätyn sijainnin.
+     * @return 
+     */
     public Vector3d getLastPosition() {
         if (positions.isEmpty()) {
             return null;
         }
         return positions.get(positions.size() - 1);
     }
-    
+    /**
+     * Palauttaa sijaintilistan.
+     * @return 
+     */
     public ArrayList<Vector3d> getPositions() {
         return positions;
     }
-    
+    /**
+     * Merkitsee tilastoinnin päättyneeksi.
+     */
     public void disable() {
         active = false;
     }
-    
+    /**
+     * Palauttaa toden jos tilastointi on vielä käynnissä.
+     * @return 
+     */
     public boolean isActive() {
         return active;
     }
-    
+    /**
+     * Palauttaa lineaarisen kertoimen projektiilin massasta, kevyt kranaatti vastaanottaa arvon 1.
+     * @return 
+     */
     public float getPower() {
         return (float) (mass / 123f);
     }
-    
+    /**
+     * Palauttaa projektiilin massan.
+     * @return 
+     */
     public float getMass() {
         return (float) mass;
     }
-    
+    /**
+     * Palauttaa tykin lähtökoron.
+     * @return 
+     */
     public float getElevation() {
         return (float) elevation;
     }
-    
+    /**
+     * Tekstimuunnos testikäyttöön.
+     * @return 
+     */
     @Override
     public String toString() {
         return "final position: " + lastPosition;

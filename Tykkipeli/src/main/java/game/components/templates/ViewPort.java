@@ -22,7 +22,7 @@ import game.components.GameObject;
 import java.util.Random;
 
 /**
- *
+ * World-tyyppinen peliobjekti näkymien toteuttamiseen. Käyttäytyy kuten empty, mutta toteuttaa näkymän pienennyksen ja tärisytyksen.
  * @author Kari Suominen
  */
 public class ViewPort extends GameObject {
@@ -30,12 +30,19 @@ public class ViewPort extends GameObject {
     private float screenShakeIntensity = 1;
     private boolean minimized = false;
     
-    Random rand = new Random();
+    private Random rand = new Random();
     
+    /**
+     * Rakentaja, alustaa emptyn.
+     * @param name
+     */
     public ViewPort(String name) {
         super(name);
     }
     
+    /**
+     * Päivitysmetodi, tärisyttää näkymää ja sen kaikkia lapsiobjekteja jos tärisytys on käynnissä.
+     */
     @Override
     public void update() {
         if (screenShake) {
@@ -45,6 +52,11 @@ public class ViewPort extends GameObject {
             ));
         }
     }
+
+    /**
+     * Asettaa tärisytyksen arvon, nollaa näkymän ja sen lapset jos tärinä on loppu.
+     * @param intensity
+     */
     public void setScreenShake(float intensity) {
         screenShakeIntensity = intensity;
         if (intensity < 0.1) {
@@ -54,17 +66,36 @@ public class ViewPort extends GameObject {
             screenShake = true;
         }
     }
+
+    /**
+     * Palauttaa toden jos näkymä tärisee.
+     * @return
+     */
     public boolean isShaking() {
         return screenShake;
     }
+
+    /**
+     * Palauttaa toden jos näkymä on pienennetty.
+     * @return
+     */
     @Override
     public boolean isMinimized() {
         return minimized;
     }
+
+    /**
+     * Kytkee näkymän pienennyksen päälle ja pois.
+     */
     @Override
     public void toggleMinimized() {
         setMinimized(!minimized);
     }
+
+    /**
+     * Asettaa näkymän pienennyksen suoraan.
+     * @param state
+     */
     @Override
     public void setMinimized(boolean state) {
         minimized = state;

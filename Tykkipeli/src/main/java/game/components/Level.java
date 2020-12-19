@@ -23,38 +23,54 @@ import game.components.templates.ViewPort;
 import game.components.templates.Mortar;
 import game.components.templates.ReloadScreen;
 /**
- * GameObject luokan implementaatio pelin päänäkymien hallitsemiseen. Sekä kartta- että pelinäkymän juuri.
+ * GameObject luokan implementaatio pelin päänäkymän hallitsemiseen. Sekä kartta- että pelinäkymän juuri.
  * @author Kari Suominen
  */
 public class Level extends GameObject {
-    long start = System.currentTimeMillis();
-    
+
+    /**
+     * Tykkinäkymä.
+     */
     public ViewPort gameView;
+
+    /**
+     * Karttanäkymä.
+     */
     public ViewPort mapView;
+
+    /**
+     * Tykki.
+     */
     public Mortar mortar;
+
+    /**
+     * Karttanäkymän käyttöliittymä.
+     */
     public MapScreen mapScreen;
+
+    /**
+     * Tykkinäkymän tykin latauksen käyttöliittymä.
+     */
     public ReloadScreen reloadScreen;
+
+    /**
+     * Tykkinäkymän lopetusruudun käyttöliittymä.
+     */
     public EndScreen endScreen;
-    public GameObject background;
-    public GameObject overlay;
+    private GameObject background;
     
-    private boolean isFinished = false;
     private float viewportScale = 720f / 1080f;    
+
+    /**
+     * Rakentaja, alustaa peliobjektin sekä näkymät/käyttöliittymät, tykin ja taustan 
+     * @param name
+     */
     public Level(String name) {
         super(name);
         init();
     }
-    
-    public boolean isFinished() {
-        return isFinished;
-    }
-    
-    /**
-     * Alustaa pelinäkymän, tykin ja taustan. Kutsutaan vain ensimmäisellä luontikerralla.
-     */
+ 
     private void init() {
-        overlay = new GameObject("overlay") { };
-        
         initGameView();
         initMapView();
         
@@ -66,7 +82,7 @@ public class Level extends GameObject {
     private void initGameView() {
         gameView = new ViewPort("game");        
         mortar = new Mortar("mortar");
-        background = new BackgroundCoast("coast", 1);
+        background = new BackgroundCoast();
         reloadScreen = new ReloadScreen("reloadScreen");
         endScreen = new EndScreen("endScreen");
         
@@ -78,13 +94,10 @@ public class Level extends GameObject {
         gameView.append(endScreen);
         append(gameView);
     }
-    /**
-     * Alustaa karttanäkymän, kutsutaan joka kerta kun kenttä vaihtuu.
-     */
+    
     private void initMapView() {
         mapView = new ViewPort("map");
         mapScreen = new MapScreen("mapScreen");
-        //mapScreen.setOverlay(overlay);
         mapView.append(mapScreen);
         append(mapView);        
     }
@@ -98,6 +111,9 @@ public class Level extends GameObject {
         initMapView();
     }
     
+    /**
+     * Päivitysmetodi, animoi taustan tykin suunnan perusteella.
+     */
     @Override
     public void update() {
         background.setRotation(mortar.getTraversal());

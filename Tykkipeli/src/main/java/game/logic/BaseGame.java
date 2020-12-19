@@ -35,32 +35,44 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * Pääluokka pelin logiikalle
+ * Ohjauslogiikka pääpelisilmukalle.
  * @author Kari Suominen
  */
 public class BaseGame implements LogicInterface {
     private InputManager inputs = null;
     private Renderer renderer = null;
     private Timing timing;
-    LogicInterface parent = null;
     
-    ScoreManager scoreManager;
+    private ScoreManager scoreManager;
     private String currentLevel;
     private String nextLevel;
     
     private boolean guiInitialized = false;
+    /**
+     * Tulituslogiikka, julkinen testejä varten.
+     */
     public MortarLogic mortarLogic;
+    /**
+     * Latauslogiikka, julkinen testejä varten.
+     */
     public ReloadLogic reloadLogic;
-    public EndLogic endLogic;
+    /**
+     * Pelin maaliobjektit, julkinen testejä varten.
+     */
     public ArrayList<TargetLogic> targets;
+    /**
+     * Pelin kenttä, world-tyyppinen peliobjekti, julkinen testejä varten.
+     */
     public Level level = null;
+    
+    private EndLogic endLogic;
     
     private int targetsLeft = 0;
     
     private String nextLogicName;
     private boolean hasNext = false;
     
-    public ScreenShaker screenShaker;
+    private ScreenShaker screenShaker;
     private boolean gunMovementActive = true;
     
     private boolean initialized = false;
@@ -626,16 +638,11 @@ public class BaseGame implements LogicInterface {
     }
     
     /**
-     * Logiikan julkinen päivitysmetodi manuaaliseen kutsuun. Vastaanottaa piirtoon kuluneen ajan, ja on tarkoitettu testeistä ajettavaksi.
+     * Logiikan julkinen päivitysmetodi manuaaliseen kutsuun. Vastaanottaa edellisestä päivityksestä tähän kuluneen ajan, ja on tarkoitettu testeistä ajettavaksi.
      * @param dtMillis Piirtoon kulunut aika millisekunneissa. Yleensä 16 (60fps).
      */
     public void update(double dtMillis) {
         deltatimeMillis = dtMillis;
         updateLogic();
-    }
-
-    @Override
-    public void setParent(LogicInterface parent) {
-        this.parent = parent;
     }
 }

@@ -20,7 +20,7 @@ import game.components.Animator;
 import game.components.GameObject;
 
 /**
- *
+ * Empty-tyyppinen peliobjekti ruudun tärisyttämiseen.
  * @author Kari Suominen
  */
 public class ScreenShaker extends GameObject {
@@ -28,29 +28,50 @@ public class ScreenShaker extends GameObject {
     private boolean shaking;
     private float shakeValue;
     
+    /**
+     * Rakentaja, alustaa peliobjektin ja animaattorin.
+     */
     public ScreenShaker() {
         super("screenshaker");
         init();
     }
     
-    public void init() {
+    private void init() {
         shaking = false;
         shakeValue = 0;
         animator = new Animator();
         animator.loadAnimation("screenshaker/normalShake");
         animator.bindDriver("shaker", this);
     }
+
+    /**
+     * Aktivoi animaattorissa ruuduntärisytyksen.
+     */
     public void shake() {
         shaking = true;
         animator.playAnimation("screenshaker/normalShake");
     }
+    /**
+     * Rajapinta animaattorille, vastaanottaa avaimen ja ohjausarvon jolla avaimen määrittämää objektia animoidaan.
+     * @param target avain
+     * @param value ohjausarvo
+     */
     @Override
     public void drive(String target, double value) {
         shakeValue = (float) value;
     }
+
+    /**
+     * Palauttaa tärisytyksen ohjausarvon.
+     * @return
+     */
     public float getShakevalue() {
         return shakeValue;
     }
+
+    /**
+     * Päivitysmetodi, päivittää animaattoria jos tärisytys on käynnissä.
+     */
     @Override
     public void update() {
         double dt = getDeltatime();

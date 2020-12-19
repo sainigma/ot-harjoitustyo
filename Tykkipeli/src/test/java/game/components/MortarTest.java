@@ -79,7 +79,6 @@ public class MortarTest {
     }
     private boolean _testElevationSetter(float elevation){
         mortar.setTrueElevation(elevation);
-        mortar.addElevation(0.5f);
         return (Math.abs(mortar.getElevation() - elevation) < 0.6f);
     }
     @Test

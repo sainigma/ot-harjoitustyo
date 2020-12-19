@@ -31,4 +31,5 @@
 | 16.12 | 6 | Pistetallentimen viimeistelyä. Highscorenäkymän tekemistä, pisteet haetaan näkymään sekä paikallisesta arkistosta sekä netistä. Refaktorointia. Pelin lopetusruudun hienosäätöä, nimensyöttö. Projektin viimeistelyä toimintojen puolesta.
 | 17.12 | 4 | Koodin siistimistä ja hienosäätöä.
 | 18.12 | 7 | Javadocin kirjoitusta, skriptojen tekoa nopeampaan testailuun ja kääntämiseen.
-| yht | 151 | |
+| 19.12 | 3 | Javadocin viimeistely.
+| yht | 154 | |

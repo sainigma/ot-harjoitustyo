@@ -16,14 +16,12 @@
  */
 package game.components.animation;
 
-import game.components.animation.Clip;
-import game.components.animation.Frame;
 import game.utils.JSONLoader;
 import java.util.HashMap;
 import org.json.*;
 
 /**
- *
+ * Yksittäinen animaatio, metodit animaatioklipin lataamiseen ja animaation pyörittämiseen. Tarkoitettu yhden animaation toistamiseen, mutta yksi animaatio voi koostua useasta klipistä, esim. jos animaatio liikuttaa useita objekteja.
  * @author Kari Suominen
  */
 public class Animation {
@@ -37,6 +35,10 @@ public class Animation {
     private boolean loop = false;
     private HashMap<String, Clip> driverClips;
     
+    /**
+     * Rakentaja, kutsuu animaation lataamisen tiedostosta.
+     * @param path animaation nimi, muotoa objekti/polku
+     */
     public Animation(String path) {
         driverClips = new HashMap<>();
         name = path;
@@ -74,6 +76,11 @@ public class Animation {
         }
     }
     
+    /**
+     * Palauttaa driver-tyyppisen animaation nykyisen framen avaimen perusteella.
+     * @param name animaation nimi, muotoa objekti/animaatio
+     * @return
+     */
     public Frame getDriverFrame(String name) {
         if (!driverClips.containsKey(name)) {
             return null;
@@ -82,6 +89,9 @@ public class Animation {
         return clip.getFrame(currentFrame);
     }
     
+    /**
+     * Päivittää animaation, nollaa tai palauttaa sen alkuun jos loppu saavutetaan.
+     */
     public void advance() {
         currentFrame += 1;
         if (currentFrame >= length) {
@@ -93,20 +103,31 @@ public class Animation {
         }
     }
     
+    /**
+     * Nollaa animaation ja soittaa sen alusta.
+     */
     public void play() {
         reset();
         playing = true;
         loop = false;
     }
+
+    /**
+     * Toistaa animaatiota ikuisesti. 
+     */
     public void playForever() {
         playing = true;
         loop = true;
     }
-    
+    /**
+     * Pysäyttää animaation toistamisen.
+     */
     public void pause() {
         playing = false;
     }
-    
+    /**
+     * Pysäyttää animaation toistamisen ja palauttaa sen alkuun.
+     */
     public void stop() {
         playing = false;
         currentFrame = 0;
@@ -118,11 +139,18 @@ public class Animation {
         }
     }
     
+    /**
+     * Palauttaa kaikki animaatioklipit alkuun.
+     */
     public void reset() {
         currentFrame = 0;
         resetClips(driverClips);
     }
     
+    /**
+     * Palauttaa toden jos animaatioklippi on päällä.
+     * @return
+     */
     public boolean isPlaying() {
         return playing;
     }

@@ -34,7 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
+ * Ohjauslogiikka pistenäkymälle.
  * @author Kari Suominen
  */
 public class HighScores implements LogicInterface {
@@ -44,9 +44,9 @@ public class HighScores implements LogicInterface {
     
     private boolean nextReadyToSpawn = false;
     
-    JSONObject localScores;
-    JSONObject globalScores;
-    ArrayList<String> levelList;
+    private JSONObject localScores;
+    private JSONObject globalScores;
+    private ArrayList<String> levelList;
  
     private StringTools stringTools = new StringTools();
     
@@ -61,6 +61,9 @@ public class HighScores implements LogicInterface {
     private GameObject scoreRoot;
     private Text title;
     
+    /**
+     * Rakentaja, alustaa käyttöliittymän ja hakee nykyiset pistetilastot.
+     */
     public HighScores() {
         timing = new Timing();
         root = new ScreenShaker();
@@ -83,9 +86,7 @@ public class HighScores implements LogicInterface {
         }
         Collections.sort(levelList, String.CASE_INSENSITIVE_ORDER);
     }
-    
 
-    
     private void setScoreList(String title, String level, Text scoreList, JSONObject scores) {
         String content = title;
         if (scores == null || !scores.has(level) || scores.getJSONArray(level).length() == 0) {
@@ -95,7 +96,7 @@ public class HighScores implements LogicInterface {
                 JSONArray singleScoreArr = (JSONArray) singleScore;
                 try {
                     String name = singleScoreArr.getString(0);
-                    content += "\n" + stringTools.padZeros(singleScoreArr.getInt(1), 9);
+                    content += "\n" + name + "  " + stringTools.padZeros(singleScoreArr.getInt(1), 9);
                 } catch (Exception e) {
                     throw new ClassCastException("Malformed score!");
                 }
@@ -132,10 +133,20 @@ public class HighScores implements LogicInterface {
         createViews();
     }
     
+    /**
+     * Asettaa näppäimistökuuntelijan.
+     * @param inputs
+     */
+    @Override
     public void setInputManager(InputManager inputs) {
         this.inputs = inputs;
     }
-
+    
+    /**
+     * Asettaa renderöijän logiikalle.
+     * @param renderer
+     */
+    @Override
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
         renderer.appendToRenderQueue(root);
@@ -191,6 +202,9 @@ public class HighScores implements LogicInterface {
         nextReadyToSpawn = true;
     }
     
+    /**
+     * Logiikan päivitysmetodi, alustaa käyttöliittymän, päivittää ajastimen, logiikan ja käyttöliittymän sekä tarvittaessa kutsuu seuraavan logiikan spawnauksen.
+     */
     @Override
     public void update() {
         if (nextReadyToSpawn) {
@@ -205,15 +219,5 @@ public class HighScores implements LogicInterface {
         updateLogic();
         updateControls();
         animate();
-    }
-
-    @Override
-    public void update(double dtMillis) {
-        deltatimeMillis = dtMillis;
-        updateLogic();
-    }
-
-    @Override
-    public void setParent(LogicInterface parent) {
     }
 }
