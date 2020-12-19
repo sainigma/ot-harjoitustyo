@@ -210,7 +210,6 @@ public class ReloadLogic {
     private void reload() {
         if (mortarLogic.addProjectile(currentProjectile)) {
             setMessage("Tulivalmis!");
-            System.out.println(magazine);
             reloadFinished = true;
             blockMovement = false;
             mortar.setInclinometer(true);

@@ -254,7 +254,6 @@ public class MapScreen extends GameObject {
         int j = projectiles.size() - 1;
         while (projectiles.size() > i) {
             ProjectileGroup projectile = projectiles.get(j);
-            spawnHitmarker(projectile.getPosition(), projectile.getPower());
             projectiles.get(j).kill();
             projectiles.remove(j);
             plotters.remove(j);
@@ -332,10 +331,6 @@ public class MapScreen extends GameObject {
         if (projectiles.size() < size) {
             projectiles.add(new ProjectileGroup());
         }
-    }
-    
-    private void spawnHitmarker(Vector3d position, float power) {
-        System.out.println("spawning hitmarker at " + position);
     }
     
     private void setChildTransforms() {

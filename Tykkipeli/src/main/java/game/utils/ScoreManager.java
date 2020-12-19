@@ -181,7 +181,7 @@ public class ScoreManager {
     private String encrypt(String body) {
         PublicKey key = getKey();
         if (key == null) {
-            return body;
+            return null;
         }
         try {
             Cipher cipher = Cipher.getInstance("RSA");
@@ -198,6 +198,10 @@ public class ScoreManager {
     private void saveGlobal() {
         String message = "{\"name\":\"" + score.name + "\", \"score\":\"" + score.score + "\"}";
         message = encrypt(message);
+        if (message == null) {
+            statusCode = -1;
+            return;
+        }
         String body = "{\"raw\":\"" + message + "\"}";
         statusCode = services.post(basePath + score.level, body);
     }
@@ -207,6 +211,21 @@ public class ScoreManager {
      * @return 
      */
     public int getStatusCode() {
-        return statusCode;
+        return services.getStatusCode();
+    }
+    
+    /**
+     * Asettaa nettirajapinnan juuripolun, testauskäyttöön.
+     * @param path 
+     */
+    public void setServicesPath(String path) {
+        services.setPath(path);
+    }
+    
+    /**
+     * Asettaa enkryptioavaimen suoraan, testauskäyttöön.
+     */
+    public void setEncryptionKey(String key) {
+        this.key = key;
     }
 }

@@ -213,7 +213,6 @@ public class EndScreen extends GameObject {
      */
     public void setWinState(boolean winState) {
         this.winState = winState;
-        System.out.println("asd");
         if (winState) {
             title.setContent(" VOITTO!  ");
         } else {

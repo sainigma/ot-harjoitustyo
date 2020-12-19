@@ -172,10 +172,8 @@ public class MortarLogic {
      */
     public boolean fire() {
         if (currentProjectile == null) {
-            System.out.println("no projectile set");
             return false;
         }
-        System.out.println("firing for effect");
         startSolver();
         currentProjectile = null;
         return true;

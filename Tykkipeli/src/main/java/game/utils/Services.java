@@ -32,7 +32,7 @@ import org.json.JSONObject;
 public class Services {
     private String basepath = "https://1030321.xyz/api/";
     private int timeoutMillis = 1000;
-    
+    private int statusCode = 0;
     /**
      * Lähettää merkkijonoksi muutetun json-objektin POST pyyntönä.
      * @param path suhteellinen polku rajapintaan
@@ -40,6 +40,10 @@ public class Services {
      * @return 
      */
     public int post(String path, String body) {
+        statusCode = -1;
+        if (body == null || body.isBlank()) {
+            return statusCode;
+        }
         HttpClient client = HttpClient.newHttpClient();
         URI serverURI = URI.create(basepath + path);
         HttpRequest req = HttpRequest.newBuilder()
@@ -50,14 +54,15 @@ public class Services {
                 .build();
         try {
             HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
-            return res.statusCode();
+            statusCode = res.statusCode();
         } catch (IOException | InterruptedException ex) {
             System.out.println("Connection to server failed: timeout");
-            return -1;
         }
+        return statusCode;
     }
     
     private HttpResponse<String> get(String path) {
+        statusCode = -1;
         HttpClient client = HttpClient.newHttpClient();
         URI serverURI = URI.create(basepath + path);
         HttpRequest req = HttpRequest.newBuilder()
@@ -68,9 +73,10 @@ public class Services {
                 .build();
         try {
             HttpResponse<String> res = client.send(req, HttpResponse.BodyHandlers.ofString());
+            statusCode = res.statusCode();
             return res;
         } catch (IOException | InterruptedException ex) {
-            System.out.println("Connection to server failed: timeout");            
+            System.out.println("Connection to server failed: timeout");
         }
         return null;
     }
@@ -98,5 +104,20 @@ public class Services {
             return object;
         }
         return null;
+    }
+    /**
+     * Palauttaa viimesimmän tapahtuman statuskoodin.
+     * @return 
+     */
+    public int getStatusCode() {
+        return statusCode;
+    }
+    
+    /**
+     * Asettaa juuripolun, testauskäyttöön.
+     * @param path 
+     */
+    public void setPath(String path) {
+        basepath = path;
     }
 }
