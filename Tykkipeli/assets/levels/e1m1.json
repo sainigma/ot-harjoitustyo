@@ -4,16 +4,23 @@
     "type":"game",
     "next":"e1m2",
     "magazine":{
-        "light":20,
-        "medium":34,
-        "heavy":6,
-        "charges":32
+        "light":10,
+        "medium":5,
+        "heavy":3,
+        "charges":20
     },
     "ships":[
         {
             "name":"lineship",
             "waypoints":[
-                [4200.0, 0],
+                [-500.0, -5000.0],
+                [6000.0, -5000.0]
+            ]
+        },
+        {
+            "name":"lineship",
+            "waypoints":[
+                [3000.0, -100.0],
                 [0.0, 0.0]
             ]
         }

@@ -34,14 +34,9 @@ public class BackgroundCoast extends GameObject {
         init();
     }
     private void init() {
-        background = new GameObject("bg_foreground", "background/taustaluonnos.png", new Vector3d(0, 0, 1)) { };
+        background = new GameObject("bg_foreground", "background/taustaluonnos.png", new Vector3d(0, 0, 1), 0.666f) { };
+        background.translate(0, -50);
         append(background);
-        background.setVertexOffset(
-                new float[]{0, 0},
-                new float[]{0, 150f},
-                new float[]{-1000f, 150f},
-                new float[]{-1000f, 0}
-        );
         setRotation(0);
     }
     /**
