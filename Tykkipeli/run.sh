@@ -9,7 +9,7 @@ function buildNative {
  mkdir -p builds/$2
  mkdir -p builds/$2/assets
  cp ./target/Tykkipeli.jar ./builds/$2/Tykkipeli.jar
- cp -R ./assets ./builds/$2/assets
+ cp -R ./assets ./builds/$2/
  (cd ./builds/$2/; zip -r ../Tykkipeli_$2.zip .)
 }
 
