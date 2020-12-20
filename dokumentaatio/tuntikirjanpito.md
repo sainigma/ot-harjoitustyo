@@ -1,4 +1,6 @@
-# työaikakirjanpito
+# Työaikakirjanpito
+
+![jakautuminen](./assets/tkirjanpito.png)
 
 | päivä | aika | mitä tein  |
 | :----:|:-----| :-----|
