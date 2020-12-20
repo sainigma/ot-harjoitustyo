@@ -21,7 +21,7 @@ Pelin pisteet tallennetaan sekä paikallisesti, että julkisesti nettiin.
 
 ## Dokumentaatio
 
-[Käyttöohje](/dokumentaatio/kayttoohje.md)
+[Pelaamisen käyttöohje](/dokumentaatio/kayttoohje.md)
 
 [Vaatimuusmäärittely](/dokumentaatio/vaatimusmaarittely.md)
 

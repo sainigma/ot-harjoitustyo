@@ -32,5 +32,5 @@
 | 17.12 | 4 | Koodin siistimistä ja hienosäätöä.
 | 18.12 | 7 | Javadocin kirjoitusta, skriptojen tekoa nopeampaan testailuun ja kääntämiseen.
 | 19.12 | 6 | Javadocin viimeistely. Testien kirjoitusta backendille. Testien dokumentointia. README:n päivitys.
-| 20.12 | 3 | Arkkitehtuurikuvauksen kirjoitusta.
-| yht | 160 | |
+| 20.12 | 4 | Arkkitehtuurikuvauksen kirjoitusta.
+| yht | 161 | |

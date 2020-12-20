@@ -1,31 +1,28 @@
-## Pelin eteneminen
-Demo:
+## Asetukset
 
-	    1. Siirry lataustilaan (paina R)
-	    2. Valitse ammus (vasen/oikea, enter)
-	    3. Valitse panostuksen koko (vasen/oikea, enter)
-	    4. Nosta tykki oikeaan korkeuteen (ylös/alas)
-	    5. Laukaise tykki (väli)
-	    6. Projektiilin etenemistä voi seurata karttaruudussa (M)
-		7. Tykkinäkymässä, GOTO 1
+Pelin asetuksia pystyy muuttamaan config kansion settings.json tiedostosta. Tällä hetkellä ainoastaan näytönasetuksia pystyy muuttamaan, eli resoluutiota ja ikkunan kokoa. 
 
-Huom. tykin voi laukaista myös karttanäkymässä, projektiileja voi olla ilmassa useita.
+Peli pyörii tällä hetken parhaiten joko ikkunassa tai natiiviresoluutiota alemmassa kokoruuduntilassa. Natiiviresoluution kokoruuduntilaan suosittelen borderless windowed tilaa, joka aktivoituu asettamalla sekä fullscreen että windowed todeksi.
 
-Huom2. tykin lataamisen käyttöliittymä sijaitsee toistaiseksi kokonaan komentolinjassa
-
-Huom3. oikeat parametrit ensimmäisen kentän oikean yläkulman maaliin osumiseen on 29 astetta korotusta, 45 astetta siirtoa, raskas kärki ja 3 kartussia.
-
-## Oletuskontrollit
+## Kontrollit
 
 |  | Yleiset |
 |--|--|
 | ← | Valitse edellinen |
 | → | Valitse seuraava |
 | Enter | Hyväksy valinta |
+
+
+### Peli
+
+|  | Yleiset |
+|--|--|
+| H | Näytä/piilota kontrolliohje |
 | M | Karttanäkymä päälle/pois |
+| Q | Kartan pyöritys myötäpäivään |
+| E | Kartan pyöritys vastapäivään |
 | LShift | Nopeammin |
 | LCtrl | Hitaammin |
-
 
 |  | Tykin kontrollit |
 |--|--|
@@ -36,18 +33,22 @@ Huom3. oikeat parametrit ensimmäisen kentän oikean yläkulman maaliin osumisee
 | R | Tykin lataus |
 | Väli | Tykin laukaisu |
 
-
 |  | Kartan kontrollit |
 |--|--|
 | ← | Tykin kääntö vasemmalle |
 | → | Tykin kääntö oikealle |
-| Q | Kartan pyöritys myötäpäivään |
-| E | Kartan pyöritys vastapäivään |
 | väli | Tykin laukaisu |
 
 
-## Videodemo
+Demo:
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/zZMtgFfIBSc/0.jpg)](https://youtu.be/zZMtgFfIBSc)
+	    1. Siirry lataustilaan (paina R)
+	    2. Valitse ammus (vasen/oikea, enter)
+	    3. Valitse panostuksen koko (vasen/oikea, enter)
+	    4. Nosta tykki oikeaan korkeuteen (ylös/alas)
+		5. Siirrä tykki oikeaan suuntaan (vasen/oikea, katso maalin sijainti karttaruudusta (M))
+	    5. Laukaise tykki (väli)
+	    6. Projektiilin etenemistä voi seurata karttaruudussa (M)
+		7. Jos maaleja on vielä jäljellä, siirry kohtaan 1.
 
-↑ Linkki
+Huom. tykin voi laukaista myös karttanäkymässä, projektiileja voi olla ilmassa useita.
