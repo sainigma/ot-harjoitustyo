@@ -1,7 +1,5 @@
 # Tuntikirjanpito
 
-![jakautuminen](./assets/tkirjanpito.png)
-
 | päivä | aika | mitä tein  |
 | :----:|:-----| :-----|
 | 27.10. |  6  | Projektin alustus, koodin rakenteen luonnostelua, yksinkertaisen fysiikkasolverin toteutus |
@@ -36,3 +34,5 @@
 | 19.12 | 6 | Javadocin viimeistely. Testien kirjoitusta backendille. Testien dokumentointia. README:n päivitys.
 | 20.12 | 6 | Arkkitehtuurikuvauksen kirjoitusta. Käyttöohjeen päivitystä. Vaatimusmäärittelyn uudelleenkirjoitus.
 | yht | 161 | |
+
+![jakautuminen](./assets/tkirjanpito.png)
