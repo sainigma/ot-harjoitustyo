@@ -122,20 +122,9 @@ Ratkoja yhdistetään pääpelisilmukkaan MortarLogic -alilogiikan kautta.
 
 ### Pisteiden tallennus
 
+Pisteet tallennetaan lokaalisti **JSONLoader** luokalla .json tiedostoon. Globaalisti pisteet lähetetään **Services** luokan avulla backendin REST rajapintaan. Pisteet enkryptoidaan syväkoodatulla julkisella avaimella, releasessa ja backendissä käytetty avainpari on eri kuin repositoriossa käytetty.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+Pisteet tallennetaan samassa json rakenteessa sekä paikallisesti että backendiin, jolloin samoja latausmetodeja voi käyttää sekä paikallisen että julkisen pistenäkymän luomiseen.
 
 ## Esimerkit
 
