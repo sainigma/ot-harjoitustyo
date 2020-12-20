@@ -1,4 +1,4 @@
-# Työaikakirjanpito
+# Tuntikirjanpito
 
 ![jakautuminen](./assets/tkirjanpito.png)
 
