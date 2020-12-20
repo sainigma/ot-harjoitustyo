@@ -53,7 +53,7 @@ Lataa repositorio manuaalisesti, navigoi Tykkipeli-kansion juureen ja anna [run.
 
 ## Testaus
 
-Mahdollisia komentoja run-skriptalle ovat test, jolla ajetaan testit ja luodaan kattavuusraportti, checkstyle joka lintterin ja luo siitä raportin, sekä javadoc joka luo projektille javadocin. 
+Mahdollisia komentoja run-skriptalle ovat test, jolla ajetaan testit ja luodaan kattavuusraportti, checkstyle joka ajaa lintterin ja luo siitä raportin, sekä javadoc joka luo projektille javadocin. 
 
     ./run.sh test xdg-open
     ./run.sh checkstyle xdg-open
