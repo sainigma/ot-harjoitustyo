@@ -327,12 +327,6 @@ public class BaseGame implements LogicInterface {
         }
     }
     
-    private void menuMovement() {
-        if (gunMovementActive) {
-            return;
-        }
-    }
-    
     /**
      * Tulituslogiikka. Aktivoituu tulitusnappia painettaessa, mutta tulittaa vain jos tulituslogiikka on alustettu.
      */
