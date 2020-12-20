@@ -9,6 +9,10 @@
         - [Animointi](#Animation)
         - [Muut](#Muut)
     - [Tykkipeli](#Tykkipeli)
+        - [Logiikka](#Logiikka)
+        - [Simulaatio](#Simulaatio)
+        - [Peliobjektit](#Peliobjektit)
+        - [Pisteiden tallennus](#Pisteiden-tallennus)
     - [Esimerkit](#Esimerkit)
 
 Arkkitehtuurikuvaus on jaettu kahteen osioon: pelimoottorin sekä itse pelin kuvaukseen. Pelimoottori toimii sovelluksen rakenteessa ensimmäisenä logiikkakerroksena, itse peli taas toimii sen puitteissa.
@@ -68,13 +72,13 @@ ImmediateDrawerista on myös jatkoabstraktio **VectorGraphics**, jota käytetä�
 
 Huomiona toteutukseen: sekä quadien että välittömän piirtomoden käyttäminen on nykyaikana huono idea (hitaita, deprekoituja), päädyin käyttämään niitä ajansäästösyistä.
 
-## Animation
+### Animation
 
 Moottorista löytyy animointityökalut joilla voidaan tallentaa ja soittaa monimutkaisia liikeratoja peliobjekteille json-tiedostoja lukemalla. Animaattorin hyödyntäminen vaatii implementaation GameObject luokasta, koska animaattori sidotaan luokkaan implementaation vaativalla drive -metodilla.
 
 Animaattori tukee sekä muunnoksilla, että ohjausarvoilla animoimista. Tykkipeli käyttää näistä yksinomaan ohjausarvoilla animoimista. Animaattori ei vaadi jokaiselle ruudunpäivitykselle omaa ruutua, vaan arvot voidaan myös lineaari-interpoloida lennossa.
 
-## Muut
+### Muut
 Game.utils on sikermä erilaisia yleistyökaluja joita tarvitaan sekä pelimoottorissa että itse tykkipelissä.
 
     - Vector3d, vektorimatematiikka, käytetään muunnosten tallentamiseen ja laskuun
@@ -96,8 +100,27 @@ Pelilogiikka muodostuu seuraavista paketeista ja yksittäisistä luokista:
  - game.simulations kokonaisuudessaan
  - game.simulations.cases kokonaisuudessaan
 
+### Logiikka
+
 Pelilogiikka yhdistyy pelimoottoriin game.logic paketin LogicInterface implementaatioilla. Jokainen luokista toteuttaa nimensä mukaisen näkymän peliin, eli päävalikon, pelisilmukan sekä pistelistan.
 
+Päävalikko ja pistelista ovat melko yksinkertaisia, eli ne ei käytä apulogiikkoja. Pelilogiikka **BaseGame** sen sijaan on massiivinen, ja sen logiikka on jatkopilkottu game.logic.controllers paketin määrittämiin alilogiikoihin.
+
+BaseGame itsessään alustaa ja lopettaa pelisilmukan, sekä päivittää juuri nyt aktiiviset alilogiikat. Jokainen alilogiikka kuvaa jotain tiettyä tapahtumaa logiikkaketjussa, esim. latauksen tai pelin lopetuksen käyttöliittymää. Osa alilogiikoista on myös aina aktiivisia, kuten projektiilinseurannan ja maalinpäivityksen alilogiikat. Alilogiikkojen ohjaukset toteutetaan nyt ehtorakenteilla, joten tässä olisi jatkokehityksen kannalta hyvä paikka refaktoroinnille.
+
+Jokainen pelilogiikkaluokista alustaa jonkin **DrawCallInterface**a hyödyntävän objektin jota käytetään käyttöliittymän juuriobjektina. Juuriobjektin käyttö mahdollistaa sen, että logiikkaa alustaessa renderöijän piirtojonoon tarvitsee lisätä vain yksi objekti.
+
+Pelissä käytetään myös spesifejä implementaatioita GameObject luokasta. Nämä löytyy paketista **game.components.templates**. Osa templateista toteuttaa käyttöliittymän osia, osa taas jotain monimutkaisia peliobjekteja, kuten esim **Mortar** joka toimii tykin näkyvänä käyttöliittymänä.
+
+### Simulaatio
+
+Pelin fysiikkaratkoja on toteutettu takaisinkytkevänä dynaamisena systeeminä joka ratkoo asetettua ongelmaa kunnes loppuehto saavutetaan. Ratkoja määritetään abstraktissa luokassa **PhysicsSolver**.
+
+Abstraktia luokkaa laajennetaan luokalla **Ballistics**. PhysicsSolver itsessään käyttää tilan laskemiseen vakiokiihtyvyyttä, jolloin sillä pystyy laskemaan vain parabolisia lentoratoja. Ballistics implementoi oman metodin kiihtyvyyden laskemiseen, metodi ottaa huomioon nykyisen nopeuden jota käytetään ilmanvastuksen sekä "maapallon pyörimisestä syntyvän kiihtyvyyden" (tukivoimamainen apulasku jolla vaikutuksen voi ottaa huomioon kiihtyvyytenä). Lisäksi metodi laskee tuulesta syntyvän lisäilmanvastuksen, jos tuuli on asetettu. Tuuli asetetaan **BaseGame** luokasta **Services** luokan kautta, koska tuuli haetaan Ilmatieteenlaitoksen rajapinnasta (pelin backendin kautta siistittynä, koska ilmatieteenlaitoksen api puskee valtavia tiedostoja).
+
+Ratkoja yhdistetään pääpelisilmukkaan MortarLogic -alilogiikan kautta.
+
+### Pisteiden tallennus
 
 
 
@@ -113,9 +136,10 @@ Pelilogiikka yhdistyy pelimoottoriin game.logic paketin LogicInterface implement
 
 
 
-# Esimerkit
 
-## Pelilogiikan alustus, tykin lataus & laukaus ilman graafista käyttöliittymää
+## Esimerkit
+
+### Pelilogiikan alustus, tykin lataus & laukaus ilman graafista käyttöliittymää
 
 ![asd2](./assets/reloadAndFiringWithoutGUI.png)
 
