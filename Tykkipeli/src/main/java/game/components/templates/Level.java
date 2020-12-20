@@ -14,14 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package game.components;
+package game.components.templates;
 
-import game.components.templates.BackgroundCoast;
-import game.components.templates.EndScreen;
-import game.components.templates.MapScreen;
-import game.components.templates.ViewPort;
-import game.components.templates.Mortar;
-import game.components.templates.ReloadScreen;
+import game.components.GameObject;
 /**
  * GameObject luokan implementaatio pelin päänäkymän hallitsemiseen. Sekä kartta- että pelinäkymän juuri.
  * @author Kari Suominen

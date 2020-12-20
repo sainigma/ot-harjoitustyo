@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import org.json.JSONArray;
@@ -33,6 +34,14 @@ public class Services {
     private String basepath = "https://1030321.xyz/api/";
     private int timeoutMillis = 1000;
     private int statusCode = 0;
+    
+    private Builder createRequestHeader(URI serverURI, String type) {
+        return HttpRequest
+                .newBuilder()
+                .uri(serverURI)
+                .header(type, "application/json");
+    }
+    
     /**
      * Lähettää merkkijonoksi muutetun json-objektin POST pyyntönä.
      * @param path suhteellinen polku rajapintaan
@@ -46,9 +55,7 @@ public class Services {
         }
         HttpClient client = HttpClient.newHttpClient();
         URI serverURI = URI.create(basepath + path);
-        HttpRequest req = HttpRequest.newBuilder()
-                .uri(serverURI)
-                .header("Content-Type", "application/json")
+        HttpRequest req = createRequestHeader(serverURI, "Content-Type")
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .timeout(Duration.ofMillis(timeoutMillis))
                 .build();
@@ -65,9 +72,7 @@ public class Services {
         statusCode = -1;
         HttpClient client = HttpClient.newHttpClient();
         URI serverURI = URI.create(basepath + path);
-        HttpRequest req = HttpRequest.newBuilder()
-                .uri(serverURI)
-                .header("Accept", "application/json")
+        HttpRequest req = createRequestHeader(serverURI, "Accept")
                 .GET()
                 .timeout(Duration.ofMillis(timeoutMillis))
                 .build();

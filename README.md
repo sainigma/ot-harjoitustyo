@@ -17,7 +17,7 @@ Perinteinen tykkipeli jossa pelaaja yrittää osua laivoihin tykin kulmaa ja amm
 
 Haasteena osumiselle on laivojen liikkumisen lisäksi dynaaminen fysiikkasimulaatio, joka ottaa ilmanvastuksen, maapallon pyörimisen sekä tuulen vaikutuksen huomioon. Viimeisessä ominaisuudessa tuulen suunta ja nopeus haetaan reaaliajassa Ilmatieteenlaitoksen rajapinnasta Harmajan mittausasemalta. 
 
-Pelin pisteet tallennetaan sekä paikallisesti että julkisesti nettiin.
+Pelin pisteet tallennetaan sekä paikallisesti, että julkisesti nettiin.
 
 ## Dokumentaatio
 

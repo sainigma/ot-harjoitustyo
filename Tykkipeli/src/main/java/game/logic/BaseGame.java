@@ -18,7 +18,7 @@ package game.logic;
 
 import game.components.GameObject;
 import game.logic.controllers.*;
-import game.components.Level;
+import game.components.templates.Level;
 import game.components.Text;
 import game.components.templates.ScreenShaker;
 import game.utils.InputManager;
